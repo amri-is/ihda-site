@@ -6,7 +6,7 @@ import { FOOTER_ITEM } from '@/constants/footer'
 export default function Footer() {
   return (
     <footer
-      className="grid absolute w-full bottom-0 px-8 grid-cols-2"
+      className="grid absolute w-full bottom-0 grid-cols-2 px-4 pb-2"
     >
       <div className="flex gap-2 items-center text-xl font-serif">
         <Bloom size="logo" />
