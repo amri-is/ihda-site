@@ -15,7 +15,7 @@ export default function Booking() {
       >
         <div className="h-full w-full flex flex-col justify-center items-center max-w-3xl mx-auto relative text-center">
 
-          <div className="absolute opacity-10 left-0 scale-200">
+          <div className="absolute opacity-10 left-0 scale-200 -z-10">
               <Bloom size="large" flip/>
           </div>
 

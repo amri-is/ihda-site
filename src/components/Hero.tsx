@@ -9,14 +9,14 @@ export default function Hero() {
       id="hero"
       className="h-screen flex flex-col justify-center px-8 max-w-3xl mx-auto w-full relative"
     >
-        <div className="absolute opacity-10 right-0 scale-175" >
+        <div className="absolute opacity-10 right-0 scale-175 -z-10" >
             <Bloom size="large" />
       </div>
       
         <div className="hero-in text-xs uppercase tracking-widest text-rose">
           Makeup & hijab styling studio
         </div>
-        <h1 className="hero-in font-serif font-normal text-5xl leading-[1.02] tracking-tight max-w-3xl">
+        <h1 className="hero-in font-serif font-normal text-5xl leading-none tracking-tight max-w-3xl">
           Beauty for
           <br />
           <em className="font-curvy text-6xl text-rosedeep font-black">

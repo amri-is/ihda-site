@@ -2,12 +2,13 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollSmoother } from "gsap/ScrollSmoother";
 
 import '@/App.css'
 import Hero from '@/components/Hero'
 import Booking from '@/components/Booking'
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 function App() {
   const scrollTrackRef = useRef<HTMLDivElement | null>(null);
@@ -17,6 +18,13 @@ function App() {
     const wrap = scrollTrackRef.current;
     const bar = scrollThumbRef.current;
     if (!wrap || !bar) return;
+
+    const smoother = ScrollSmoother.create({
+      wrapper: "#smooth-wrapper",
+      content: "#smooth-content",
+      smooth: 1,
+      effects: true,
+    });
 
     const maxTop = () => wrap.clientHeight - bar.clientHeight;
     let hideTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -35,12 +43,13 @@ function App() {
         hideTimeout = setTimeout(() => {
           wrap.style.opacity = "0";
           wrap.style.visibility = "hidden";
-        }, 1000);
+        }, 500);
       },
     });
 
     return () => {
       st.kill();
+      smoother.kill();
       clearTimeout(hideTimeout);
     };
   }, []);
@@ -57,8 +66,12 @@ function App() {
         ></div>
       </div>
 
-      <Hero />
-      <Booking />
+      <div id="smooth-wrapper">
+        <div id="smooth-content">
+          <Hero />
+          <Booking />
+        </div>
+      </div>
     </>
   )
 }
