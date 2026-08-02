@@ -9,8 +9,8 @@ export default function Hero() {
       id="hero"
       className="h-screen flex flex-col justify-center px-8 max-w-3xl mx-auto w-full relative"
     >
-        <div className="absolute opacity-10 right-0 scale-200" >
-            <Bloom size="large" className=""/>
+        <div className="absolute opacity-10 right-0 scale-175" >
+            <Bloom size="large" />
       </div>
       
         <div className="hero-in text-xs uppercase tracking-widest text-rose">

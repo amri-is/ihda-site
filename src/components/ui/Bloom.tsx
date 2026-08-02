@@ -4,13 +4,11 @@ import { cn } from "@/lib/utils"
 type BloomProps = {
   size?: "large" | "small" | "logo"
   flip?: boolean
-  className?: string
 }
 
 export default function Bloom({
   size = "small",
   flip = false,
-  className = "",
 }: BloomProps) {
 
   // unique ids so multiple <Bloom /> instances on one page don't collide
@@ -21,7 +19,7 @@ export default function Bloom({
 
   const dimensions =
     size === "large"
-      ? "size-80"
+      ? "size-100"
       : size === "logo"
       ? "size-6"
       : "size-16"
@@ -31,7 +29,7 @@ export default function Bloom({
       viewBox="0 0 50 50"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn(dimensions, flip && "-scale-x-100", className)}
+      className={cn(dimensions, flip && "-scale-x-100")}
     >
       <defs>
         <radialGradient
