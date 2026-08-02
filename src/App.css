@@ -36,3 +36,12 @@ body {
 ::selection {
   @apply bg-rose text-white;
 }
+
+:root {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+:root::-webkit-scrollbar {
+  display: none;
+}
