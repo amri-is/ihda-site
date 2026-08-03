@@ -17,7 +17,7 @@ export default function Portfolio() {
       className="h-screen relative section pin-section"
     >
       <div className="h-full w-full flex flex-col justify-center items-center max-w-3xl mx-auto relative ">
-        <div className="portfolio-title w-full shrink-0 bg-green-200/20 backdrop-blur-sm">
+        <div className="portfolio-title w-full shrink-0 bg-green-200/20 backdrop-blur-sm mask-[linear-gradient(to_bottom,black_calc(100%-2rem),transparent_100%)]">
           <div className="list">
             {PortfolioData.map((item, idx) => (
               <div className="p-1" key={idx}>{item.title}</div>
@@ -45,7 +45,7 @@ export default function Portfolio() {
             </div>
           ))}
         </div>
-        <div className="portfolio-body w-full shrink-0 bg-violet-200/20 backdrop-blur-sm">
+        <div className="portfolio-body w-full shrink-0 bg-violet-200/20 backdrop-blur-sm mask-[linear-gradient(to_top,black_calc(100%-2rem),transparent_100%)]">
           <div className="body">
             {PortfolioData.map((item, idx) => (
               <div className="p-1 text-sm" key={idx}>{item.body}</div>
