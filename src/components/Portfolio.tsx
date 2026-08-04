@@ -22,38 +22,57 @@ const scrubReveal = (
   start: 'top 75%',
   ...opts,
 })
+type ItemEls = {
+  root: HTMLElement;
+  index: HTMLElement;
+  title: HTMLElement;
+  body: HTMLElement
+}
+
+  function animateIndex(index: HTMLElement) {
+    gsap.set(index, { y: '-2rem', x: '-1.5rem' })
+    const tl = gsap.timeline().from(index, { y: '-50%', opacity: 0, ease: 'power2.out' })
+    scrubReveal(tl, index, { start: '+=50% 75%', end: () => '+=' + index.offsetHeight })
+  }
+
+  function animateTitle(title: HTMLElement, index: HTMLElement) {
+    const split = SplitText.create(title, { type: 'words', mask: 'words' })
+    const tl = gsap.timeline().from(split.words, {
+      x: '100%', opacity: 0, ease: 'power2.out',
+      stagger: { amount: 0.5, from: 'start' },
+    })
+    scrubReveal(tl, title, { endTrigger: index, end: () => '+=' + index.offsetHeight })
+  }
+
+  function animateBody(body: HTMLElement) {
+    SplitText.create(body, {
+      type: 'words, lines', mask: 'lines', linesClass: 'line', autoSplit: true,
+      onSplit: (self) => {
+        const tl = gsap.timeline().from(self.lines, {
+          y: 20, autoAlpha: 0, stagger: { amount: 0.5, from: 'start' },
+        })
+        scrubReveal(tl, body, { end: () => '+=' + body.offsetHeight })
+      },
+    })
+  }
 
 export default function Portfolio() {
   const sectionRef = useRef<HTMLElement | null>(null)
   const itemRefs = useRef<HTMLElement[]>([])
 
   useGSAP(() => {
-    itemRefs.current.forEach((item) => {
-      const index = item.querySelector<HTMLElement>('.portfolio-index')
-      const title = item.querySelector<HTMLElement>('.portfolio-title')
-      const body = item.querySelector<HTMLElement>('.portfolio-body')
-      if (!index || !title || !body) return
+    const elements: ItemEls[] = itemRefs.current.map((root) => {
+      const index = root.querySelector<HTMLElement>('.portfolio-index')
+      const title = root.querySelector<HTMLElement>('.portfolio-title')
+      const body = root.querySelector<HTMLElement>('.portfolio-body')
+      if (!index || !title || !body) return null
+      return { root, index, title, body }
+    }).filter((el): el is ItemEls => el !== null)
 
-      gsap.set(index, { y: '-2rem', x: '-1.5rem' })
-      const indexTl = gsap.timeline().from(index, { y: '-50%', opacity: 0, ease: 'power2.out' })
-      scrubReveal(indexTl, index, { start: '+=50% 75%', end: () => '+=' + index.offsetHeight })
-
-      const titleSplit = SplitText.create(title, { type: 'words', mask: 'words' })
-      const titleTl = gsap.timeline().from(titleSplit.words, {
-        x: '100%', opacity: 0, ease: 'power2.out',
-        stagger: { amount: 0.5, from: 'start' },
-      })
-      scrubReveal(titleTl, title, { endTrigger: index, end: () => '+=' + index.offsetHeight })
-
-      SplitText.create(body, {
-        type: 'words, lines', mask: 'lines', linesClass: 'line', autoSplit: true,
-        onSplit: (self) => {
-          const bodyTl = gsap.timeline().from(self.lines, {
-            y: 20, autoAlpha: 0, stagger: { amount: 0.5, from: 'start' },
-          })
-          scrubReveal(bodyTl, body, { end: () => '+=' + body.offsetHeight })
-        },
-      })
+    elements.forEach(({ index, title, body }) => {
+      animateIndex(index)
+      animateTitle(title, index)
+      animateBody(body)
     })
   }, { scope: sectionRef })
 
@@ -61,10 +80,10 @@ export default function Portfolio() {
     <section
       ref={sectionRef}
       id="portfolio"
-      className="section py-24 px-8 max-w-6xl mx-auto w-full relative overflow-hidden flex flex-col gap-[10vh]"
+      className="section py-16 px-8 max-w-6xl mx-auto w-full relative overflow-hidden flex flex-col gap-[10vh]"
     >
       {PortfolioData.map((item, index) => (
-        <section
+        <article
           key={item.title}
           ref={(el) => { if (el) itemRefs.current[index] = el }}
           className="relative h-[80vh] flex flex-col justify-between"
@@ -92,7 +111,7 @@ export default function Portfolio() {
               </div>
             ))}
           </div>
-        </section>
+        </article>
       ))}
     </section>
   )
