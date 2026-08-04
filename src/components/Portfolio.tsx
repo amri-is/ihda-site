@@ -35,7 +35,6 @@ export default function Portfolio() {
         y: '-50%',
         opacity: 0,
         ease: 'power2.out',
-        duration: 5
       })
 
       ScrollTrigger.create({
@@ -46,7 +45,6 @@ export default function Portfolio() {
         trigger: index,
         start: '+=50% 75%',
         end: () => "+=" + indexHeight,
-        toggleActions: 'play none none reverse'
       })
 
 
@@ -55,14 +53,16 @@ export default function Portfolio() {
       if (!title) return
 
       const titleTl = gsap.timeline()
+      let titleSplit = SplitText.create(title, { type: 'words', mask: 'words'})
 
-      // set title anim
-      titleTl.from(title, {
-        x: '5rem',
-        // skewX: '-10',
+      titleTl.from(titleSplit.words, {
+        x: '100%',
         opacity: 0,
         ease: 'power2.out',
-        duration: 5
+        stagger: {
+          amount: 0.5,
+          from: 'start'
+        }
       })
 
       ScrollTrigger.create({
@@ -74,7 +74,6 @@ export default function Portfolio() {
         start: 'top 75%',
         endTrigger: index,
         end: () => "+=" + indexHeight,
-        toggleActions: 'play none none reverse'
       })
 
       // body anim logic
@@ -83,31 +82,31 @@ export default function Portfolio() {
 
       const bodyHeight = body.offsetHeight
       const bodyTl = gsap.timeline()
-      const bodySplit = SplitText.create(body, {type: 'lines', mask: 'lines'})
-
-      // set body anim
-      bodyTl.from(bodySplit.lines, {
-        y: '20',
-        autoAlpha: 0,
-        // ease: 'power2.out',
-        // duration: 5,
-        stagger: {
-          amount: 0.5,
-          from: 'start',
-          // repeat: -1,
-          // yoyo: true,
-        },
-      })
-
-      ScrollTrigger.create({
-        markers: true,
-        id: 'body',
-        scrub: 1,
-        animation: bodyTl,
-        trigger: body,
-        start: 'top 75%',
-        end: () => "+=" + bodyHeight,
-        // toggleActions: 'play none none reverse'
+      let bodySplit
+      
+      SplitText.create(body, {
+        type: 'words, lines',
+        mask: 'lines',
+        linesClass: 'line',
+        autoSplit: true,
+        onSplit: (self) => {
+          bodySplit = gsap.from(self.lines, {
+            y: '20',
+            autoAlpha: 0,
+            stagger: {
+              amount: 0.5,
+              from: 'start',
+            },
+            scrollTrigger: {
+              // markers: true,
+              id: 'body',
+              scrub: 1,
+              trigger: body,
+              start: 'top 75%',
+              end: () => "+=" + bodyHeight,
+            }
+          })
+        }
       })
 
     });
