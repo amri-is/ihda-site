@@ -9,108 +9,85 @@ const POS_X = [-25, 0, 18]
 const POS_Y = [-18, 0, 20]
 const ROTATE = [20, 5, -15]
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger, SplitText)
+
+const scrubReveal = (
+  tl: gsap.core.Timeline,
+  trigger: Element | string,
+  opts: Partial<ScrollTrigger.Vars> = {}
+) => ScrollTrigger.create({
+  animation: tl,
+  trigger,
+  scrub: 1,
+  start: 'top 75%',
+  ...opts,
+})
 
 export default function Portfolio() {
   const sectionRef = useRef<HTMLElement | null>(null)
-  
+
   useGSAP(() => {
     const items = gsap.utils.toArray<HTMLDivElement>('.portfolio-items')
 
     items.forEach((item) => {
-      // index anim logic
       const index = item.querySelector<HTMLElement>('.portfolio-index')
-      if (!index) return
+      const title = item.querySelector<HTMLElement>('.portfolio-title')
+      const body = item.querySelector<HTMLElement>('.portfolio-body')
+      if (!index || !title || !body) return
 
-      const indexHeight = index.offsetHeight
-      const indexTl = gsap.timeline()
-
-      // set index style
-      gsap.set(index, {
-        y: '-2rem',
-        x: '-1.5rem',
-      })
-      // set index anim
-      indexTl.from(index, {
+      // index
+      gsap.set(index, { y: '-2rem', x: '-1.5rem' })
+      const indexTl = gsap.timeline().from(index, {
         y: '-50%',
         opacity: 0,
-        ease: 'power2.out',
+        ease: 'power2.out'
       })
-
-      ScrollTrigger.create({
-        // markers: true,  
-        id: 'index',
-        scrub: 1,
-        animation: indexTl,
-        trigger: index,
+      scrubReveal(indexTl, index, {
         start: '+=50% 75%',
-        end: () => "+=" + indexHeight,
+        end: () => '+=' + index.offsetHeight
       })
 
-
-      // title anim logic
-      const title = item.querySelector<HTMLElement>('.portfolio-title')
-      if (!title) return
-
-      const titleTl = gsap.timeline()
-      let titleSplit = SplitText.create(title, { type: 'words', mask: 'words'})
-
-      titleTl.from(titleSplit.words, {
+      // title
+      const titleSplit = SplitText.create(title, {
+        type: 'words',
+        mask: 'words'
+      })
+      const titleTl = gsap.timeline().from(titleSplit.words, {
         x: '100%',
         opacity: 0,
         ease: 'power2.out',
         stagger: {
-          amount: 0.5,
+          amount: 0.25,
           from: 'start'
-        }
+        },
       })
-
-      ScrollTrigger.create({
-        // markers: true,
-        id: 'title',
-        scrub: 1,
-        animation: titleTl,
-        trigger: title,
-        start: 'top 75%',
+      scrubReveal(titleTl, title, {
         endTrigger: index,
-        end: () => "+=" + indexHeight,
+        end: () => '+=' + index.offsetHeight
       })
 
-      // body anim logic
-      const body = item.querySelector<HTMLElement>('.portfolio-body')
-      if (!body) return
-
-      const bodyHeight = body.offsetHeight
-      const bodyTl = gsap.timeline()
-      let bodySplit
-      
+      // body
       SplitText.create(body, {
-        type: 'words, lines',
-        mask: 'lines',
-        linesClass: 'line',
+        type: 'words, lines', 
+        mask: 'lines', 
+        linesClass: 'line', 
         autoSplit: true,
         onSplit: (self) => {
-          bodySplit = gsap.from(self.lines, {
-            y: '20',
+          const bodyTl = gsap.timeline().from(self.lines, {
+            y: 20,
             autoAlpha: 0,
             stagger: {
               amount: 0.5,
-              from: 'start',
+              from: 'start'
             },
-            scrollTrigger: {
-              // markers: true,
-              id: 'body',
-              scrub: 1,
-              trigger: body,
-              start: 'top 75%',
-              end: () => "+=" + bodyHeight,
-            }
           })
-        }
+          scrubReveal(bodyTl, body, {
+            end: () => '+=' + body.offsetHeight
+          })
+        },
       })
-
-    });
-  })
+    })
+  }, { scope: sectionRef })
 
   return (
     <section
