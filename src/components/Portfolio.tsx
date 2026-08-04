@@ -25,104 +25,62 @@ const scrubReveal = (
 
 export default function Portfolio() {
   const sectionRef = useRef<HTMLElement | null>(null)
+  const itemRefs = useRef<HTMLElement[]>([])
 
   useGSAP(() => {
-    const items = gsap.utils.toArray<HTMLDivElement>('.portfolio-items')
-
-    items.forEach((item) => {
+    itemRefs.current.forEach((item) => {
       const index = item.querySelector<HTMLElement>('.portfolio-index')
       const title = item.querySelector<HTMLElement>('.portfolio-title')
       const body = item.querySelector<HTMLElement>('.portfolio-body')
       if (!index || !title || !body) return
 
-      // index
       gsap.set(index, { y: '-2rem', x: '-1.5rem' })
-      const indexTl = gsap.timeline().from(index, {
-        y: '-50%',
-        opacity: 0,
-        ease: 'power2.out'
-      })
-      scrubReveal(indexTl, index, {
-        start: '+=50% 75%',
-        end: () => '+=' + index.offsetHeight
-      })
+      const indexTl = gsap.timeline().from(index, { y: '-50%', opacity: 0, ease: 'power2.out' })
+      scrubReveal(indexTl, index, { start: '+=50% 75%', end: () => '+=' + index.offsetHeight })
 
-      // title
-      const titleSplit = SplitText.create(title, {
-        type: 'words',
-        mask: 'words'
-      })
+      const titleSplit = SplitText.create(title, { type: 'words', mask: 'words' })
       const titleTl = gsap.timeline().from(titleSplit.words, {
-        x: '100%',
-        opacity: 0,
-        ease: 'power2.out',
-        stagger: {
-          amount: 0.25,
-          from: 'start'
-        },
+        x: '100%', opacity: 0, ease: 'power2.out',
+        stagger: { amount: 0.5, from: 'start' },
       })
-      scrubReveal(titleTl, title, {
-        endTrigger: index,
-        end: () => '+=' + index.offsetHeight
-      })
+      scrubReveal(titleTl, title, { endTrigger: index, end: () => '+=' + index.offsetHeight })
 
-      // body
       SplitText.create(body, {
-        type: 'words, lines', 
-        mask: 'lines', 
-        linesClass: 'line', 
-        autoSplit: true,
+        type: 'words, lines', mask: 'lines', linesClass: 'line', autoSplit: true,
         onSplit: (self) => {
           const bodyTl = gsap.timeline().from(self.lines, {
-            y: 20,
-            autoAlpha: 0,
-            ease: 'power2.out',
-            stagger: {
-              amount: 0.5,
-              from: 'start'
-            },
+            y: 20, autoAlpha: 0, stagger: { amount: 0.5, from: 'start' },
           })
-          scrubReveal(bodyTl, body, {
-            end: () => '+=' + body.offsetHeight
-          })
+          scrubReveal(bodyTl, body, { end: () => '+=' + body.offsetHeight })
         },
       })
     })
   }, { scope: sectionRef })
 
   return (
-    <>
     <section
       ref={sectionRef}
       id="portfolio"
       className="section py-24 px-8 max-w-6xl mx-auto w-full relative overflow-hidden flex flex-col gap-[10vh]"
     >
-      <div className="hidden max-w-3xl mx-auto text-center mb-16">
-        <div className="text-xs uppercase tracking-[.25em] text-rose">Portfolio</div>
-        <h2 className="mt-4 font-serif text-4xl leading-tight text-ink sm:text-5xl">
-          Signature looks for every chapter.
-        </h2>
-      </div>
-
       {PortfolioData.map((item, index) => (
-        <article
+        <section
           key={item.title}
-          className="portfolio-items relative h-[80vh] flex flex-col justify-between"
+          ref={(el) => { if (el) itemRefs.current[index] = el }}
+          className="relative h-[80vh] flex flex-col justify-between"
           style={{ backgroundColor: item.bgColor ?? '#F3E7E0' }}
         >
-          <div className=" absolute inset-0 overflow-hidden mix-blend-darken">
-            <div className="portfolio-index text-[10rem]/[10rem] uppercase text-inksoft/5 font-mono font-black left-0 -tracking-widest ">
+          <div className="absolute inset-0 overflow-hidden mix-blend-darken">
+            <div className="portfolio-index text-[10rem]/[10rem] uppercase text-inksoft/5 font-mono font-black left-0 -tracking-widest">
               {String(index + 1).padStart(2, '0')}
             </div>
           </div>
           <div className="portfolio-title relative z-20 text-center flex justify-center w-full overflow-hidden">
             <h3 className="font-serif text-3xl text-ink p-4">{item.title}</h3>
           </div>
-
           <div className="relative z-20 text-center overflow-hidden">
             <p className="portfolio-body text-base leading-relaxed text-inksoft">{item.body}</p>
           </div>
-
           <div className="portfolio-media absolute z-0 h-full w-full flex justify-center items-center" aria-label={item.title}>
             {item.img.map((image, imageIndex) => (
               <div
@@ -134,10 +92,8 @@ export default function Portfolio() {
               </div>
             ))}
           </div>
-        </article>
+        </section>
       ))}
-        
     </section>
-    </>
   )
 }
