@@ -1,13 +1,84 @@
 import { PortfolioData } from '@/data/portfolio'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
+import { useRef } from 'react'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const POS_X = [-25, 0, 18]
 const POS_Y = [-18, 0, 20]
 const ROTATE = [20, 5, -15]
 
+gsap.registerPlugin(ScrollTrigger)
+
 export default function Portfolio() {
+  const sectionRef = useRef<HTMLElement | null>(null)
+  
+  useGSAP(() => {
+    const items = gsap.utils.toArray<HTMLDivElement>('.portfolio-items')
+
+    items.forEach((item) => {
+      // index anim logic
+      const index = item.querySelector<HTMLElement>('.portfolio-index')
+      if (!index) return
+
+      const indexHeight = index.offsetHeight
+      const indexTl = gsap.timeline()
+
+      // set index style
+      gsap.set(index, {
+        y: '-2rem',
+        x: '-1.5rem',
+      })
+      // set index anim
+      indexTl.from(index, {
+        y: '-50%',
+        opacity: 0,
+        ease: 'power2.out',
+        duration: 5
+      })
+
+      // ScrollTrigger.create({
+      //   markers: true,
+      //   scrub: 1,
+      //   animation: indexTl,
+      //   trigger: index,
+      //   start: '+=50% center',
+      //   end: () => "+=" + indexHeight,
+      //   toggleActions: 'play none none reverse'
+      // })
+
+
+      // title anim logic
+      const title = item.querySelector<HTMLElement>('.portfolio-title')
+      if (!title) return
+
+      const titleTl = gsap.timeline()
+
+      // set title anim
+      titleTl.from(title, {
+        x: '5rem',
+        skewX: '-50',
+        opacity: 0,
+        ease: 'power2.out',
+        duration: 5
+      })
+
+      // ScrollTrigger.create({
+      //   markers: true,
+      //   scrub: 1,
+      //   animation: indexTl,
+      //   trigger: index,
+      //   start: '+=50% center',
+      //   end: () => "+=" + indexHeight,
+      //   toggleActions: 'play none none reverse'
+      // })
+
+    });
+  })
 
   return (
     <section
+      ref={sectionRef}
       id="portfolio"
       className="section py-24 px-8 max-w-6xl mx-auto w-full relative overflow-hidden flex flex-col gap-[10vh]"
     >
@@ -21,18 +92,20 @@ export default function Portfolio() {
       {PortfolioData.map((item, index) => (
         <article
           key={item.title}
-          className="portfolio-item relative h-screen flex flex-col justify-between"
+          className="portfolio-items relative h-[80vh] flex flex-col justify-between"
           style={{ backgroundColor: item.bgColor ?? '#F3E7E0' }}
         >
-          <div className="portfolio-title relative z-20 text-center flex justify-center w-full ">
-            <div className="absolute text-xs uppercase text-rose/90 left-0">
+          <div className=" absolute inset-0 overflow-hidden mix-blend-darken">
+            <div className="portfolio-index text-[10rem]/[10rem] uppercase text-inksoft/5 font-mono font-black left-0 -tracking-widest ">
               {String(index + 1).padStart(2, '0')}
             </div>
-            <h3 className="font-serif text-3xl text-ink">{item.title}</h3>
+          </div>
+          <div className="portfolio-title relative z-20 text-center flex justify-center w-full overflow-hidden">
+            <h3 className="font-serif text-3xl text-ink p-4">{item.title}</h3>
           </div>
 
-          <div className="portfolio-body relative z-20 text-center">
-            <p className="text-base leading-relaxed text-inksoft">{item.body}</p>
+          <div className="relative z-20 text-center overflow-hidden">
+            <p className="portfolio-body text-base leading-relaxed text-inksoft">{item.body}</p>
           </div>
 
           <div className="portfolio-media absolute z-0 h-full w-full flex justify-center items-center" aria-label={item.title}>
@@ -40,10 +113,7 @@ export default function Portfolio() {
               <div
                 key={`${item.title}-${image.alt}`}
                 className="portfolio-card absolute overflow-hidden p-4 pb-12 bg-white shadow rounded"
-                style={{
-                  transform: `translate(${POS_X[imageIndex]}vh, ${POS_Y[imageIndex]}vh) rotate(${ROTATE[imageIndex]}deg)`,
-                  zIndex: 3 - imageIndex,
-                }}
+                style={{ zIndex: 3 - imageIndex }}
               >
                 <img src={image.src} alt={image.alt} className="aspect-ratio-4/5 w-70 object-cover" />
               </div>
