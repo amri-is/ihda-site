@@ -37,15 +37,16 @@ export default function Portfolio() {
         duration: 5
       })
 
-      // ScrollTrigger.create({
-      //   markers: true,
-      //   scrub: 1,
-      //   animation: indexTl,
-      //   trigger: index,
-      //   start: '+=50% center',
-      //   end: () => "+=" + indexHeight,
-      //   toggleActions: 'play none none reverse'
-      // })
+      ScrollTrigger.create({
+        markers: true,
+        id: 'index',
+        scrub: 1,
+        animation: indexTl,
+        trigger: index,
+        start: '+=50% center',
+        end: () => "+=" + indexHeight,
+        toggleActions: 'play none none reverse'
+      })
 
 
       // title anim logic
@@ -57,21 +58,23 @@ export default function Portfolio() {
       // set title anim
       titleTl.from(title, {
         x: '5rem',
-        skewX: '-50',
+        skewX: '-10',
         opacity: 0,
         ease: 'power2.out',
         duration: 5
       })
 
-      // ScrollTrigger.create({
-      //   markers: true,
-      //   scrub: 1,
-      //   animation: indexTl,
-      //   trigger: index,
-      //   start: '+=50% center',
-      //   end: () => "+=" + indexHeight,
-      //   toggleActions: 'play none none reverse'
-      // })
+      ScrollTrigger.create({
+        markers: true,
+        id: 'title',
+        scrub: 1,
+        animation: titleTl,
+        trigger: title,
+        start: 'top center',
+        endTrigger: index,
+        end: () => "+=" + indexHeight,
+        toggleActions: 'play none none reverse'
+      })
 
     });
   })
