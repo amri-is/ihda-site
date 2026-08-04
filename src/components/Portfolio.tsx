@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { useRef } from 'react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { SplitText } from 'gsap/SplitText'
 
 const POS_X = [-25, 0, 18]
 const POS_Y = [-18, 0, 20]
@@ -38,12 +39,12 @@ export default function Portfolio() {
       })
 
       ScrollTrigger.create({
-        markers: true,
+        // markers: true,  
         id: 'index',
         scrub: 1,
         animation: indexTl,
         trigger: index,
-        start: '+=50% center',
+        start: '+=50% 75%',
         end: () => "+=" + indexHeight,
         toggleActions: 'play none none reverse'
       })
@@ -58,22 +59,55 @@ export default function Portfolio() {
       // set title anim
       titleTl.from(title, {
         x: '5rem',
-        skewX: '-10',
+        // skewX: '-10',
         opacity: 0,
         ease: 'power2.out',
         duration: 5
       })
 
       ScrollTrigger.create({
-        markers: true,
+        // markers: true,
         id: 'title',
         scrub: 1,
         animation: titleTl,
         trigger: title,
-        start: 'top center',
+        start: 'top 75%',
         endTrigger: index,
         end: () => "+=" + indexHeight,
         toggleActions: 'play none none reverse'
+      })
+
+      // body anim logic
+      const body = item.querySelector<HTMLElement>('.portfolio-body')
+      if (!body) return
+
+      const bodyHeight = body.offsetHeight
+      const bodyTl = gsap.timeline()
+      const bodySplit = SplitText.create(body, {type: 'lines', mask: 'lines'})
+
+      // set body anim
+      bodyTl.from(bodySplit.lines, {
+        y: '20',
+        autoAlpha: 0,
+        // ease: 'power2.out',
+        // duration: 5,
+        stagger: {
+          amount: 0.5,
+          from: 'start',
+          // repeat: -1,
+          // yoyo: true,
+        },
+      })
+
+      ScrollTrigger.create({
+        markers: true,
+        id: 'body',
+        scrub: 1,
+        animation: bodyTl,
+        trigger: body,
+        start: 'top 75%',
+        end: () => "+=" + bodyHeight,
+        // toggleActions: 'play none none reverse'
       })
 
     });
