@@ -3,6 +3,8 @@ import gsap from "gsap"
 import Button from '@/components/ui/Button'
 import Bloom from '@/components/ui/Bloom'
 
+import { BRAND_ITEM } from "@/constants/brand";
+
 export default function Hero() {
   return (
     <section
@@ -13,8 +15,8 @@ export default function Hero() {
             <Bloom size="large" />
       </div>
       
-        <div className="hero-in text-xs uppercase tracking-widest text-rose">
-          Makeup & hijab styling studio
+        <div className="hero-in text-xs uppercase tracking-[.25em] text-rose">
+          {BRAND_ITEM.name}
         </div>
         <h1 className="hero-in font-serif font-normal text-5xl leading-none tracking-tight max-w-3xl">
           Beauty for

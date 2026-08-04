@@ -1,58 +1,56 @@
-import { Fragment } from 'react'
-
 import { PortfolioData } from '@/data/portfolio'
 
-import PhotoCard from '@/components/ui/PhotoCard'
-
-const POS_X = [-5,0,10]
-const POS_Y = [-10,0,15]
-const ROTATE = [20,5,-15]
-const Z_IDX = [1,3,2]
+const POS_X = [-25, 0, 18]
+const POS_Y = [-18, 0, 20]
+const ROTATE = [20, 5, -15]
 
 export default function Portfolio() {
 
   return (
     <section
       id="portfolio"
-      className="h-screen relative section pin-section"
+      className="section py-24 px-8 max-w-6xl mx-auto w-full relative overflow-hidden flex flex-col gap-[10vh]"
     >
-      <div className="h-full w-full flex flex-col justify-center items-center max-w-3xl mx-auto relative ">
-        <div className="portfolio-title w-full shrink-0 bg-green-200/20 backdrop-blur-sm mask-[linear-gradient(to_bottom,black_calc(100%-2rem),transparent_100%)]">
-          <div className="list">
-            {PortfolioData.map((item, idx) => (
-              <div className="p-1" key={idx}>{item.title}</div>
-            ))}
-          </div>
-        </div>
-        <div className="portfolio-img w-full flex-1 max-h-[80vh] bg-red-200/20 relative -z-10">
-          {PortfolioData.map((item, idx) => (
-            <div key={idx} className='img-stack flex items-center justify-center absolute h-full w-full' data-title={idx+1}>
-              {item.img.map((image, imageIdx) => (
-                <div
-                  key={`${item.title}-${image.src}`}
-                  className="absolute min-w-0 bg-white p-4 pb-16 rounded shadow-xl transition-transform duration-300"
-                  style={{
-                    transform: `
-                      translateX(${POS_X[imageIdx % POS_X.length]}rem)
-                      translateY(${POS_Y[imageIdx % POS_Y.length]}rem)
-                      rotate(${ROTATE[imageIdx % ROTATE.length]}deg)
-                    `,
-                  }}
-                >
-                  <img src={image.src} alt={image.alt} className='aspect-4/5 w-[clamp(20rem,22vw,20rem)] max-w-full object-cover rounded' />
-                </div>
-                ))}
-            </div>
-          ))}
-        </div>
-        <div className="portfolio-body w-full shrink-0 bg-violet-200/20 backdrop-blur-sm mask-[linear-gradient(to_top,black_calc(100%-2rem),transparent_100%)]">
-          <div className="body">
-            {PortfolioData.map((item, idx) => (
-              <div className="p-1 text-sm" key={idx}>{item.body}</div>
-            ))}
-          </div>
-        </div>
+      <div className="hidden max-w-3xl mx-auto text-center mb-16">
+        <div className="text-xs uppercase tracking-[.25em] text-rose">Portfolio</div>
+        <h2 className="mt-4 font-serif text-4xl leading-tight text-ink sm:text-5xl">
+          Signature looks for every chapter.
+        </h2>
       </div>
+
+      {PortfolioData.map((item, index) => (
+        <article
+          key={item.title}
+          className="portfolio-item relative h-screen flex flex-col justify-between"
+          style={{ backgroundColor: item.bgColor ?? '#F3E7E0' }}
+        >
+          <div className="portfolio-title relative z-20 text-center flex justify-center w-full ">
+            <div className="absolute text-xs uppercase text-rose/90 left-0">
+              {String(index + 1).padStart(2, '0')}
+            </div>
+            <h3 className="font-serif text-3xl text-ink">{item.title}</h3>
+          </div>
+
+          <div className="portfolio-body relative z-20 text-center">
+            <p className="text-base leading-relaxed text-inksoft">{item.body}</p>
+          </div>
+
+          <div className="portfolio-media absolute z-0 h-full w-full flex justify-center items-center" aria-label={item.title}>
+            {item.img.map((image, imageIndex) => (
+              <div
+                key={`${item.title}-${image.alt}`}
+                className="portfolio-card absolute overflow-hidden p-4 pb-12 bg-white shadow rounded"
+                style={{
+                  transform: `translate(${POS_X[imageIndex]}vh, ${POS_Y[imageIndex]}vh) rotate(${ROTATE[imageIndex]}deg)`,
+                  zIndex: 3 - imageIndex,
+                }}
+              >
+                <img src={image.src} alt={image.alt} className="aspect-ratio-4/5 w-70 object-cover" />
+              </div>
+            ))}
+          </div>
+        </article>
+      ))}
     </section>
   )
 }
