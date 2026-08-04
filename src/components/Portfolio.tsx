@@ -76,6 +76,7 @@ export default function Portfolio() {
           const bodyTl = gsap.timeline().from(self.lines, {
             y: 20,
             autoAlpha: 0,
+            ease: 'power2.out',
             stagger: {
               amount: 0.5,
               from: 'start'
@@ -90,6 +91,7 @@ export default function Portfolio() {
   }, { scope: sectionRef })
 
   return (
+    <>
     <section
       ref={sectionRef}
       id="portfolio"
@@ -134,6 +136,8 @@ export default function Portfolio() {
           </div>
         </article>
       ))}
+        
     </section>
+    </>
   )
 }
