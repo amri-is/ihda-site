@@ -121,44 +121,103 @@ function animateCards(cards: HTMLElement[], trigger: HTMLElement) {
   })
 }
 
+const EXPANDED_SCALE = 1.1
+const EXPANDED_Z = 50
+const TOGGLE_DURATION = 0.5
+const IDLE_COLLAPSE_MS = 2000
+
+let idleTimer: ReturnType<typeof setTimeout> | null = null
+
+function clearIdleTimer() {
+  if (!idleTimer) return
+  clearTimeout(idleTimer)
+  idleTimer = null
+}
+
+function collapseCard(card: HTMLElement) {
+  clearIdleTimer()
+  card.dataset.expanded = 'false'
+  gsap.to(card, {
+    scale: 1,
+    zIndex: card.dataset.baseZ,
+    duration: TOGGLE_DURATION,
+    ease: 'power2.out',
+    overwrite: 'auto',
+  })
+}
+
+function scheduleIdleCollapse(card: HTMLElement) {
+  clearIdleTimer()
+  idleTimer = setTimeout(() => collapseCard(card), IDLE_COLLAPSE_MS)
+}
+
+function expandCard(card: HTMLElement, allCards: HTMLElement[]) {
+  const currentlyExpanded = allCards.find((c) => c !== card && c.dataset.expanded === 'true')
+  if (currentlyExpanded) collapseCard(currentlyExpanded)
+
+  card.dataset.expanded = 'true'
+  gsap.to(card, {
+    scale: EXPANDED_SCALE,
+    zIndex: EXPANDED_Z,
+    duration: TOGGLE_DURATION,
+    ease: 'power2.out',
+    overwrite: 'auto',
+  })
+  scheduleIdleCollapse(card)
+}
+
+function toggleCard(card: HTMLElement, allCards: HTMLElement[]) {
+  if (card.dataset.expanded === 'true') {
+    collapseCard(card)
+    return
+  }
+  expandCard(card, allCards)
+}
+
+function setupCardExpansion(
+  allCards: HTMLElement[],
+  contextSafe: (fn: (e: Event) => void) => (e: Event) => void
+) {
+  const onClick = contextSafe((e: Event) => {
+    const card = e.currentTarget as HTMLElement
+    toggleCard(card, allCards)
+  })
+
+  const onScroll = () => {
+    const expanded = allCards.find((c) => c.dataset.expanded === 'true')
+    if (!expanded) return
+    collapseCard(expanded)
+  }
+
+  allCards.forEach((card) => {
+    card.dataset.baseZ = card.style.zIndex || '1'
+    card.dataset.expanded = 'false'
+    card.addEventListener('click', onClick)
+  })
+  window.addEventListener('scroll', onScroll, { passive: true })
+
+  return () => {
+    allCards.forEach((card) => card.removeEventListener('click', onClick))
+    window.removeEventListener('scroll', onScroll)
+    clearIdleTimer()
+  }
+}
+
 export default function Portfolio() {
   const sectionRef = useRef<HTMLElement | null>(null)
   const itemRefs = useRef<HTMLElement[]>([])
 
   useGSAP((_, contextSafe) => {
-    const elements: ItemEls[] = itemRefs.current.map((root) => {
-      const index = root.querySelector<HTMLElement>('.portfolio-index')
-      const title = root.querySelector<HTMLElement>('.portfolio-title')
-      const body = root.querySelector<HTMLElement>('.portfolio-body')
-      const cards = Array.from(root.querySelectorAll<HTMLElement>('.portfolio-card'))
-      if (!index || !title || !body || cards.length === 0) return null
-      return { root, index, title, body, cards }
-    }).filter((el): el is ItemEls => el !== null)
-
-    const allCards = elements.flatMap((el) => el.cards)
-    allCards.forEach((card) => { card.dataset.baseZ = card.style.zIndex || '1' })
-
-    const collapse = (card: HTMLElement) => {
-      card.dataset.expanded = 'false'
-      gsap.to(card, { scale: 1, zIndex: card.dataset.baseZ, duration: 0.4, ease: 'power2.out', overwrite: 'auto' })
-    }
-
-    const expand = (card: HTMLElement) => {
-      allCards.forEach((c) => { if (c !== card && c.dataset.expanded === 'true') collapse(c) })
-      card.dataset.expanded = 'true'
-      gsap.to(card, { scale: 1.1, zIndex: 50, duration: 0.4, ease: 'power2.out', overwrite: 'auto' })
-    }
-
-    // contextSafe wraps handler so any gsap calls inside are gc'd on context revert
-    const onCardClick = contextSafe!((e: Event) => {
-      const card = e.currentTarget as HTMLElement
-      card.dataset.expanded === 'true' ? collapse(card) : expand(card)
-    })
-
-    allCards.forEach((card) => {
-      card.dataset.expanded = 'false'
-      card.addEventListener('click', onCardClick)
-    })
+    const elements: ItemEls[] = itemRefs.current
+      .map((root) => {
+        const index = root.querySelector<HTMLElement>('.portfolio-index')
+        const title = root.querySelector<HTMLElement>('.portfolio-title')
+        const body = root.querySelector<HTMLElement>('.portfolio-body')
+        const cards = Array.from(root.querySelectorAll<HTMLElement>('.portfolio-card'))
+        if (!index || !title || !body || cards.length === 0) return null
+        return { root, index, title, body, cards }
+      })
+      .filter((el): el is ItemEls => el !== null)
 
     elements.forEach(({ root, index, title, body, cards }) => {
       animateIndex(index)
@@ -167,19 +226,15 @@ export default function Portfolio() {
       animateCards(cards, root)
     })
 
-    // MANUAL cleanup — useGSAP does NOT remove plain addEventListener
-    return () => {
-      allCards.forEach((card) => card.removeEventListener('click', onCardClick))
-    }
+    const allCards = elements.flatMap((el) => el.cards)
+    return setupCardExpansion(allCards, contextSafe!)
   }, { scope: sectionRef })
-
-  // ...rest unchanged
 
   return (
     <section
       ref={sectionRef}
       id="portfolio"
-      className="section px-4 max-w-3xl mx-auto w-full relative flex flex-col gap-[10vh]"
+      className="section px-8 max-w-3xl mx-auto w-full relative flex flex-col gap-[10vh]"
     >
       {PortfolioData.map((item, index) => (
         <article
