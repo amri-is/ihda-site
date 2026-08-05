@@ -91,7 +91,6 @@ function animateBody(body: HTMLElement) {
         },
       })
       scrubReveal(tl, body, {
-        markers: true,
         start: 'top 90%',
         end: '+=100'
       })
