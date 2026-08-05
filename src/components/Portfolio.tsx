@@ -110,6 +110,7 @@ function animateCards(cards: HTMLElement[], trigger: HTMLElement) {
 
   const tl = gsap.timeline().from(cards, {
     x: '-100vw',
+    y: '50vh',
     ease: 'power2.out',
     duration: 0.8,
 
