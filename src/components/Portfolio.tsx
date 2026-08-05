@@ -11,6 +11,10 @@ const ROTATE = [20, 5, -15]
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
+ScrollTrigger.defaults({
+  start: 'top 75%'
+})
+
 /**
  * Create a scrubbed ScrollTrigger for a timeline reveal.
  * @param tl GSAP timeline to animate
@@ -26,7 +30,6 @@ const scrubReveal = (
   animation: tl,
   trigger,
   scrub: 1,
-  start: 'top 75%',
   ...opts,
 })
 
@@ -63,10 +66,7 @@ function animateTitle(title: HTMLElement, trigger: HTMLElement) {
     x: '100%',
     opacity: 0,
     ease: 'power2.out',
-    stagger: {
-      amount: 0.25,
-      from: 'start'
-    },
+    stagger: 0.05,
   })
   scrubReveal(tl, title, {
     endTrigger: trigger,
@@ -84,13 +84,16 @@ function animateBody(body: HTMLElement) {
       const tl = gsap.timeline().from(self.lines, {
         y: 20,
         autoAlpha: 0,
+        ease: 'power2.out',
         stagger: {
-          amount: 0.5,
+          amount: 0.01,
           from: 'start'
         },
       })
       scrubReveal(tl, body, {
-        end: () => '+=' + body.offsetHeight
+        markers: true,
+        start: 'top 90%',
+        end: '+=100'
       })
     },
   })
@@ -98,23 +101,16 @@ function animateBody(body: HTMLElement) {
 
 function animateCards(cards: HTMLElement[], trigger: HTMLElement) {
   gsap.set(cards, {
-    // autoAlpha: 0,
     x: (i) => `${POS_X[i] ?? 0}vw`,
     y: (i) => `${POS_Y[i] ?? 0}vh`,
     rotation: (i) => ROTATE[i] ?? 0,
   })
 
   const tl = gsap.timeline().from(cards, {
-    // autoAlpha: 1,
-    // y: '-100vw',
-    // rotation: 0,
     x: '-100vw',
     ease: 'power2.out',
     duration: 0.8,
-    stagger: {
-      each: 0.2,
-      from: 'random'
-    },
+
   })
 
   scrubReveal(tl, trigger, {
@@ -149,13 +145,13 @@ export default function Portfolio() {
     <section
       ref={sectionRef}
       id="portfolio"
-      className="section py-16 px-8 max-w-6xl mx-auto w-full relative overflow-hidden flex flex-col gap-[10vh]"
+      className="section px-4 max-w-3xl mx-auto w-full relative overflow-hidden flex flex-col gap-[10vh]"
     >
       {PortfolioData.map((item, index) => (
         <article
           key={item.title}
           ref={(el) => { if (el) itemRefs.current[index] = el }}
-          className="relative h-[80vh] flex flex-col justify-between"
+          className="relative h-[90vh] flex flex-col justify-between"
           style={{ backgroundColor: item.bgColor ?? '#F3E7E0' }}
         >
           <div className="absolute inset-0 overflow-hidden mix-blend-darken">
