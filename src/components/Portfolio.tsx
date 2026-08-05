@@ -11,6 +11,13 @@ const ROTATE = [20, 5, -15]
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
+/**
+ * Create a scrubbed ScrollTrigger for a timeline reveal.
+ * @param tl GSAP timeline to animate
+ * @param trigger element or selector used as trigger
+ * @param opts optional ScrollTrigger settings
+ * @returns created ScrollTrigger instance
+ */
 const scrubReveal = (
   tl: gsap.core.Timeline,
   trigger: Element | string,
@@ -22,6 +29,7 @@ const scrubReveal = (
   start: 'top 75%',
   ...opts,
 })
+
 type ItemEls = {
   root: HTMLElement;
   index: HTMLElement;
@@ -30,28 +38,59 @@ type ItemEls = {
 }
 
   function animateIndex(index: HTMLElement) {
-    gsap.set(index, { y: '-2rem', x: '-1.5rem' })
-    const tl = gsap.timeline().from(index, { y: '-50%', opacity: 0, ease: 'power2.out' })
-    scrubReveal(tl, index, { start: '+=50% 75%', end: () => '+=' + index.offsetHeight })
+    gsap.set(index, {
+      y: '-2rem',
+      x: '-1.5rem'
+    })
+    const tl = gsap.timeline().from(index, {
+      y: '-50%',
+      opacity: 0,
+      ease: 'power2.out'
+    })
+    scrubReveal(tl, index, {
+      start: '+=50% 75%',
+      end: () => '+=' + index.offsetHeight
+    })
   }
 
   function animateTitle(title: HTMLElement, index: HTMLElement) {
-    const split = SplitText.create(title, { type: 'words', mask: 'words' })
-    const tl = gsap.timeline().from(split.words, {
-      x: '100%', opacity: 0, ease: 'power2.out',
-      stagger: { amount: 0.5, from: 'start' },
+    const split = SplitText.create(title, {
+      type: 'words',
+      mask: 'words'
     })
-    scrubReveal(tl, title, { endTrigger: index, end: () => '+=' + index.offsetHeight })
+    const tl = gsap.timeline().from(split.words, {
+      x: '100%',
+      opacity: 0,
+      ease: 'power2.out',
+      stagger: {
+        amount: 0.5,
+        from: 'start'
+      },
+    })
+    scrubReveal(tl, title, {
+      endTrigger: index,
+      end: () => '+=' + index.offsetHeight
+    })
   }
 
   function animateBody(body: HTMLElement) {
     SplitText.create(body, {
-      type: 'words, lines', mask: 'lines', linesClass: 'line', autoSplit: true,
+      type: 'words, lines',
+      mask: 'lines',
+      linesClass: 'line',
+      autoSplit: true,
       onSplit: (self) => {
         const tl = gsap.timeline().from(self.lines, {
-          y: 20, autoAlpha: 0, stagger: { amount: 0.5, from: 'start' },
+          y: 20,
+          autoAlpha: 0,
+          stagger: {
+            amount: 0.5,
+            from: 'start'
+          },
         })
-        scrubReveal(tl, body, { end: () => '+=' + body.offsetHeight })
+        scrubReveal(tl, body, {
+          end: () => '+=' + body.offsetHeight
+        })
       },
     })
   }
