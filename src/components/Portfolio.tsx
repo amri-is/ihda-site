@@ -5,8 +5,8 @@ import { useRef } from 'react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 
-const POS_X = [-25, 0, 18]
-const POS_Y = [-16, 0, 20]
+const POS_X = [-28, 0, 25]
+const POS_Y = [-18, 0, 20]
 const ROTATE = [20, 5, -15]
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
@@ -125,7 +125,7 @@ export default function Portfolio() {
   const sectionRef = useRef<HTMLElement | null>(null)
   const itemRefs = useRef<HTMLElement[]>([])
 
-  useGSAP(() => {
+  useGSAP((_, contextSafe) => {
     const elements: ItemEls[] = itemRefs.current.map((root) => {
       const index = root.querySelector<HTMLElement>('.portfolio-index')
       const title = root.querySelector<HTMLElement>('.portfolio-title')
@@ -135,19 +135,51 @@ export default function Portfolio() {
       return { root, index, title, body, cards }
     }).filter((el): el is ItemEls => el !== null)
 
+    const allCards = elements.flatMap((el) => el.cards)
+    allCards.forEach((card) => { card.dataset.baseZ = card.style.zIndex || '1' })
+
+    const collapse = (card: HTMLElement) => {
+      card.dataset.expanded = 'false'
+      gsap.to(card, { scale: 1, zIndex: card.dataset.baseZ, duration: 0.4, ease: 'power2.out', overwrite: 'auto' })
+    }
+
+    const expand = (card: HTMLElement) => {
+      allCards.forEach((c) => { if (c !== card && c.dataset.expanded === 'true') collapse(c) })
+      card.dataset.expanded = 'true'
+      gsap.to(card, { scale: 1.1, zIndex: 50, duration: 0.4, ease: 'power2.out', overwrite: 'auto' })
+    }
+
+    // contextSafe wraps handler so any gsap calls inside are gc'd on context revert
+    const onCardClick = contextSafe!((e: Event) => {
+      const card = e.currentTarget as HTMLElement
+      card.dataset.expanded === 'true' ? collapse(card) : expand(card)
+    })
+
+    allCards.forEach((card) => {
+      card.dataset.expanded = 'false'
+      card.addEventListener('click', onCardClick)
+    })
+
     elements.forEach(({ root, index, title, body, cards }) => {
       animateIndex(index)
       animateTitle(title, index)
       animateBody(body, root)
       animateCards(cards, root)
     })
+
+    // MANUAL cleanup — useGSAP does NOT remove plain addEventListener
+    return () => {
+      allCards.forEach((card) => card.removeEventListener('click', onCardClick))
+    }
   }, { scope: sectionRef })
+
+  // ...rest unchanged
 
   return (
     <section
       ref={sectionRef}
       id="portfolio"
-      className="section px-4 max-w-3xl mx-auto w-full relative overflow-hidden flex flex-col gap-[10vh]"
+      className="section px-4 max-w-3xl mx-auto w-full relative flex flex-col gap-[10vh]"
     >
       {PortfolioData.map((item, index) => (
         <article
