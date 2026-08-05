@@ -74,7 +74,7 @@ function animateTitle(title: HTMLElement, trigger: HTMLElement) {
   })
 }
 
-function animateBody(body: HTMLElement) {
+function animateBody(body: HTMLElement, trigger: HTMLElement) {
   SplitText.create(body, {
     type: 'words, lines',
     mask: 'lines',
@@ -91,8 +91,11 @@ function animateBody(body: HTMLElement) {
         },
       })
       scrubReveal(tl, body, {
-        start: 'top 90%',
-        end: '+=100'
+        trigger,
+        // markers: true,
+        start: '+=70% 70%',
+        endTrigger: trigger,
+        end: 'bottom 70%'
       })
     },
   })
@@ -135,7 +138,7 @@ export default function Portfolio() {
     elements.forEach(({ root, index, title, body, cards }) => {
       animateIndex(index)
       animateTitle(title, index)
-      animateBody(body)
+      animateBody(body, root)
       animateCards(cards, root)
     })
   }, { scope: sectionRef })
