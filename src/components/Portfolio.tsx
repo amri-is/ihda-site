@@ -6,7 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 
 const POS_X = [-25, 0, 18]
-const POS_Y = [-18, 0, 20]
+const POS_Y = [-16, 0, 20]
 const ROTATE = [20, 5, -15]
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
@@ -34,66 +34,94 @@ type ItemEls = {
   root: HTMLElement;
   index: HTMLElement;
   title: HTMLElement;
-  body: HTMLElement
+  body: HTMLElement;
+  cards: HTMLElement[];
 }
 
-  function animateIndex(index: HTMLElement) {
-    gsap.set(index, {
-      y: '-2rem',
-      x: '-1.5rem'
-    })
-    const tl = gsap.timeline().from(index, {
-      y: '-50%',
-      opacity: 0,
-      ease: 'power2.out'
-    })
-    scrubReveal(tl, index, {
-      start: '+=50% 75%',
-      end: () => '+=' + index.offsetHeight
-    })
-  }
+function animateIndex(index: HTMLElement) {
+  gsap.set(index, {
+    y: '-2rem',
+    x: '-1.5rem'
+  })
+  const tl = gsap.timeline().from(index, {
+    y: '-50%',
+    opacity: 0,
+    ease: 'power2.out'
+  })
+  scrubReveal(tl, index, {
+    start: '+=50% 75%',
+    end: () => '+=' + index.offsetHeight
+  })
+}
 
-  function animateTitle(title: HTMLElement, index: HTMLElement) {
-    const split = SplitText.create(title, {
-      type: 'words',
-      mask: 'words'
-    })
-    const tl = gsap.timeline().from(split.words, {
-      x: '100%',
-      opacity: 0,
-      ease: 'power2.out',
-      stagger: {
-        amount: 0.5,
-        from: 'start'
-      },
-    })
-    scrubReveal(tl, title, {
-      endTrigger: index,
-      end: () => '+=' + index.offsetHeight
-    })
-  }
+function animateTitle(title: HTMLElement, trigger: HTMLElement) {
+  const split = SplitText.create(title, {
+    type: 'words',
+    mask: 'words'
+  })
+  const tl = gsap.timeline().from(split.words, {
+    x: '100%',
+    opacity: 0,
+    ease: 'power2.out',
+    stagger: {
+      amount: 0.25,
+      from: 'start'
+    },
+  })
+  scrubReveal(tl, title, {
+    endTrigger: trigger,
+    end: () => '+=' + trigger.offsetHeight
+  })
+}
 
-  function animateBody(body: HTMLElement) {
-    SplitText.create(body, {
-      type: 'words, lines',
-      mask: 'lines',
-      linesClass: 'line',
-      autoSplit: true,
-      onSplit: (self) => {
-        const tl = gsap.timeline().from(self.lines, {
-          y: 20,
-          autoAlpha: 0,
-          stagger: {
-            amount: 0.5,
-            from: 'start'
-          },
-        })
-        scrubReveal(tl, body, {
-          end: () => '+=' + body.offsetHeight
-        })
-      },
-    })
-  }
+function animateBody(body: HTMLElement) {
+  SplitText.create(body, {
+    type: 'words, lines',
+    mask: 'lines',
+    linesClass: 'line',
+    autoSplit: true,
+    onSplit: (self) => {
+      const tl = gsap.timeline().from(self.lines, {
+        y: 20,
+        autoAlpha: 0,
+        stagger: {
+          amount: 0.5,
+          from: 'start'
+        },
+      })
+      scrubReveal(tl, body, {
+        end: () => '+=' + body.offsetHeight
+      })
+    },
+  })
+}
+
+function animateCards(cards: HTMLElement[], trigger: HTMLElement) {
+  gsap.set(cards, {
+    // autoAlpha: 0,
+    x: (i) => `${POS_X[i] ?? 0}vw`,
+    y: (i) => `${POS_Y[i] ?? 0}vh`,
+    rotation: (i) => ROTATE[i] ?? 0,
+  })
+
+  const tl = gsap.timeline().from(cards, {
+    // autoAlpha: 1,
+    // y: '-100vw',
+    // rotation: 0,
+    x: '-100vw',
+    ease: 'power2.out',
+    duration: 0.8,
+    stagger: {
+      each: 0.2,
+      from: 'random'
+    },
+  })
+
+  scrubReveal(tl, trigger, {
+    start: 'top 80%',
+    end: () => '+=' + trigger.offsetHeight,
+  })
+}
 
 export default function Portfolio() {
   const sectionRef = useRef<HTMLElement | null>(null)
@@ -104,14 +132,16 @@ export default function Portfolio() {
       const index = root.querySelector<HTMLElement>('.portfolio-index')
       const title = root.querySelector<HTMLElement>('.portfolio-title')
       const body = root.querySelector<HTMLElement>('.portfolio-body')
-      if (!index || !title || !body) return null
-      return { root, index, title, body }
+      const cards = Array.from(root.querySelectorAll<HTMLElement>('.portfolio-card'))
+      if (!index || !title || !body || cards.length === 0) return null
+      return { root, index, title, body, cards }
     }).filter((el): el is ItemEls => el !== null)
 
-    elements.forEach(({ index, title, body }) => {
+    elements.forEach(({ root, index, title, body, cards }) => {
       animateIndex(index)
       animateTitle(title, index)
       animateBody(body)
+      animateCards(cards, root)
     })
   }, { scope: sectionRef })
 
@@ -144,9 +174,9 @@ export default function Portfolio() {
               <div
                 key={`${item.title}-${image.alt}`}
                 className="portfolio-card absolute overflow-hidden p-4 pb-12 bg-white shadow rounded"
-                style={{ zIndex: 3 - imageIndex }}
+                style={{ zIndex: imageIndex + 1 }}
               >
-                <img src={image.src} alt={image.alt} className="aspect-ratio-4/5 w-70 object-cover" />
+                <img src={image.src} alt={image.alt} className="aspect-ratio-4/5 w-50 object-cover" />
               </div>
             ))}
           </div>
