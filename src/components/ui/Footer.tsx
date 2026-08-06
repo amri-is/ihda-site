@@ -20,7 +20,7 @@ export default function Footer() {
       </div>
 
       <div className="text-[.7rem] text-inksoft text-left tracking-wider font-light w-full border-t py-1 border-line col-span-2">
-        All rights reserved. &copy; ${new Date().getFullYear()}
+        All rights reserved. &copy; {new Date().getFullYear()}
       </div>
     </footer>
   )
