@@ -5,14 +5,15 @@ import { useRef } from 'react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 
-const POS_X = [-28, 0, 25]
-const POS_Y = [-1, -5, -2]
-const ROTATE = [20, 5, -15]
+const POS_X = [-20, 0, 20]
+const POS_Y = [0, -5, 0]
+const ROTATE = [-18, 0, 18]
+const EASE = 'power3.out'
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
 ScrollTrigger.defaults({
-  start: 'top 85%'
+  start: 'top 75%'
 })
 
 /**
@@ -41,7 +42,7 @@ type ItemEls = {
   cards: HTMLElement[];
 }
 
-function animateIndex(index: HTMLElement) {
+function animateIndex(index: HTMLElement, root: HTMLElement) {
   gsap.set(index, {
     y: '-2rem',
     x: '-1.5rem'
@@ -49,15 +50,15 @@ function animateIndex(index: HTMLElement) {
   const tl = gsap.timeline().from(index, {
     y: '-50%',
     opacity: 0,
-    ease: 'power2.out'
+    ease: EASE
   })
-  scrubReveal(tl, index, {
-    start: '+=50% 75%',
-    end: () => '+=' + index.offsetHeight
+  scrubReveal(tl, root, {
+    end: '+=100',
+    // markers: true
   })
 }
 
-function animateTitle(title: HTMLElement, trigger: HTMLElement) {
+function animateTitle(title: HTMLElement, root: HTMLElement) {
   const split = SplitText.create(title, {
     type: 'words',
     mask: 'words'
@@ -65,16 +66,16 @@ function animateTitle(title: HTMLElement, trigger: HTMLElement) {
   const tl = gsap.timeline().from(split.words, {
     x: '100%',
     opacity: 0,
-    ease: 'power2.out',
+    ease: EASE,
     stagger: 0.05,
   })
-  scrubReveal(tl, title, {
-    endTrigger: trigger,
-    end: () => '+=' + trigger.offsetHeight
+  scrubReveal(tl, root, {
+    end: '+=100',
+    // markers: true
   })
 }
 
-function animateBody(body: HTMLElement, trigger: HTMLElement) {
+function animateBody(body: HTMLElement, root: HTMLElement) {
   SplitText.create(body, {
     type: 'words, lines',
     mask: 'lines',
@@ -84,24 +85,21 @@ function animateBody(body: HTMLElement, trigger: HTMLElement) {
       const tl = gsap.timeline().from(self.lines, {
         y: 20,
         autoAlpha: 0,
-        ease: 'power2.out',
+        ease: EASE,
         stagger: {
-          amount: 0.01,
+          amount: 0.2,
           from: 'start'
         },
       })
-      scrubReveal(tl, body, {
-        trigger,
-        // markers: true,
-        start: '+=85% 85%',
-        endTrigger: trigger,
-        end: 'bottom 85%'
+      scrubReveal(tl, root, {
+        start: '+=80% 80%',
+        end: 'bottom 80%'
       })
     },
   })
 }
 
-function animateCards(cards: HTMLElement[], trigger: HTMLElement) {
+function animateCards(cards: HTMLElement[], root: HTMLElement) {
   gsap.set(cards, {
     x: (i) => `${POS_X[i] ?? 0}vw`,
     y: (i) => `${POS_Y[i] ?? 0}vh`,
@@ -109,20 +107,22 @@ function animateCards(cards: HTMLElement[], trigger: HTMLElement) {
   })
 
   const tl = gsap.timeline().from(cards, {
-    x: '-100vw',
+    x: 0,
     y: '50vh',
-    ease: 'power2.out',
-    duration: 0.8,
+    rotation: 0,
+    ease: EASE,
+    // duration: 0.8,
 
   })
 
-  scrubReveal(tl, trigger, {
-    start: 'top 80%',
-    end: () => '+=' + trigger.offsetHeight,
+  scrubReveal(tl, root, {
+    start: '+=20% 80%',
+    end: '+=20%',
+    // markers: true
   })
 }
 
-const EXPANDED_SCALE = 1.1
+const EXPANDED_SCALE = 1.05
 const EXPANDED_Z = 50
 const TOGGLE_DURATION = 0.5
 const IDLE_COLLAPSE_MS = 2000
@@ -142,7 +142,7 @@ function collapseCard(card: HTMLElement) {
     scale: 1,
     zIndex: card.dataset.baseZ,
     duration: TOGGLE_DURATION,
-    ease: 'power2.out',
+    ease: EASE,
     overwrite: 'auto',
   })
 }
@@ -161,7 +161,7 @@ function expandCard(card: HTMLElement, allCards: HTMLElement[]) {
     scale: EXPANDED_SCALE,
     zIndex: EXPANDED_Z,
     duration: TOGGLE_DURATION,
-    ease: 'power2.out',
+    ease: EASE,
     overwrite: 'auto',
   })
   scheduleIdleCollapse(card)
@@ -221,8 +221,8 @@ function animateAll(
       .filter((el): el is ItemEls => el !== null)
 
     elements.forEach(({ root, index, title, body, cards }) => {
-      animateIndex(index)
-      animateTitle(title, index)
+      animateIndex(index, root)
+      animateTitle(title, root)
       animateBody(body, root)
       animateCards(cards, root)
     })
@@ -266,10 +266,10 @@ export default function Portfolio() {
             {item.img.map((image, imageIndex) => (
               <div
                 key={`${item.title}-${image.alt}`}
-                className="portfolio-card absolute overflow-hidden p-4 pb-12 bg-white shadow rounded"
+                className="portfolio-card absolute overflow-hidden p-2 pb-6 bg-white shadow rounded"
                 style={{ zIndex: imageIndex + 1 }}
               >
-                <img src={image.src} alt={image.alt} className="aspect-ratio-4/5 w-50 object-cover" />
+                <img src={image.src} alt={image.alt} className="aspect-9/11 w-50 object-cover object-top" />
               </div>
             ))}
           </div>
