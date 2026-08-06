@@ -204,10 +204,10 @@ function setupCardExpansion(
   }
 }
 
-export default function Portfolio() {
-  const sectionRef = useRef<HTMLElement | null>(null)
-  const itemRefs = useRef<HTMLElement[]>([])
-
+function animateAll(
+  sectionRef: React.RefObject<HTMLElement | null>,
+  itemRefs: React.RefObject<HTMLElement[]>
+) {
   useGSAP((_, contextSafe) => {
     const elements: ItemEls[] = itemRefs.current
       .map((root) => {
@@ -230,6 +230,13 @@ export default function Portfolio() {
     const allCards = elements.flatMap((el) => el.cards)
     return setupCardExpansion(allCards, contextSafe!)
   }, { scope: sectionRef })
+}
+
+export default function Portfolio() {
+  const sectionRef = useRef<HTMLElement | null>(null)
+  const itemRefs = useRef<HTMLElement[]>([])
+
+  animateAll(sectionRef, itemRefs)
 
   return (
     <section
