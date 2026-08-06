@@ -6,13 +6,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 
 const POS_X = [-28, 0, 25]
-const POS_Y = [-18, 0, 20]
+const POS_Y = [-1, -5, -2]
 const ROTATE = [20, 5, -15]
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
 ScrollTrigger.defaults({
-  start: 'top 75%'
+  start: 'top 85%'
 })
 
 /**
@@ -93,9 +93,9 @@ function animateBody(body: HTMLElement, trigger: HTMLElement) {
       scrubReveal(tl, body, {
         trigger,
         // markers: true,
-        start: '+=70% 70%',
+        start: '+=85% 85%',
         endTrigger: trigger,
-        end: 'bottom 70%'
+        end: 'bottom 85%'
       })
     },
   })
@@ -235,25 +235,25 @@ export default function Portfolio() {
     <section
       ref={sectionRef}
       id="portfolio"
-      className="section px-8 max-w-3xl mx-auto w-full relative flex flex-col gap-[10vh]"
+      className="section px-8 max-w-3xl mx-auto w-full relative flex flex-col gap-[20vh]"
     >
       {PortfolioData.map((item, index) => (
         <article
           key={item.title}
           ref={(el) => { if (el) itemRefs.current[index] = el }}
-          className="relative h-[90vh] flex flex-col justify-between"
+          className="relative h-[70vh] flex flex-col justify-between"
           style={{ backgroundColor: item.bgColor ?? '#F3E7E0' }}
-        >
+        >  
           <div className="absolute inset-0 overflow-hidden mix-blend-darken">
-            <div className="portfolio-index text-[10rem]/[10rem] uppercase text-inksoft/5 font-mono font-black left-0 -tracking-widest">
+            <div className="portfolio-index text-[10rem]/[10rem] uppercase text-inksoft/5 font-curvy font-black left-0 ">
               {String(index + 1).padStart(2, '0')}
             </div>
           </div>
-          <div className="portfolio-title relative z-20 text-center flex justify-center w-full overflow-hidden">
-            <h3 className="font-serif text-3xl text-ink p-4">{item.title}</h3>
+          <div className=" relative z-20 text-center flex justify-center w-full overflow-hidden">
+            <h3 className="portfolio-title font-serif text-3xl text-ink p-4">{item.title}</h3>
           </div>
-          <div className="relative z-20 text-center overflow-hidden">
-            <p className="portfolio-body text-base leading-relaxed text-inksoft">{item.body}</p>
+          <div className="relative z-20  overflow-hidden p-8">
+            <p className="portfolio-body text-base/5 text-justify text-inksoft">{item.body}</p>
           </div>
           <div className="portfolio-media absolute z-0 h-full w-full flex justify-center items-center" aria-label={item.title}>
             {item.img.map((image, imageIndex) => (
