@@ -120,7 +120,7 @@ export default function Hero() {
   const titleRef = useRef<HTMLDivElement | null>(null)
   const bodyRef = useRef<HTMLDivElement | null>(null)
   const buttonRef = useRef<HTMLAnchorElement | null>(null)
-  const btnTextRef = useRef<HTMLAnchorElement | null>(null)
+  const btnTextRef = useRef<HTMLSpanElement | null>(null)
 
   animateBloom(bloomRef)
   animateEyebrow(eyebrowRef)
