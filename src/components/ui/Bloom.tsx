@@ -26,7 +26,7 @@ export default function Bloom({
 
   return (
     <svg
-      viewBox="0 0 50 50"
+      viewBox="0 0 15.875 15.875"
       strokeLinecap="round"
       strokeLinejoin="round"
       className={cn(dimensions, flip && "-scale-x-100")}
@@ -37,16 +37,17 @@ export default function Bloom({
           gradientUnits="userSpaceOnUse"
           cx="0"
           cy="0"
-          r="50"
+          r="15.875"
         >
-          <stop offset="0%" stopColor="#93394E" />
-          <stop offset="70%" stopColor="#6E2B3B" />
-          <stop offset="100%" stopColor="#000000" />
+          <stop offset="0%" stopColor="#A8425A" />
+          <stop offset="100%" stopColor="#7C2E42" />
         </radialGradient>
 
-        <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="50" height="50">
-          <rect x="0" y="0" width="50" height="50" fill="black" />
-          <g transform="scale(3)" fill="none" stroke="white" strokeWidth="0.25" strokeLinecap="round" strokeLinejoin="round">
+        <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="15.875" height="15.875">
+          <rect x="0" y="0" width="15.875" height="15.875" fill="black" />
+          <g transform="" fill="none" stroke="white" strokeWidth="0.25" strokeLinecap="round" strokeLinejoin="round">
+            <g id="layer1" transform="translate(0.30393594,0.4668249)">
+
               <path id="left-stalk" d="m 2.4499861,13.681626 c -0.122458,0.367374 -0.041645,0.74121 0.3937616,0.945306" />
               <path id="left-petal-1" d="M 2.4499861,13.681626 C 0.64983805,12.621426 0.09209525,11.134512 0.76687459,11.088119 1.4416539,11.041726 1.7736236,12.755191 2.4396568,13.573409" />
               <path id="left-petal-2" d="M 2.4499861,13.681626 C 1.7655668,9.9273492 2.7625582,8.8830453 3.4713536,9.0951748 4.180149,9.3073043 3.0107747,11.351827 2.5262477,13.626326" />
@@ -58,6 +59,10 @@ export default function Bloom({
               <path id="left-back-petal-3" d="m 5.6810586,10.736626 c 0.2595595,-0.326652 0.7919951,-0.258663 0.2438746,0.468233" />
               <path id="left-back-petal-4" d="m 5.6030823,12.612895 c 0.2254353,-0.05535 0.4077831,0.261463 -0.1978443,0.493341" />
 
+            </g>
+
+            <g id="layer6" transform="translate(-0.34272399,0.44406425)">
+
               <path id="right-stalk" d="M 12.273017,7.2114176 C 12.572358,8.4632108 12.68121,10.817126 11.03483,11.973675" />
               <path id="right-petal-5" d="M 12.273017,7.2114176 C 14.698938,6.3628652 16.244528,3.4379185 14.961732,3.424374 13.678937,3.4108294 13.349849,5.9389957 12.284513,7.0812728" />
               <path id="right-petal-4" d="M 12.273017,7.2114176 C 13.304277,3.0020724 12.359887,0.12474828 10.94783,0.36292301 9.5357734,0.60109774 11.39223,3.864955 12.116142,6.7012349" />
@@ -68,13 +73,15 @@ export default function Bloom({
               <path id="right-back-petal-3" d="M 9.5417455,2.3323041 C 9.4247931,2.1627613 9.3057518,1.5874645 9.6974149,1.449101 10.089078,1.3107375 10.582697,2.073261 10.657916,2.3236341" />
               <path id="right-back-petal-2" d="M 6.9272726,3.3553976 C 6.7252271,3.1581628 6.4846968,2.9152273 6.6001515,2.6939394 c 0.1154546,-0.221288 0.627784,0.055322 0.7095642,0.1900188" />
               <path id="right-back-petal-1" d="M 7.8337704,6.4390446 C 7.4309844,6.3181546 6.9808435,5.9888389 7.0891825,5.7664075 7.1975215,5.5439761 7.6452322,5.7130538 7.7758893,5.7824212" />
+
+            </g>
           </g>
         </mask>
       </defs>
 
       <rect
-        width="50"
-        height="50"
+        width="15.875"
+        height="15.875"
         fill={`url(#${gradientId})`}
         mask={`url(#${maskId})`}
       />
