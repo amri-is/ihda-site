@@ -117,7 +117,7 @@ function animateCards(cards: HTMLElement[], root: HTMLElement) {
 
   scrubReveal(tl, root, {
     start: '+=20% 80%',
-    end: '+=20%',
+    end: '+=48%',
     // markers: true
   })
 }
@@ -204,7 +204,7 @@ function setupCardExpansion(
   }
 }
 
-function animateAll(
+function useAnimateAll(
   sectionRef: React.RefObject<HTMLElement | null>,
   itemRefs: React.RefObject<HTMLElement[]>
 ) {
@@ -236,7 +236,7 @@ export default function Portfolio() {
   const sectionRef = useRef<HTMLElement | null>(null)
   const itemRefs = useRef<HTMLElement[]>([])
 
-  animateAll(sectionRef, itemRefs)
+  useAnimateAll(sectionRef, itemRefs)
 
   return (
     <section
