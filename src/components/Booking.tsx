@@ -26,9 +26,9 @@ export default function Booking() {
           <h2 className="booking-in font-serif font-normal text-4xl leading-tight">
             Let's create your
             <br />
-            <em className="text-rosedeep text-4xl">
+            <span className="text-rosedeep text-[2.8rem] italic font-curvy font-black">
               perfect&nbsp;
-            </em>
+            </span>
             look.
           </h2>
 
