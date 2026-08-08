@@ -20,12 +20,9 @@ export default function Hero() {
     const tl = gsap.timeline()
 
     // Bloom drifts in behind the copy.
-    tl.to(bloomRef.current, {
-      translateX: '20vh',
-      scale: 1,
-      ease: 'expo.out',
-      opacity: 0.1,
-      z: -10,
+    tl.from(bloomRef.current, {
+      xPercent: -100,
+      ease: EASE,
       duration: DURATION,
     }, 0)
 
@@ -71,7 +68,7 @@ export default function Hero() {
         opacity: 0,
         duration: DURATION,
         ease: EASE,
-      }, DURATION - 1)
+      }, DURATION / 2)
       tl.from(btnSplit.words, {
         y: '-5vh',
         opacity: 0,
@@ -89,7 +86,7 @@ export default function Hero() {
       id="hero"
       className="h-screen flex flex-col justify-center px-8 max-w-3xl mx-auto w-full relative"
     >
-      <div className="-z-10 absolute w-full right-0 flex items-center justify-center">
+      <div className="-z-10 absolute w-full right-0 flex items-center justify-end opacity-10">
         <div ref={bloomRef}>
           <Bloom size="large" />
         </div>
