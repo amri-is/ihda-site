@@ -26,8 +26,9 @@ export function splitFrom(
 
 // ---- Scroll-scrubbed reveal (Portfolio) ---------------------------------
 
-/** Wrap a timeline in a scrubbed ScrollTrigger tied to `trigger`. */
-export function scrubReveal(
+/** Wrap a timeline in a ScrollTrigger that plays once on enter
+ *  (and reverses if scrolled back up past start). */
+export function enterReveal(
   tl: gsap.core.Timeline,
   trigger: Element | string,
   opts: Partial<ScrollTrigger.Vars> = {}
@@ -35,15 +36,15 @@ export function scrubReveal(
   return ScrollTrigger.create({
     animation: tl,
     trigger,
-    scrub: 1,
     start: 'top 75%',
+    toggleActions: 'play none none reverse',
     ...opts,
   })
 }
 
 /**
  * Common pattern across animateIndex/animateTitle/animateCards:
- * optionally set starting props, build a `from` timeline, scrub it
+ * optionally set starting props, build a `from` timeline, trigger it
  * against `root`. Collapses 3 near-identical functions into 1 call.
  */
 export function revealOnScroll(
@@ -57,5 +58,5 @@ export function revealOnScroll(
 ) {
   if (opts.setVars) gsap.set(el, opts.setVars)
   const tl = gsap.timeline().from(el, fromVars)
-  return scrubReveal(tl, root, opts.scrollOpts)
+  return enterReveal(tl, root, opts.scrollOpts)
 }

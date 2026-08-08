@@ -1,81 +1,47 @@
 import { PortfolioData } from '@/data/portfolio'
-import gsap from 'gsap'
-import { useGSAP } from '@gsap/react'
 import { useRef } from 'react'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { SplitText } from 'gsap/SplitText'
+import { gsap, useGSAP, ScrollTrigger, SplitText } from '@/lib/gsap'
+import { revealOnScroll, enterReveal, EASE_SOFT } from '@/lib/animation'
 
 const POS_X = [-20, 0, 20]
 const POS_Y = [0, -5, 0]
 const ROTATE = [-18, 0, 18]
-const EASE = 'power3.out'
 
-gsap.registerPlugin(ScrollTrigger, SplitText)
+ScrollTrigger.defaults({ start: 'top 75%' })
 
-ScrollTrigger.defaults({
-  start: 'top 75%'
-})
-
-/**
- * Create a scrubbed ScrollTrigger for a timeline reveal.
- * @param tl GSAP timeline to animate
- * @param trigger element or selector used as trigger
- * @param opts optional ScrollTrigger settings
- * @returns created ScrollTrigger instance
- */
-const scrubReveal = (
-  tl: gsap.core.Timeline,
-  trigger: Element | string,
-  opts: Partial<ScrollTrigger.Vars> = {}
-) => ScrollTrigger.create({
-  animation: tl,
-  trigger,
-  scrub: 1,
-  ...opts,
-})
+const EXPANDED_SCALE = 1.05
+const EXPANDED_Z = 50
+const TOGGLE_DURATION = 0.5
+const IDLE_COLLAPSE_MS = 2000
 
 type ItemEls = {
-  root: HTMLElement;
-  index: HTMLElement;
-  title: HTMLElement;
-  body: HTMLElement;
-  cards: HTMLElement[];
+  root: HTMLElement
+  index: HTMLElement
+  title: HTMLElement
+  body: HTMLElement
+  cards: HTMLElement[]
 }
 
+// ---- Per-item reveals ----------------------------------------------------
+
 function animateIndex(index: HTMLElement, root: HTMLElement) {
-  gsap.set(index, {
-    y: '-2rem',
-    x: '-1.5rem'
-  })
-  const tl = gsap.timeline().from(index, {
-    y: '-50%',
-    opacity: 0,
-    ease: EASE
-  })
-  scrubReveal(tl, root, {
-    end: '+=100',
-    // markers: true
-  })
+  revealOnScroll(index, root,
+    { y: '-50%', opacity: 0, ease: EASE_SOFT },
+    { setVars: { y: '-2rem', x: '-1.5rem' }, scrollOpts: { end: '+=100' } }
+  )
 }
 
 function animateTitle(title: HTMLElement, root: HTMLElement) {
-  const split = SplitText.create(title, {
-    type: 'words',
-    mask: 'words'
-  })
-  const tl = gsap.timeline().from(split.words, {
-    x: '100%',
-    opacity: 0,
-    ease: EASE,
-    stagger: 0.05,
-  })
-  scrubReveal(tl, root, {
-    end: '+=100',
-    // markers: true
-  })
+  const split = SplitText.create(title, { type: 'words', mask: 'words' })
+  revealOnScroll(split.words, root,
+    { x: '100%', opacity: 0, ease: EASE_SOFT, stagger: 0.05 },
+    { scrollOpts: { end: '+=100' } }
+  )
 }
 
 function animateBody(body: HTMLElement, root: HTMLElement) {
+  // autoSplit resplits on resize/font-load, so the reveal has to be built
+  // inside onSplit rather than up front like the other reveals.
   SplitText.create(body, {
     type: 'words, lines',
     mask: 'lines',
@@ -85,109 +51,89 @@ function animateBody(body: HTMLElement, root: HTMLElement) {
       const tl = gsap.timeline().from(self.lines, {
         y: 20,
         autoAlpha: 0,
-        ease: EASE,
-        stagger: {
-          amount: 0.2,
-          from: 'start'
-        },
+        ease: EASE_SOFT,
+        stagger: { amount: 0.2, from: 'start' },
       })
-      scrubReveal(tl, root, {
-        start: '+=80% 80%',
-        end: 'bottom 80%'
-      })
+      enterReveal(tl, root, { start: '+=80% 80%', end: 'bottom 80%' })
     },
   })
 }
 
 function animateCards(cards: HTMLElement[], root: HTMLElement) {
-  gsap.set(cards, {
-    x: (i) => `${POS_X[i] ?? 0}vw`,
-    y: (i) => `${POS_Y[i] ?? 0}vh`,
-    rotation: (i) => ROTATE[i] ?? 0,
-  })
-
-  const tl = gsap.timeline().from(cards, {
-    x: 0,
-    y: '50vh',
-    rotation: 0,
-    ease: EASE,
-    // duration: 0.8,
-
-  })
-
-  scrubReveal(tl, root, {
-    start: '+=20% 80%',
-    end: '+=48%',
-    // markers: true
-  })
+  revealOnScroll(cards, root,
+    { x: 0, y: '50vh', rotation: 0, ease: EASE_SOFT },
+    {
+      setVars: {
+        x: (i: number) => `${POS_X[i] ?? 0}vw`,
+        y: (i: number) => `${POS_Y[i] ?? 0}vh`,
+        rotation: (i: number) => ROTATE[i] ?? 0,
+      },
+      scrollOpts: { start: '+=20% 80%', end: '+=48%' },
+    }
+  )
 }
 
-const EXPANDED_SCALE = 1.05
-const EXPANDED_Z = 50
-const TOGGLE_DURATION = 0.5
-const IDLE_COLLAPSE_MS = 2000
+// ---- Click-to-expand cards ------------------------------------------------
 
-let idleTimer: ReturnType<typeof setTimeout> | null = null
-
-function clearIdleTimer() {
-  if (!idleTimer) return
-  clearTimeout(idleTimer)
-  idleTimer = null
-}
-
-function collapseCard(card: HTMLElement) {
-  clearIdleTimer()
-  card.dataset.expanded = 'false'
-  gsap.to(card, {
-    scale: 1,
-    zIndex: card.dataset.baseZ,
-    duration: TOGGLE_DURATION,
-    ease: EASE,
-    overwrite: 'auto',
-  })
-}
-
-function scheduleIdleCollapse(card: HTMLElement) {
-  clearIdleTimer()
-  idleTimer = setTimeout(() => collapseCard(card), IDLE_COLLAPSE_MS)
-}
-
-function expandCard(card: HTMLElement, allCards: HTMLElement[]) {
-  const currentlyExpanded = allCards.find((c) => c !== card && c.dataset.expanded === 'true')
-  if (currentlyExpanded) collapseCard(currentlyExpanded)
-
-  card.dataset.expanded = 'true'
-  gsap.to(card, {
-    scale: EXPANDED_SCALE,
-    zIndex: EXPANDED_Z,
-    duration: TOGGLE_DURATION,
-    ease: EASE,
-    overwrite: 'auto',
-  })
-  scheduleIdleCollapse(card)
-}
-
-function toggleCard(card: HTMLElement, allCards: HTMLElement[]) {
-  if (card.dataset.expanded === 'true') {
-    collapseCard(card)
-    return
-  }
-  expandCard(card, allCards)
-}
-
+/**
+ * Sets up expand/collapse-on-click for a set of cards, with idle
+ * auto-collapse and scroll-to-collapse. All state (idle timer, which
+ * card is expanded) lives in this closure, scoped to one call — so
+ * multiple Portfolio instances on a page never share a timer.
+ */
 function setupCardExpansion(
   allCards: HTMLElement[],
   contextSafe: (fn: (e: Event) => void) => (e: Event) => void
 ) {
-  const onClick = contextSafe((e: Event) => {
-    const card = e.currentTarget as HTMLElement
-    toggleCard(card, allCards)
-  })
+  let idleTimer: ReturnType<typeof setTimeout> | null = null
+
+  const clearIdleTimer = () => {
+    if (!idleTimer) return
+    clearTimeout(idleTimer)
+    idleTimer = null
+  }
+
+  const collapseCard = (card: HTMLElement) => {
+    clearIdleTimer()
+    card.dataset.expanded = 'false'
+    gsap.to(card, {
+      scale: 1,
+      zIndex: card.dataset.baseZ,
+      duration: TOGGLE_DURATION,
+      ease: EASE_SOFT,
+      overwrite: 'auto',
+    })
+  }
+
+  const scheduleIdleCollapse = (card: HTMLElement) => {
+    clearIdleTimer()
+    idleTimer = setTimeout(() => collapseCard(card), IDLE_COLLAPSE_MS)
+  }
+
+  const expandCard = (card: HTMLElement) => {
+    const currentlyExpanded = allCards.find((c) => c !== card && c.dataset.expanded === 'true')
+    if (currentlyExpanded) collapseCard(currentlyExpanded)
+
+    card.dataset.expanded = 'true'
+    gsap.to(card, {
+      scale: EXPANDED_SCALE,
+      zIndex: EXPANDED_Z,
+      duration: TOGGLE_DURATION,
+      ease: EASE_SOFT,
+      overwrite: 'auto',
+    })
+    scheduleIdleCollapse(card)
+  }
+
+  const toggleCard = (card: HTMLElement) => {
+    card.dataset.expanded === 'true' ? collapseCard(card) : expandCard(card)
+  }
+
+  const onClick = contextSafe((e: Event) => toggleCard(e.currentTarget as HTMLElement))
 
   const onScroll = () => {
     const expanded = allCards.find((c) => c.dataset.expanded === 'true')
-    if (!expanded) return
-    collapseCard(expanded)
+    if (expanded) collapseCard(expanded)
   }
 
   allCards.forEach((card) => {
@@ -203,6 +149,8 @@ function setupCardExpansion(
     clearIdleTimer()
   }
 }
+
+// ---- Wire it all up per portfolio item -----------------------------------
 
 function useAnimateAll(
   sectionRef: React.RefObject<HTMLElement | null>,
@@ -250,16 +198,16 @@ export default function Portfolio() {
           ref={(el) => { if (el) itemRefs.current[index] = el }}
           className="relative h-[70vh] flex flex-col justify-between"
           style={{ backgroundColor: item.bgColor ?? '#F3E7E0' }}
-        >  
+        >
           <div className="absolute inset-0 overflow-hidden mix-blend-darken">
-            <div className="portfolio-index text-[10rem]/[10rem] uppercase text-inksoft/5 font-curvy font-black left-0 ">
+            <div className="portfolio-index text-[10rem]/[10rem] uppercase text-inksoft/5 font-curvy font-black left-0">
               {String(index + 1).padStart(2, '0')}
             </div>
           </div>
-          <div className=" relative z-20 text-center flex justify-center w-full overflow-hidden">
+          <div className="relative z-20 text-center flex justify-center w-full overflow-hidden">
             <h3 className="portfolio-title font-serif text-3xl text-ink p-4">{item.title}</h3>
           </div>
-          <div className="relative z-20  overflow-hidden p-8">
+          <div className="relative z-20 overflow-hidden p-8">
             <p className="portfolio-body text-base/5 text-justify text-inksoft">{item.body}</p>
           </div>
           <div className="portfolio-media absolute z-0 h-full w-full flex justify-center items-center" aria-label={item.title}>
