@@ -86,10 +86,8 @@ export default function Hero() {
       id="hero"
       className="h-screen flex flex-col justify-center px-8 max-w-3xl mx-auto w-full relative"
     >
-      <div className="-z-10 absolute w-full right-0 flex items-center justify-end opacity-10">
-        <div ref={bloomRef}>
+      <div ref={bloomRef} className="-z-10 absolute w-full right-0 flex items-center justify-end opacity-10">
           <Bloom size="large" />
-        </div>
       </div>
 
       <div ref={eyebrowRef} className="text-xs uppercase tracking-[.25em] text-rose">
