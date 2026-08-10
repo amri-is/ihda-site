@@ -3,9 +3,9 @@ import Bloom from '@/components/ui/Bloom'
 import { BRAND_ITEM } from '@/constants/brand'
 import { useRef } from 'react'
 import { gsap, useGSAP, SplitText } from '@/lib/gsap'
-import { splitFrom, EASE, DURATION } from '@/lib/animation'
 
-const BTN_DURATION = DURATION - 1
+const EASE = "power3.out"
+const DURATION = 2
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null)
@@ -18,27 +18,30 @@ export default function Hero() {
 
   useGSAP(() => {
     const tl = gsap.timeline()
+    const eyebrowSplit = SplitText.create(eyebrowRef.current, {type: 'words', mask: 'words'})
+    const bodySplit = SplitText.create(bodyRef.current, {type: 'words', mask: 'words'})
+    const titleSplit = SplitText.create(titleRef.current, {type: 'words'})
+    const btnTextSplit = SplitText.create(btnTextRef.current, {type: 'words'})
 
     // Bloom drifts in behind the copy.
     tl.from(bloomRef.current, {
       xPercent: -100,
+      autoAlpha: 0,
       ease: EASE,
       duration: DURATION,
     }, 0)
 
     // Eyebrow, title, body all split + reveal, running together.
-    tl.add(splitFrom(eyebrowRef.current, 'lines', {
-      y: '-50vh',
-      x: '50vw',
-      rotate: 90,
+    tl.add(gsap.from(eyebrowSplit.words, {
+      yPercent: -100,
       autoAlpha: 0,
       ease: EASE,
       stagger: 0.1,
       duration: DURATION,
     }), 0)
 
-    tl.add(splitFrom(titleRef.current, 'words', {
-      x: '-5vw',
+    tl.add(gsap.from(titleSplit.words, {
+      xPercent: -50,
       filter: 'blur(1rem)',
       autoAlpha: 0,
       ease: EASE,
@@ -46,37 +49,28 @@ export default function Hero() {
       duration: DURATION,
     }), 0)
 
-    tl.add(splitFrom(bodyRef.current, 'words', {
-      y: '50vh',
-      x: '-50vw',
-      rotate: 90,
+    tl.add(gsap.from(bodySplit.words, {
+      yPercent: 100,
       autoAlpha: 0,
       ease: EASE,
       stagger: { from: 'start', amount: 0.5 },
       duration: DURATION,
     }), 0)
 
-    
-
-    // Button: box opens, then its text words drop in.
-    if (buttonRef.current && btnTextRef.current) {
-      const btnSplit = SplitText.create(btnTextRef.current, { type: 'words' })
-      gsap.set(buttonRef.current, { overflow: 'hidden' })
-
-      tl.from(buttonRef.current, {
-        width: 36,
+    tl.add(gsap.from(buttonRef.current, {
+        width: 0,
         opacity: 0,
         duration: DURATION,
         ease: EASE,
-      }, DURATION / 2)
-      tl.from(btnSplit.words, {
+    }), 0)
+
+    tl.add(gsap.from(btnTextSplit.words, {
         y: '-5vh',
         opacity: 0,
         ease: 'back.out',
         stagger: { from: 'start', amount: 1 / 5 },
-        duration: BTN_DURATION,
-      }, '-=1')
-    }
+        duration: DURATION - 1,
+    }), 1)
 
   }, { scope: sectionRef })
 
@@ -86,7 +80,7 @@ export default function Hero() {
       id="hero"
       className="h-screen flex flex-col justify-center px-8 max-w-3xl mx-auto w-full relative"
     >
-      <div ref={bloomRef} className="-z-10 absolute w-full right-0 flex items-center justify-end opacity-10">
+      <div ref={bloomRef} className="-z-10 absolute w-full right-0 flex items-center justify-center opacity-10 scale-200">
           <Bloom size="large" />
       </div>
 
