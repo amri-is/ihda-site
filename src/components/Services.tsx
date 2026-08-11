@@ -1,3 +1,5 @@
+import { ServiceData } from "@/data/services";
+
 function Services() {
   return (
     <section
@@ -26,54 +28,45 @@ function Services() {
       </header>
 
       <div className="flex flex-col gap-2">
-        <div className="p-4 bg-rose/15 min-h-8 flex flex-col gap-4 rounded">
-          <header className="flex flex-col gap-2">
-            <h1 className="text-2xl/6 font-serif">
-              Regular
-            </h1>
-            <p className="text-sm/3.5 text-inksoft">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Temporibus quod reiciendis mollitia, corporis quasi impedit fuga esse iusto rem tempore.
-            </p>
-          </header>
-          <div className="img-wrap relative">
-            <img
-              className="object-cover object-center aspect-square w-full rounded-sm"
-              src="https://assets.codepen.io/7558/flame-glow-blur-003.jpg"
-              alt=""
-            />
-            <div className="tags absolute bottom-0 right-0 flex flex-wrap-reverse flex-row-reverse w-full p-2 gap-1">
-              <div className="tag bg-white/70 backdrop-blur-sm px-1.5 py-1 uppercase text-xs/3 rounded-xs tracking-wide">
-                family bride
+        {ServiceData.map((item, idx) => (
+          <div key={idx} className="p-4 bg-rose/15 min-h-8 flex flex-col gap-4 rounded">
+            <header className="flex flex-col gap-2">
+              <h1 className="text-2xl/6 font-serif">
+                {item.title}
+              </h1>
+              <p className="text-sm/3.5 text-inksoft">
+                {item.body}
+              </p>
+            </header>
+            <div className="content relative">
+              <div className="img-stack aspect-square overflow-hidden relative rounded-sm">
+                {item.imgs.map((img, imgIdx) => (
+                  <img
+                    key={`${img}-${imgIdx}`}
+                    className="absolute"
+                    src={img}
+                    alt=""
+                  />
+                ))}
               </div>
-              <div className="tag bg-white/70 backdrop-blur-sm px-1.5 py-1 uppercase text-xs/3 rounded-xs tracking-wide">
-                among tamu
-              </div>
-              <div className="tag bg-white/70 backdrop-blur-sm px-1.5 py-1 uppercase text-xs/3 rounded-xs tracking-wide">
-                yearbook
-              </div>
-              <div className="tag bg-white/70 backdrop-blur-sm px-1.5 py-1 uppercase text-xs/3 rounded-xs tracking-wide">
-                wedding guest
-              </div>
-              <div className="tag bg-white/70 backdrop-blur-sm px-1.5 py-1 uppercase text-xs/3 rounded-xs tracking-wide">
-                brides maid
+              <div className="tags absolute bottom-0 right-0 flex flex-wrap-reverse flex-row-reverse w-full p-2 gap-1">
+                {item.tags.map((tag, tagIdx) => (
+                  <div
+                    key={`${tag}-${tagIdx}`}
+                    className="tag bg-white/70 backdrop-blur-sm px-1.5 py-1 uppercase text-xs/3 rounded-xs tracking-wide"
+                  >
+                    {tag}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-        </div>
-        <div className="p-4 bg-rose/15 min-h-8 flex flex-col gap-4 rounded">
-          
-        </div>
-        <div className="p-4 bg-rose/15 min-h-8 flex flex-col gap-4 rounded">
-          
-        </div>
-        <div className="p-4 bg-rose/15 min-h-8 flex flex-col gap-4 rounded">
-          
-        </div>
-        <div className="border border-dashed p-3">
-          <div className="bg-rose/15 h-8 flex gap-4 rounded text-xs items-center justify-center uppercase">
+        ))}
+
+        <div className="border border-dashed p-3 rounded">
+          <div className="bg-rose/15 h-8 flex gap-4 rounded-sm text-xs items-center justify-center uppercase">
             Full Service List
           </div>
-
         </div>
       </div>
 
