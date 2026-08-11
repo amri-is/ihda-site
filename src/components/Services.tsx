@@ -27,7 +27,7 @@ function Services() {
 
       </header>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-4">
         {ServiceData.map((item, idx) => (
           <div key={idx} className="p-4 bg-rose/15 min-h-8 flex flex-col gap-4 rounded">
             <header className="flex flex-col gap-2">
