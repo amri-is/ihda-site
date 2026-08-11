@@ -1,11 +1,9 @@
 import Button from '@/components/ui/Button'
 import Bloom from '@/components/ui/Bloom'
 import { BRAND_ITEM } from '@/constants/brand'
+import { EASE, DURATION } from '@/constants/animation'
 import { useRef } from 'react'
 import { gsap, useGSAP, SplitText } from '@/lib/gsap'
-
-const EASE = "power3.out"
-const DURATION = 2
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null)
