@@ -45,14 +45,10 @@ export default function Portfolio() {
   )
 
   return (
-    <section ref={sectionRef} id="portfolio" className="relative">
-      {/* h-screen + relative required: header-items are `absolute inset-0`,
-          they fill THIS box. Strip h-screen and this box auto-collapses
-          (absolute children don't contribute to flow height), so inset-0
-          has nothing real to fill — text lands in the wrong spot. */}
+    <section ref={sectionRef} id="portfolio" className="flex flex-col justify-center px-8 max-w-3xl mx-auto w-full relative">
       <div
         ref={headerWrapRef}
-        className="portfolio-header absolute top-0 w-full pointer-events-none"
+        className="portfolio-header absolute inset-0 w-full pointer-events-none"
       >
         {PortfolioData.map((item, idx) => (
           <div
@@ -60,7 +56,7 @@ export default function Portfolio() {
             ref={(el) => {
               headerRefs.current[idx] = el
             }}
-            className="header-item absolute top-0 flex flex-col justify-end p-8 max-w-md z-4"
+            className="header-item absolute top-0 flex flex-col justify-end max-w-md z-4 p-8"
           >
             <div className="header-eyebrow text-sm uppercase tracking-widest text-rose">
               {`0${idx + 1}`}
