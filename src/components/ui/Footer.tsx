@@ -8,9 +8,11 @@ export default function Footer() {
     <footer
       className="grid absolute w-full bottom-0 grid-cols-2 px-4 pb-2"
     >
-      <div className="flex gap-2 items-center text-xl font-serif">
+      <div className="flex gap-2 items-center font-serif">
         <Bloom size="logo" />
+        <span className='text-left'>
         {BRAND_ITEM.name}
+        </span>
       </div>
 
       <div className="text-[.7rem] text-inksoft text-right tracking-wider font-light">

@@ -78,20 +78,20 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="hero"
-      className="h-screen flex flex-col justify-center px-8 max-w-3xl mx-auto w-full relative"
+      className="h-screen flex flex-col items-center justify-center text-center px-8 max-w-3xl mx-auto w-full relative"
     >
       <div ref={bloomRef} className="-z-10 absolute w-full right-0 flex items-center justify-center opacity-10 scale-200">
           <Bloom size="large" />
       </div>
 
-      <div ref={eyebrowRef} className="text-xs uppercase tracking-[.25em] text-rose">
+      <h2 ref={eyebrowRef} className="text-sm uppercase tracking-widest text-rose">
         {BRAND_ITEM.name}
-      </div>
+      </h2>
 
-      <h1 ref={titleRef} className="font-serif text-5xl max-w-3xl">
+      <h1 ref={titleRef} className="font-serif font-normal text-4xl leading-tight">
         Beauty for
         <br />
-        <span className="font-curvy text-6xl italic text-rosedeep font-black">
+        <span className="text-rosedeep text-[2.8rem] italic font-curvy font-black">
           every&nbsp;
         </span>
         occasion,
@@ -99,7 +99,7 @@ export default function Hero() {
         your way.
       </h1>
 
-      <p ref={bodyRef} className="text-base text-inksoft max-w-md mt-8">
+      <p ref={bodyRef} className="text-base text-ink/50 max-w-md mt-8">
         From everyday soft glam to graduation, bridal day —
         we shape looks that
         <span className="text-ink">&nbsp;feel&nbsp;</span>
