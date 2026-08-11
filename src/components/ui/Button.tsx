@@ -11,7 +11,7 @@ const Button = forwardRef<HTMLAnchorElement, ButtonProps>(function Button(
   ref
 ) {
   const base =
-    "items-center justify-center px-4 py-2 rounded-full text-sm tracking-wider bg-ink text-bg w-fit"
+    "flex items-center justify-center px-4 py-2 rounded-full text-sm tracking-wider bg-ink text-bg w-fit"
 
   return (
     <a ref={ref} href={href} className={cn(base, className)} {...props}>
