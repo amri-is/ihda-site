@@ -8,7 +8,9 @@ function Services() {
   const contentRef = useRef<HTMLDivElement>(null)
   const innerRefs = useRef<Array<HTMLElement | null>>([])
   const cardRefs = useRef<Array<HTMLDivElement | null>>([])
+  const imgsRefs = useRef<Array<Array<HTMLImageElement | null>>>([])
 
+  // accordion anim
   useGSAP(() => {
     const DUR = 1
     const EASE = 'power4.out'
@@ -97,6 +99,25 @@ function Services() {
 
   })
 
+  // imgs anim
+  useGSAP(() => {
+    const stacks = imgsRefs.current
+
+    stacks.forEach((imgs) => {
+      if (!imgs || imgs.length < 2) return
+
+      gsap.set(imgs, { autoAlpha: 0 })
+      gsap.set(imgs[0], { autoAlpha: 1 })
+
+      const tl = gsap.timeline({ repeat: -1 })
+      imgs.forEach((img, i) => {
+        const next = imgs[(i + 1) % imgs.length]
+        tl.to(img, { autoAlpha: 0, duration: 1, ease: 'linear' }, `+=5`)
+          .to(next, { autoAlpha: 1, duration: 1, ease: 'linear' }, '<')
+      })
+    })
+  }, { scope: sectionRef })
+
   return (
     <section
       id="services"
@@ -149,9 +170,12 @@ function Services() {
                   {item.imgs.map((img, imgIdx) => (
                     <img
                       key={`${img}-${imgIdx}`}
-                      className="absolute object-cover object-center scale-120"
+                      ref={(el) => {
+                        if (!imgsRefs.current[idx]) imgsRefs.current[idx] = []
+                        imgsRefs.current[idx][imgIdx] = el
+                      }}
+                      className="absolute object-cover object-center"
                       src={img}
-                      data-speed={1}
                     />
                   ))}
                 </div>
