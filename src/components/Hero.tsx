@@ -1,7 +1,6 @@
 import Button from '@/components/ui/Button'
 import Bloom from '@/components/ui/Bloom'
 import { BRAND_ITEM } from '@/constants/brand'
-import { EASE, DURATION } from '@/constants/animation'
 import { useRef } from 'react'
 import { gsap, useGSAP, SplitText } from '@/lib/gsap'
 
@@ -15,6 +14,8 @@ export default function Hero() {
   const btnTextRef = useRef<HTMLSpanElement | null>(null)
 
   useGSAP(() => {
+    const EASE = 'power4.out'
+    const DUR = 2
     const tl = gsap.timeline()
     const eyebrowSplit = SplitText.create(eyebrowRef.current, {type: 'words', mask: 'words'})
     const bodySplit = SplitText.create(bodyRef.current, {type: 'words', mask: 'words'})
@@ -26,7 +27,7 @@ export default function Hero() {
       xPercent: -100,
       autoAlpha: 0,
       ease: EASE,
-      duration: DURATION,
+      duration: DUR,
     }, 0)
 
     // Eyebrow, title, body all split + reveal, running together.
@@ -35,7 +36,7 @@ export default function Hero() {
       autoAlpha: 0,
       ease: EASE,
       stagger: 0.1,
-      duration: DURATION,
+      duration: DUR,
     }), 0)
 
     tl.add(gsap.from(titleSplit.words, {
@@ -44,7 +45,7 @@ export default function Hero() {
       autoAlpha: 0,
       ease: EASE,
       stagger: { from: 'start', amount: 1 },
-      duration: DURATION,
+      duration: DUR,
     }), 0)
 
     tl.add(gsap.from(bodySplit.words, {
@@ -52,22 +53,22 @@ export default function Hero() {
       autoAlpha: 0,
       ease: EASE,
       stagger: { from: 'start', amount: 0.5 },
-      duration: DURATION,
+      duration: DUR,
     }), 0)
 
     tl.add(gsap.from(buttonRef.current, {
-        width: 0,
-        opacity: 0,
-        duration: DURATION,
-        ease: EASE,
+      width: 0,
+      opacity: 0,
+      duration: DUR,
+      ease: EASE,
     }), 0)
 
     tl.add(gsap.from(btnTextSplit.words, {
-        y: '-5vh',
-        opacity: 0,
-        ease: 'back.out',
-        stagger: { from: 'start', amount: 1 / 5 },
-        duration: DURATION - 1,
+      yPercent: -300,
+      opacity: 0,
+      ease: 'back.out',
+      stagger: { from: 'start', amount: 1 / 5 },
+      duration: DUR - 1,
     }), 1)
 
   }, { scope: sectionRef })
