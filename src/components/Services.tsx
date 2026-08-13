@@ -71,7 +71,7 @@ function Services() {
         },0)
     })
 
-    cards.forEach((_, idx) => {
+    cards.forEach((card, idx) => {
       let GAP = null
       GAP = 48
       const finalOffset = () => {
@@ -86,8 +86,12 @@ function Services() {
         start: `+=${finalOffset()}px center`,
         onEnter: () => {
           timelines[idx].play()
+          if (card) card.dataset.expanded = "true"
         },
-        onLeaveBack: () => { timelines[idx].reverse() },
+        onLeaveBack: () => {
+          timelines[idx].reverse()
+          if (card) card.dataset.expanded = "false"
+        },
       })
     })
 
