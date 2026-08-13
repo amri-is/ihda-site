@@ -10,7 +10,7 @@ function Services() {
   const cardRefs = useRef<Array<HTMLDivElement | null>>([])
 
   useGSAP(() => {
-    const DUR = 0.8
+    const DUR = 1
     const EASE = 'power4.out'
     const section = sectionRef.current
     const content = contentRef.current
@@ -50,11 +50,13 @@ function Services() {
     }
 
     gsap.set(cards, { height: '2rem' })
-    gsap.set(inners, { visibility: 'hidden' })
+    gsap.set(inners, { autoAlpha: 0 })
     
     const timelines = cards.map((card, index) => {
       return gsap
-        .timeline({ paused: true })
+        .timeline({
+          paused: true,
+        })
         .to(card, {
           height: "auto",
           duration: DUR,
@@ -70,12 +72,21 @@ function Services() {
     })
 
     cards.forEach((_, idx) => {
+      let GAP = null
+      GAP = 48
+      const finalOffset = () => {
+        if (!GAP) return offset[idx]
+
+        return offset[idx] - GAP * idx
+      }
       ScrollTrigger.create({
-        markers: true,
+        // markers: true,
         id: `card-${idx}`,
         trigger: content,
-        start: `+=${offset[idx]}px 60%`,
-        onEnter: () => { timelines[idx].play() },
+        start: `+=${finalOffset()}px center`,
+        onEnter: () => {
+          timelines[idx].play()
+        },
         onLeaveBack: () => { timelines[idx].reverse() },
       })
     })
@@ -114,28 +125,29 @@ function Services() {
           <div
             key={idx}
             ref={(el) => { cardRefs.current[idx] = el }}
-            className="p-4 bg-rose/15 min-h-0 rounded overflow-hidden"
+            data-expanded={false}
+            className="bg-rose/15 min-h-0 rounded overflow-hidden"
           >
             <div
               ref={(el) => { innerRefs.current[idx] = el }}
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-4 p-4"
             >
               <header className="flex flex-col gap-2">
-                <h1 className="text-2xl/6 font-serif">
+                <h1 className="text-2xl font-serif">
                   {item.title}
                 </h1>
-                <p className="text-sm/3.5 text-inksoft">
+                <p className="text-sm text-inksoft">
                   {item.body}
                 </p>
               </header>
               <div className="relative">
-                <div className="img-stack aspect-square overflow-hidden relative rounded-sm">
+                <div className="img-stack aspect-square overflow-hidden relative rounded-sm flex items-center justify-center pointer-events-none ">
                   {item.imgs.map((img, imgIdx) => (
                     <img
                       key={`${img}-${imgIdx}`}
-                      className="absolute"
+                      className="absolute object-cover object-center scale-120"
                       src={img}
-                      alt=""
+                      data-speed={1}
                     />
                   ))}
                 </div>
@@ -155,10 +167,10 @@ function Services() {
           </div>
         ))}
 
-        <div className="border border-dashed p-3 rounded">
-          <div className="bg-rose/15 h-8 flex gap-4 rounded-sm text-xs items-center justify-center uppercase">
+        <div className="border border-dashed p-3 rounded pointer-events-none">
+          <a href="#price-list" className="bg-rose/15 h-8 flex gap-4 rounded-sm text-xs items-center justify-center uppercase pointer-events-auto">
             Full Service List
-          </div>
+          </a>
         </div>
       </div>
 
