@@ -1,5 +1,6 @@
 import { ServiceData } from "@/data/services";
 import { gsap, useGSAP, ScrollTrigger } from "@/lib/gsap";
+import { getRange } from "@/lib/utils";
 import { useRef } from "react";
 
 function Services() {
@@ -9,6 +10,8 @@ function Services() {
   const innerRefs = useRef<Array<HTMLElement | null>>([])
   const cardRefs = useRef<Array<HTMLDivElement | null>>([])
   const imgsRefs = useRef<Array<Array<HTMLImageElement | null>>>([])
+
+  const imgTimelinesRef = useRef<Array<gsap.core.Timeline | null>>([])
 
   // accordion anim
   useGSAP(() => {
@@ -89,10 +92,14 @@ function Services() {
         onEnter: () => {
           timelines[idx].play()
           if (card) card.dataset.expanded = "true"
+          imgTimelinesRef.current[idx]?.play(idx * getRange(5,0))
+          // console.log(`card ${idx} played at`, performance.now())
         },
         onLeaveBack: () => {
           timelines[idx].reverse()
           if (card) card.dataset.expanded = "false"
+          imgTimelinesRef.current[idx]?.pause()
+          // console.log(`card ${idx} paused at`, performance.now())
         },
       })
     })
@@ -103,18 +110,19 @@ function Services() {
   useGSAP(() => {
     const stacks = imgsRefs.current
 
-    stacks.forEach((imgs) => {
-      if (!imgs || imgs.length < 2) return
+    imgTimelinesRef.current = stacks.map((imgs) => {
+      if (!imgs || imgs.length < 2) return null
 
       gsap.set(imgs, { autoAlpha: 0 })
       gsap.set(imgs[0], { autoAlpha: 1 })
 
-      const tl = gsap.timeline({ repeat: -1 })
+      const tl = gsap.timeline({ repeat: -1, paused: true })
       imgs.forEach((img, i) => {
         const next = imgs[(i + 1) % imgs.length]
-        tl.to(img, { autoAlpha: 0, duration: 1, ease: 'linear' }, `+=5`)
+        tl.to(img, { autoAlpha: 0, duration: 1, ease: 'linear' }, `+=4`)
           .to(next, { autoAlpha: 1, duration: 1, ease: 'linear' }, '<')
       })
+      return tl
     })
   }, { scope: sectionRef })
 
