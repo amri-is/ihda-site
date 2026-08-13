@@ -1,13 +1,95 @@
 import { ServiceData } from "@/data/services";
+import { gsap, useGSAP, ScrollTrigger } from "@/lib/gsap";
+import { useRef } from "react";
 
 function Services() {
+  const sectionRef = useRef<HTMLDivElement | null>(null)
+  const headerRef = useRef<HTMLDivElement | null>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const innerRefs = useRef<Array<HTMLElement | null>>([])
+  const cardRefs = useRef<Array<HTMLDivElement | null>>([])
+
+  useGSAP(() => {
+    const DUR = 0.8
+    const EASE = 'power4.out'
+    const section = sectionRef.current
+    const content = contentRef.current
+    const cards = cardRefs.current
+    const inners = innerRefs.current
+
+    if (!section || !content || !cards || !inners ) return
+    
+    const getCardTops = () => {
+      return cards.map((el) => {
+        if (!el) return 0
+        return el.getBoundingClientRect().top
+      })
+    }
+    const getContentTops = () => {
+      return content.getBoundingClientRect().top ?? 0
+    }
+    const getContentHeight = () => {
+      return content.getBoundingClientRect().height ?? 0
+    }
+
+    const tops = getCardTops()
+    const contentTop = getContentTops()
+    const contentHeight = getContentHeight()
+    const offset = tops.map((el) => {
+      if (!el) return 0
+      return el - contentTop
+    })
+
+    console.log("tops:", tops)
+    console.log("contentTop:", contentTop)
+    console.log("contentHeight:", contentHeight)
+    console.log("offset:", offset)
+
+    if (content) {
+      content.style.minHeight = `${contentHeight}px`
+    }
+
+    gsap.set(cards, { height: '2rem' })
+    gsap.set(inners, { visibility: 'hidden' })
+    
+    const timelines = cards.map((card, index) => {
+      return gsap
+        .timeline({ paused: true })
+        .to(card, {
+          height: "auto",
+          duration: DUR,
+          ease: EASE,
+          easeReverse: true,
+        })
+        .to(inners[index],{
+          autoAlpha: 1,
+          duration: DUR,
+          ease: EASE,
+          easeReverse: true,
+        },0)
+    })
+
+    cards.forEach((_, idx) => {
+      ScrollTrigger.create({
+        markers: true,
+        id: `card-${idx}`,
+        trigger: content,
+        start: `+=${offset[idx]}px 60%`,
+        onEnter: () => { timelines[idx].play() },
+        onLeaveBack: () => { timelines[idx].reverse() },
+      })
+    })
+
+  })
+
   return (
     <section
       id="services"
+      ref={sectionRef}
       className="flex flex-col justify-center px-4 max-w-3xl mx-auto w-full relative gap-8"
     >
 
-      <header className="header flex flex-col ">
+      <header ref={headerRef} className="header flex flex-col ">
 
         <div className="text-xs uppercase tracking-[.25em] text-rose">
           What we do
@@ -27,38 +109,48 @@ function Services() {
 
       </header>
 
-      <div className="flex flex-col gap-4">
+      <div ref={contentRef} className="flex flex-col gap-4">
         {ServiceData.map((item, idx) => (
-          <div key={idx} className="p-4 bg-rose/15 min-h-8 flex flex-col gap-4 rounded">
-            <header className="flex flex-col gap-2">
-              <h1 className="text-2xl/6 font-serif">
-                {item.title}
-              </h1>
-              <p className="text-sm/3.5 text-inksoft">
-                {item.body}
-              </p>
-            </header>
-            <div className="content relative">
-              <div className="img-stack aspect-square overflow-hidden relative rounded-sm">
-                {item.imgs.map((img, imgIdx) => (
-                  <img
-                    key={`${img}-${imgIdx}`}
-                    className="absolute"
-                    src={img}
-                    alt=""
-                  />
-                ))}
+          <div
+            key={idx}
+            ref={(el) => { cardRefs.current[idx] = el }}
+            className="p-4 bg-rose/15 min-h-0 rounded overflow-hidden"
+          >
+            <div
+              ref={(el) => { innerRefs.current[idx] = el }}
+              className="flex flex-col gap-4"
+            >
+              <header className="flex flex-col gap-2">
+                <h1 className="text-2xl/6 font-serif">
+                  {item.title}
+                </h1>
+                <p className="text-sm/3.5 text-inksoft">
+                  {item.body}
+                </p>
+              </header>
+              <div className="relative">
+                <div className="img-stack aspect-square overflow-hidden relative rounded-sm">
+                  {item.imgs.map((img, imgIdx) => (
+                    <img
+                      key={`${img}-${imgIdx}`}
+                      className="absolute"
+                      src={img}
+                      alt=""
+                    />
+                  ))}
+                </div>
+                <div className="tags absolute bottom-0 right-0 flex flex-wrap-reverse flex-row-reverse w-full p-2 gap-1">
+                  {item.tags.map((tag, tagIdx) => (
+                    <div
+                      key={`${tag}-${tagIdx}`}
+                      className="tag bg-white/70 backdrop-blur-sm px-1.5 py-1 uppercase text-xs/3 rounded-xs tracking-wide"
+                    >
+                      {tag}
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="tags absolute bottom-0 right-0 flex flex-wrap-reverse flex-row-reverse w-full p-2 gap-1">
-                {item.tags.map((tag, tagIdx) => (
-                  <div
-                    key={`${tag}-${tagIdx}`}
-                    className="tag bg-white/70 backdrop-blur-sm px-1.5 py-1 uppercase text-xs/3 rounded-xs tracking-wide"
-                  >
-                    {tag}
-                  </div>
-                ))}
-              </div>
+
             </div>
           </div>
         ))}

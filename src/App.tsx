@@ -7,6 +7,7 @@ import "@/App.css"
 import Hero from "@/components/Hero"
 import Booking from "@/components/Booking"
 import Portfolio from "@/components/Portfolio"
+import Services from "@/components/Services"
 import ScrollbarIndicator from "@/components/ScrollbarIndicator"
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
@@ -31,7 +32,8 @@ function App() {
       <div id="smooth-wrapper">
         <div id="smooth-content">
           <Hero />
-          <Portfolio />
+          {/* <Portfolio /> */}
+          <Services />
           <Booking />
         </div>
       </div>
