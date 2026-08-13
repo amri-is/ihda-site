@@ -45,10 +45,10 @@ function Services() {
       return el - contentTop
     })
 
-    console.log("tops:", tops)
-    console.log("contentTop:", contentTop)
-    console.log("contentHeight:", contentHeight)
-    console.log("offset:", offset)
+    // console.log("tops:", tops)
+    // console.log("contentTop:", contentTop)
+    // console.log("contentHeight:", contentHeight)
+    // console.log("offset:", offset)
 
     if (content) {
       content.style.minHeight = `${contentHeight}px`
