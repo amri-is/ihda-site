@@ -1,4 +1,7 @@
-export const AboutPhoto = 'https://files.catbox.moe/ea94w6.jpeg'
+export const AboutItems = {
+  photo: 'https://files.catbox.moe/ea94w6.jpeg',
+  gmap: 'https://maps.app.goo.gl/Ti4CZwjFURLGZjSA9',
+}
 
 export const FillerData = [
   {

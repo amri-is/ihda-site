@@ -1,8 +1,7 @@
-import { ScrollTrigger, gsap } from "@/lib/gsap"
+import { ScrollTrigger, SplitText, gsap } from "@/lib/gsap"
 import { useGSAP } from "@gsap/react"
 import { useRef } from "react"
-import { FillerData, AboutPhoto, TitleData } from "@/data/about"
-import { BRAND_ITEM } from "@/constants/brand"
+import { FillerData, AboutItems, TitleData } from "@/data/about"
 
 function About() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -10,6 +9,7 @@ function About() {
   const fillerRefs = useRef<Array<HTMLDivElement|null>>([])
   const fillerImgRefs = useRef<Array<Array<HTMLImageElement|null>>>([])
   const footerRef = useRef<HTMLDivElement>(null)
+  const gmapRef = useRef<HTMLAnchorElement>(null)
   
   // pin title
   useGSAP(() => {
@@ -98,7 +98,7 @@ function About() {
 
   }, { scope: sectionRef })
 
-  // img cycle anim
+  // img filler cycle as the page scrolls
   useGSAP(() => {
     const fillers = fillerRefs.current
     // console.log(fillers);
@@ -116,8 +116,8 @@ function About() {
         // markers: true,
         id: `filler-${idx + 1}`,
         trigger: filler,
-        start: 'top bottom',
-        end: 'bottom top',
+        start: '+=50 bottom',
+        end: 'top top',
         onUpdate: (self) => {
           const idx = Math.floor(self.progress * imgs.length) % imgs.length
           // console.log(idx);
@@ -129,6 +129,38 @@ function About() {
       })
     })
 
+  }, { scope: sectionRef })
+
+  // gmap link anim
+  useGSAP(() => {
+    const link = gmapRef.current
+    const splitText = SplitText.create(link, { type: 'words' })
+    
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        // markers: true,
+        trigger: link,
+        start: 'top 90%',
+        // toggleActions: 'play none none reverse',
+      }
+    })
+
+    tl.from(link, {
+        autoAlpha: 0,
+        width: 0,
+        duration: 2,
+        ease: 'power4.out',
+        easeReverse: true,
+      })
+      tl.add(gsap.from(splitText.words, {
+        yPercent: -300,
+        autoAlpha: 0,
+        ease: 'back.out',
+        easeReverse: true,
+        stagger: { from: 'start', amount: 1 / 5 },
+        duration: 1,
+      }), 0)
+    
   }, { scope: sectionRef })
 
   return (
@@ -168,27 +200,29 @@ function About() {
 
       <footer ref={footerRef} className="footer relative bg-blue-200 z-50 overflow-hidden rounded">
         <div className="absolute z-110 top-0 w-full p-4 flex flex-col gap-4 items-center text-white">
-          <p className="location text-left not-italic">
+          <p className="location text-left not-italic text-sm">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis asperiores earum molestiae quisquam. Alias temporibus aut sit a eum veniam.
           </p>
         </div>
 
-        <div className="absolute z-110 bottom-0 w-full p-4 flex flex-col gap-4 items-center text-white">
+        <div className="absolute z-110 bottom-0 w-full p-4 flex items-center justify-center">
           <a
-            href="#"
+            ref={gmapRef}
+            href={AboutItems.gmap}
             target="_blank"
             rel="noopener noreferrer"
-            className="visit-us bg-bg p-2 w-full text-rose text-xl font-serif rounded-xs"
+            className="visit-us bg-bg p-1 w-full font-serif text-rose rounded-xs flex gap-1 items-center justify-center overflow-hidden"
           >
-            Visit My
-            <span className="font-curvy font-black text-[1.3rem]"> Studio</span>
+            <span>visit</span>
+            <span>my</span>
+            <span className="font-curvy font-black text-[1.25rem]">studio</span>
           </a>
         </div>
 
         <div className="about-photo h-[80svh]">
           <div className="absolute inset-0 z-100 bg-linear-to-b from-rose/90 to-rose/50 w-full h-full opacity-75"></div>
           <div className="absolute inset-0 z-50 bg-rosedeep w-full h-full mix-blend-screen opacity-50"></div>
-          <img src={AboutPhoto} alt="Meet the artist" className="h-full w-full object-cover object-top grayscale " />
+          <img src={AboutItems.photo} alt="Meet the artist" className="h-full w-full object-cover object-top grayscale " />
         </div>
         
       </footer>
