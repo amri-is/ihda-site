@@ -7,12 +7,13 @@ import { BRAND_ITEM } from "@/constants/brand"
 function About() {
   const sectionRef = useRef<HTMLElement>(null)
   const titleRefs = useRef<HTMLDivElement[]>([])
-  const fillerRefs = useRef<HTMLImageElement[]>([])
+  const fillerRefs = useRef<HTMLDivElement[]>([])
   const footerRef = useRef<HTMLDivElement>(null)
   
   useGSAP(() => {
     const section = sectionRef.current
     const titles = gsap.utils.toArray<HTMLElement>(titleRefs.current)
+    const footer = footerRef.current
 
     const getSectionTop = () => {
       return section?.getBoundingClientRect().top ?? 0
@@ -57,33 +58,43 @@ function About() {
       return (firstTop + lastBottom) / 2
     }
 
-    console.log('section top:', getSectionTop())
-    console.log('titles height:', getTitlesHeights())
-    console.log('titles top:', getTitlesTops())
-    console.log('titles bottom:', getTitlesBottoms())
-    console.log('titles center:', getTitleCenter())
-    console.log('titles center TC:', getTitleCenterTC())
+    // console.log('section top:', getSectionTop())
+    // console.log('titles height:', getTitlesHeights())
+    // console.log('titles top:', getTitlesTops())
+    // console.log('titles bottom:', getTitlesBottoms())
+    // console.log('titles center:', getTitleCenter())
+    // console.log('titles center TC:', getTitleCenterTC())
 
     const heights = getTitlesHeights()
+    // console.log(heights);
     const last = titles.length - 1
-    
-    titles.forEach((el, i) => {  
+    // console.log(last);
+    const midH = heights[Math.round(last / 2)] ?? 0
+    // console.log(midH);
+
+    titles.forEach((el, i) => {
+      // offset for each el to make it look pinned at the same time
       const h = heights[i]
-      const offset = i === 0 ? -h : i === last ? h : 0
+      let offset = 0
+
+      if (i === 0) offset = -((midH + h) / 2)
+      if (i === last) offset = (midH + h) / 2
+      
+      // console.log(`offset-${i}`, offset);
 
       ScrollTrigger.create({
         // markers: true,
         id: `title-${i+1}`,
         trigger: el,
         pin: true,
-        start: `center center+=${offset}`,
-        endTrigger: section,
-        end: `bottom-=10% center`,
+        start: `center-=${offset} center`,
+        endTrigger: footer,
+        end: `center center`,
       })
     })
 
 
-  })
+  }, { scope: sectionRef })
 
   return (
     <section ref={sectionRef} id="about" className="flex flex-col items-center justify-center text-center px-4 max-w-3xl mx-auto w-full relative">
@@ -99,23 +110,18 @@ function About() {
       ))}
 
       <div className="grid grid-cols-21 gap-y-40 my-[80svh] w-full">
-        <div className="img-stack z-10 col-start-3 col-span-8 row-start-1 h-[45svw] overflow-hidden relative rounded">
-          {FillerData.first.map((item, idx) => (
-            <img key={idx} src={item} alt="" className="absolute w-full h-full pointer-events-none object-cover object-center" />
-          ))}
-        </div>
+        {FillerData.map((item, idx) => (
+          <div
+            ref={(el) => { if (el) fillerRefs.current[idx] = el }}
+            key={idx}
+            className={item.class}
+          >
+            {item.imgs.map((img, imgIdx) => (
+              <img key={imgIdx} src={img} alt="" className="absolute w-full h-full pointer-events-none object-cover object-center" />
+            ))}
 
-        <div className="img-stack z-10 col-start-12 col-span-10 row-start-2 h-[35svw] overflow-hidden relative rounded">
-          {FillerData.second.map((item, idx) => (
-            <img key={idx} src={item} alt="" className="absolute w-full h-full pointer-events-none object-cover object-center" />
-          ))}
-        </div>
-
-        <div className="img-stack z-10 col-start-4 col-span-7 row-start-3 h-[30.75svw] overflow-hidden relative rounded">
-          {FillerData.third.map((item, idx) => (
-            <img key={idx} src={item} alt="" className="absolute w-full h-full pointer-events-none object-cover object-center" />
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
 
       <footer ref={footerRef} className="footer relative bg-blue-200 z-50 overflow-hidden rounded">
