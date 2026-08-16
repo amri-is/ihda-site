@@ -116,8 +116,8 @@ function About() {
         // markers: true,
         id: `filler-${idx + 1}`,
         trigger: filler,
-        start: '+=50 bottom',
-        end: 'top top',
+        start: 'center bottom',
+        end: 'center top',
         onUpdate: (self) => {
           const idx = Math.floor(self.progress * imgs.length) % imgs.length
           // console.log(idx);
