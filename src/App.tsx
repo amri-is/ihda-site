@@ -33,11 +33,12 @@ function App() {
       <div id="smooth-wrapper">
         <div id="smooth-content">
           <Hero />
-          <div className="spacer h-25 "></div>
+          <div className="spacer h-50 "></div>
           {/* <Portfolio /> */}
-          {/* <Services /> */}
+          <Services />
+          <div className="spacer h-100 "></div>
           <About />
-          <div className="spacer h-25 "></div>
+          <div className="spacer h-50 "></div>
           <Booking />
         </div>
       </div>
