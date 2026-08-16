@@ -7,6 +7,12 @@ export const FillerData = [
       "https://assets.codepen.io/7558/flame-glow-blur-001.jpg",
       "https://assets.codepen.io/7558/flame-glow-blur-002.jpg",
       "https://assets.codepen.io/7558/flame-glow-blur-003.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-004.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-005.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-006.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-007.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-008.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-009.jpg",
     ]
   },
   {
@@ -15,6 +21,12 @@ export const FillerData = [
       "https://assets.codepen.io/7558/flame-glow-blur-001.jpg",
       "https://assets.codepen.io/7558/flame-glow-blur-002.jpg",
       "https://assets.codepen.io/7558/flame-glow-blur-003.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-004.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-005.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-006.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-007.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-008.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-009.jpg",
     ]
   },
   {
@@ -23,6 +35,12 @@ export const FillerData = [
       "https://assets.codepen.io/7558/flame-glow-blur-001.jpg",
       "https://assets.codepen.io/7558/flame-glow-blur-002.jpg",
       "https://assets.codepen.io/7558/flame-glow-blur-003.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-004.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-005.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-006.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-007.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-008.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-009.jpg",
     ]
   },
 ]

@@ -6,10 +6,12 @@ import { BRAND_ITEM } from "@/constants/brand"
 
 function About() {
   const sectionRef = useRef<HTMLElement>(null)
-  const titleRefs = useRef<HTMLDivElement[]>([])
-  const fillerRefs = useRef<HTMLDivElement[]>([])
+  const titleRefs = useRef<Array<HTMLDivElement|null>>([])
+  const fillerRefs = useRef<Array<HTMLDivElement|null>>([])
+  const fillerImgRefs = useRef<Array<Array<HTMLImageElement|null>>>([])
   const footerRef = useRef<HTMLDivElement>(null)
   
+  // pin title
   useGSAP(() => {
     const section = sectionRef.current
     const titles = gsap.utils.toArray<HTMLElement>(titleRefs.current)
@@ -96,28 +98,68 @@ function About() {
 
   }, { scope: sectionRef })
 
+  // img cycle anim
+  useGSAP(() => {
+    const fillers = fillerRefs.current
+    // console.log(fillers);
+    
+    fillers.forEach((filler, idx) => {
+    const imgs = (fillerImgRefs.current[idx] ?? []).filter(
+      (img): img is HTMLImageElement => img !== null
+    )
+    if (!imgs.length) return
+
+    gsap.set(imgs, { autoAlpha: 0 })
+    gsap.set(imgs[0], { autoAlpha: 1 })
+
+      ScrollTrigger.create({
+        // markers: true,
+        id: `filler-${idx + 1}`,
+        trigger: filler,
+        start: 'top bottom',
+        end: 'bottom top',
+        onUpdate: (self) => {
+          const idx = Math.floor(self.progress * imgs.length) % imgs.length
+          // console.log(idx);
+          
+          imgs.forEach((img, imgIdx) => {
+            gsap.set(img, { autoAlpha: imgIdx === idx ? 1 : 0 })
+          })
+        }
+      })
+    })
+
+  }, { scope: sectionRef })
+
   return (
     <section ref={sectionRef} id="about" className="flex flex-col items-center justify-center text-center px-4 max-w-3xl mx-auto w-full relative">
 
       {TitleData.map((t, idx) => (
-        <h2
+        <div
           key={idx}
-          ref={(el) => { if (el) titleRefs.current[idx] = el }}
+          ref={(el) => { titleRefs.current[idx] = el }}
           className={`title ${t.className}`}
         >
           {t.text}
-        </h2>
+        </div>
       ))}
 
       <div className="grid grid-cols-21 gap-y-40 my-[80svh] w-full">
         {FillerData.map((item, idx) => (
           <div
-            ref={(el) => { if (el) fillerRefs.current[idx] = el }}
+            ref={(el) => { fillerRefs.current[idx] = el }}
             key={idx}
-            className={item.class}
+            className={item.class + ' a'}
           >
             {item.imgs.map((img, imgIdx) => (
-              <img key={imgIdx} src={img} alt="" className="absolute w-full h-full pointer-events-none object-cover object-center" />
+              <img
+                ref={(el) => {
+                  if (!fillerImgRefs.current[idx]) fillerImgRefs.current[idx] = []
+                  fillerImgRefs.current[idx][imgIdx] = el
+                }}
+                key={imgIdx}
+                src={img} alt=""
+                className="absolute w-full h-full pointer-events-none object-cover object-center" />
             ))}
 
           </div>
