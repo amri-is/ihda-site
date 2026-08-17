@@ -209,7 +209,6 @@ function About() {
           <a
             ref={gmapRef}
             href={AboutItems.gmap}
-            target="_blank"
             rel="noopener noreferrer"
             className="visit-us bg-bg p-1 w-full font-serif text-rose rounded-xs flex gap-1 items-center justify-center overflow-hidden"
           >
