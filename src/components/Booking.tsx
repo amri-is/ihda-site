@@ -11,7 +11,7 @@ export default function Booking() {
     <>
       <section
         id="booking"
-        className="relative h-screen flex flex-col justify-center items-center px-8 max-w-3xl mx-auto text-center"
+        className="relative h-screen flex flex-col justify-center items-center px-8 max-w-3xl mx-auto text-center overflow-hidden"
       >
 
         <div className="-z-10 absolute w-full right-0 flex items-center justify-center opacity-10 scale-200">

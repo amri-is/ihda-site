@@ -77,7 +77,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="hero"
-      className="h-screen flex flex-col items-center justify-center text-center px-8 max-w-3xl mx-auto w-full relative"
+      className="h-svh flex flex-col items-center justify-center text-center px-8 max-w-3xl mx-auto w-full relative overflow-hidden transition-all"
     >
       <div ref={bloomRef} className="-z-10 absolute w-full right-0 flex items-center justify-center opacity-10 scale-200">
           <Bloom size="large" />
