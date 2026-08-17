@@ -78,7 +78,7 @@ function Services() {
 
     cards.forEach((card, idx) => {
       let GAP = null
-      GAP = 48
+      // GAP = 48
       const finalOffset = () => {
         if (!GAP) return offset[idx]
 
@@ -92,13 +92,13 @@ function Services() {
         onEnter: () => {
           timelines[idx].play()
           if (card) card.dataset.expanded = "true"
-          imgTimelinesRef.current[idx]?.play(idx * getRange(5,0))
+          // imgTimelinesRef.current[idx]?.play(idx * getRange(5,0))
           // console.log(`card ${idx} played at`, performance.now())
         },
         onLeaveBack: () => {
           timelines[idx].reverse()
           if (card) card.dataset.expanded = "false"
-          imgTimelinesRef.current[idx]?.pause()
+          // imgTimelinesRef.current[idx]?.pause()
           // console.log(`card ${idx} paused at`, performance.now())
         },
       })
@@ -109,21 +109,59 @@ function Services() {
   // imgs anim
   useGSAP(() => {
     const stacks = imgsRefs.current
+    const cards = cardRefs.current
 
     imgTimelinesRef.current = stacks.map((imgs) => {
       if (!imgs || imgs.length < 2) return null
 
       gsap.set(imgs, { autoAlpha: 0 })
+      // reveal the first img
       gsap.set(imgs[0], { autoAlpha: 1 })
 
+      // hold anim
       const tl = gsap.timeline({ repeat: -1, paused: true })
       imgs.forEach((img, i) => {
+        // wrap back to img 0 after the last one
         const next = imgs[(i + 1) % imgs.length]
         tl.to(img, { autoAlpha: 0, duration: 1, ease: 'linear' }, `+=4`)
           .to(next, { autoAlpha: 1, duration: 1, ease: 'linear' }, '<')
       })
       return tl
     })
+
+    // play/pause anim based on data-expanded attr on each card
+    const observers = cards.map((card, idx) => {
+      if (!card) return null
+      const tl = imgTimelinesRef.current[idx]
+      if (!tl) return null
+
+      let started = false
+      const apply = () => {
+        if (card.dataset.expanded === "true") {
+
+          if (!started) {
+            // add delay/stagger on random time
+            const range = idx * getRange(5)
+            tl.play(range)
+            started = true
+          } else {
+            tl.play()
+          }
+
+        } else {
+          tl.pause() 
+        }
+      }
+      apply() // run anim if card already expanded
+
+      // watch attr changes, call apply() when they happen
+      const obs = new MutationObserver(apply)
+      obs.observe(card, { attributes: true, attributeFilter: ['data-expanded'] })
+      return obs
+    })
+
+    // cleanup
+    return () => observers.forEach((o) => o?.disconnect())
   }, { scope: sectionRef })
 
   return (
