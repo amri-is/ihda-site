@@ -1,47 +1,96 @@
 import { TestimonialItems } from "@/data/testimonial";
 import { getRange } from "@/lib/utils";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import Button from "@/components/ui/Button";
 
 export default function Testimonial() {
   const commentWrapRef = useRef<HTMLDivElement | null>(null)
   const commentRefs = useRef<Array<HTMLDivElement | null>>([])
-  // console.log(commentRefs.current);
+  const btnRef = useRef<HTMLButtonElement | null>(null)
+  // hold gsap timeline 
+  const animTl = useRef<gsap.core.Timeline | null>(null)
+  const [currentIdx, setCurrentIdx] = useState(0)
+  const [locked, setLocked] = useState(true)
 
+  // populate anim
   useGSAP(() => {
     const wrap = commentWrapRef.current
     const comments = commentRefs.current
-    const tl = gsap.timeline({ paused: true, })
-    const anim = tl.from(comments, {
+
+    const tl = gsap.timeline({ paused: true })
+    tl.from(comments, {
       autoAlpha: 0,
       scale: 0,
+      rotate: 'random(180,-180)',
       duration: 0.5,
       ease: 'back.out',
-      // easeReverse: true,
-      stagger: {
-        each: 0.15,
-        from: 'start'
-      }
+      easeReverse: 'back.in',
+      stagger: { each: 0.1, from: 'start' },
+      onStart: () => setLocked(true),
+      onComplete: () => setLocked(false),
     })
+    animTl.current = tl
 
     ScrollTrigger.create({
-      // markers: true,
+      markers: true,
       id: 'comment',
       trigger: wrap,
-      animation: anim,
+      animation: tl,
       start: 'top center',
       end: 'top center',
-      toggleActions: 'play none none reverse'
+      toggleActions: 'play none none reverse',
     })
-  })
-  
-  return (
-    <section id="testimonial" className="flex flex-col items-center text-center px-8 max-w-3xl mx-auto w-full relative overflow-hidden">
+  }, [])
 
+  const handleNext = () => {
+    if (locked) return
+
+    const items = TestimonialItems
+
+    // replay anim if all comments empty
+    if (currentIdx >= items.length) {
+      gsap.set(commentRefs.current, { xPercent: 0, rotate: 0, autoAlpha: 0 })
+      setCurrentIdx(0)
+      setLocked(true)
+      animTl.current?.restart()
+      return
+    }
+
+    // swap index to start from last
+    const frontIdx = items.length - 1 - currentIdx
+    console.log(frontIdx);
+    
+    const frontEl = commentRefs.current[frontIdx]
+    // console.log(frontEl);
+    if (!frontEl) return
+
+    setLocked(true)
+    // alternate direction
+    const dir = currentIdx % 2 === 0 ? 1 : -1
+
+    const randomRotate = getRange(90,45)
+
+    // swipe anim
+    gsap.to(frontEl, {
+      xPercent: (dir * 100),
+      autoAlpha: 0,
+      rotate: (dir * randomRotate),
+      duration: 0.4,
+      ease: 'back.in',
+      onComplete: () => {
+        setCurrentIdx((prev) => prev + 1)
+        setLocked(false)
+      }
+    })
+  }
+
+  return (
+    <section id="testimonial" className="flex flex-col items-center text-center px-8 max-w-3xl mx-auto w-full relative ">
+      
       <h2 className="text-sm uppercase tracking-[0.25rem] text-rose">
         Kind Words
       </h2>
-
       <h1 className="font-serif font-normal text-4xl leading-tight">
         From past&nbsp;
         <span className="text-rosedeep text-[2.8rem] italic font-curvy font-black">
@@ -49,45 +98,50 @@ export default function Testimonial() {
         </span>
       </h1>
 
-
+      {/* card stack container, also the ScrollTrigger trigger element */}
       <div ref={commentWrapRef} className="comments relative w-full min-h-80 flex justify-center items-center">
         {TestimonialItems.map((item, idx) => (
           <div
             key={idx}
             ref={(el) => { commentRefs.current[idx] = el }}
-            className="absolute p-5 flex flex-col gap-4 shadow-md max-w-sm"
+            data-id={idx}
+            className="absolute p-5 flex flex-col gap-4 max-w-sm min-w-3xs rounded"
             style={{
               backgroundColor: item.color,
-              backgroundImage: `linear-gradient(135deg, transparent ${getRange(80, 90)}%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.18) 100%)`,
-              transform: `rotate(${getRange(-10, 10)}deg) translateY(${getRange(-10, 10)}%) scale(${getRange(1.1, 0.9, 2)})`
+              // to make it look like post-it note
+              backgroundImage: `linear-gradient(
+                135deg,
+                transparent ${getRange(80, 90)}%, 
+                rgba(100,0,0,0.1) 0%, 
+                rgba(100,0,0,0.1) 100%
+              )`,
+              transform: `rotate(${getRange(10, -10)}deg) translateY(${getRange(10, -10)}%)`
             }}
           >
-
             <div className="comment text-sm">
               {item.comment}
             </div>
-
-            <div className="photo flex items-center gap-1">
-
+            <div className="photo flex items-center gap-4">
               <img
                 src={item.photo}
-                alt={`Testimonial photo ${idx + 1}`}
-                className="size-8 object-center object-cover rounded-full"
+                alt={`Testimonial client ${idx + 1}`}
+                className="size-15 object-center object-cover rounded-full"
               />
-
               <div className="name text-xs ml-2">
                 {item.name}
               </div>
-
             </div>
-
           </div>
         ))}
       </div>
-      <div className="buttons flex gap-5">
-        <button className="next bg-blue-200 py-1 px-4 rounded">next</button>
-      </div>
-
+      <Button
+        ref={btnRef}
+        as="button"
+        onClick={handleNext}
+        disabled={locked}
+      >
+        next
+      </Button>
     </section>
   )
 }
