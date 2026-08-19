@@ -12,10 +12,10 @@ function App() {
     <>
       <ScrollbarIndicator />
       <Hero />
-      {/* <div className="spacer h-50 "></div> */}
-      {/* <Services /> */}
-      {/* <div className="spacer h-100 "></div> */}
-      {/* <About /> */}
+      <div className="spacer h-50 "></div>
+      <Services />
+      <div className="spacer h-100 "></div>
+      <About />
       <div className="spacer h-50 "></div>
       <Testimonial />
       <div className="spacer h-50 "></div>
