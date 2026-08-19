@@ -33,13 +33,13 @@ export default function Testimonial() {
     animTl.current = tl
 
     ScrollTrigger.create({
-      markers: true,
+      // markers: true,
       id: 'comment',
       trigger: wrap,
       animation: tl,
       start: 'top center',
       end: 'top center',
-      toggleActions: 'play none none reverse',
+      toggleActions: 'play none none none',
     })
   }, [])
 
@@ -86,7 +86,7 @@ export default function Testimonial() {
   }
 
   return (
-    <section id="testimonial" className="flex flex-col items-center text-center px-8 max-w-3xl mx-auto w-full relative ">
+    <section id="testimonial" className="flex flex-col items-center text-center px-8 max-w-3xl mx-auto w-full relative overflow-hidden">
       
       <h2 className="text-sm uppercase tracking-[0.25rem] text-rose">
         Kind Words
