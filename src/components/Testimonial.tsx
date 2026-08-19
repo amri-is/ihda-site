@@ -13,6 +13,12 @@ export default function Testimonial() {
   const [currentIdx, setCurrentIdx] = useState(0)
   const [locked, setLocked] = useState(true)
 
+  // mapping testimonial items
+  const items = TestimonialItems
+
+  const isLastCard = currentIdx === items.length
+  const btnText = isLastCard ? 'click again!' : 'next'
+
   // populate anim
   useGSAP(() => {
     const wrap = commentWrapRef.current
@@ -46,44 +52,79 @@ export default function Testimonial() {
   const handleNext = () => {
     if (locked) return
 
-    const items = TestimonialItems
-
     // replay anim if all comments empty
     if (currentIdx >= items.length) {
       gsap.set(commentRefs.current, { xPercent: 0, rotate: 0, autoAlpha: 0 })
       setCurrentIdx(0)
-      setLocked(true)
       animTl.current?.restart()
       return
     }
 
     // swap index to start from last
     const frontIdx = items.length - 1 - currentIdx
-    console.log(frontIdx);
+    // console.log(frontIdx);
     
     const frontEl = commentRefs.current[frontIdx]
     // console.log(frontEl);
     if (!frontEl) return
 
-    setLocked(true)
     // alternate direction
     const dir = currentIdx % 2 === 0 ? 1 : -1
 
-    const randomRotate = getRange(90,45)
+    const randomRotate = getRange(90, 45)
 
     // swipe anim
     gsap.to(frontEl, {
-      xPercent: (dir * 100),
+      xPercent: dir * 100,
       autoAlpha: 0,
-      rotate: (dir * randomRotate),
-      duration: 0.4,
+      rotate: dir * randomRotate,
+      duration: 0.5,
       ease: 'back.in',
-      onComplete: () => {
+      onEnter: () => {
         setCurrentIdx((prev) => prev + 1)
+
+        //* this log fetch stale data since its inside a closure
+        //* call it outside so it can fetch new data
+        //* something-something garbage collected
+        // console.log(currentIdx);
+        // console.log(isLastCard);
+        // console.log(btnText);
+        // console.log(items.length);
+        
+        // disable btn
+        setLocked(true)
+      },
+      onComplete: () => {
+        // enable btn
         setLocked(false)
       }
     })
   }
+
+  // btn anim on click
+  const handleBtnAnim = () => {
+    const btn = btnRef.current
+    if (!btn) return
+    gsap.to(btn, {
+      duration: 0.1,
+      repeat: 1,
+      yoyo: true,
+      scale: 1.2,
+      ease: 'sine.in'
+    })
+  }
+
+  //! log it here (outside)
+  // console.log('currentIdx:', currentIdx)
+  // console.log('isLastCard:', isLastCard)
+  // console.log('btnText:', btnText)
+
+  // btn text anim
+  useGSAP(() => {
+    const btn = btnRef.current
+    if (!btn) return
+    gsap.to(btn, { text: btnText, ease: 'power4.out' })
+  }, [btnText])
 
   return (
     <section id="testimonial" className="flex flex-col items-center text-center px-8 max-w-3xl mx-auto w-full relative overflow-hidden">
@@ -104,7 +145,6 @@ export default function Testimonial() {
           <div
             key={idx}
             ref={(el) => { commentRefs.current[idx] = el }}
-            data-id={idx}
             className="absolute p-5 flex flex-col gap-4 max-w-sm min-w-3xs rounded"
             style={{
               backgroundColor: item.color,
@@ -137,8 +177,12 @@ export default function Testimonial() {
       <Button
         ref={btnRef}
         as="button"
-        onClick={handleNext}
+        onClick={() => {
+          handleNext()
+          handleBtnAnim()
+        }}
         disabled={locked}
+        className="mb-10"
       >
         next
       </Button>
