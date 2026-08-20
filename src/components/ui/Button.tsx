@@ -1,24 +1,41 @@
-// src/components/ui/Button.tsx
-import { forwardRef, type ReactNode, type ComponentPropsWithoutRef } from "react"
+import { forwardRef, type ReactNode } from "react"
 import { cn } from "@/lib/utils"
 
-type ButtonProps = ComponentPropsWithoutRef<"a"> & {
-  children: ReactNode
-}
+type ButtonAsAnchor = { as?: "a" } & React.ComponentPropsWithoutRef<"a">
+type ButtonAsButton = { as: "button" } & React.ComponentPropsWithoutRef<"button">
 
-const Button = forwardRef<HTMLAnchorElement, ButtonProps>(function Button(
-  { children, href = "#", className, ...props },
-  ref
-) {
-  const base =
-    "flex items-center justify-center px-4 py-2 rounded-full text-sm tracking-wider bg-ink text-bg w-fit"
+type ButtonProps = (ButtonAsAnchor | ButtonAsButton) & { children: ReactNode }
 
-  return (
-    <a ref={ref} href={href} className={cn(base, className)} {...props}>
-      {children}
-    </a>
-  )
-})
+const Button = forwardRef<HTMLAnchorElement | HTMLButtonElement, ButtonProps>(
+  function Button({ children, className, as = "a", ...props }, ref) {
+    const base =
+      "flex items-center justify-center px-4 py-2 rounded-full text-sm tracking-wider bg-ink text-bg w-fit"
+
+    if (as === "button") {
+      return (
+        <button
+          ref={ref as React.Ref<HTMLButtonElement>}
+          className={cn(base, className)}
+          {...(props as React.ComponentPropsWithoutRef<"button">)}
+        >
+          {children}
+        </button>
+      )
+    }
+
+    const { href = "#", ...anchorProps } = props as React.ComponentPropsWithoutRef<"a">
+    return (
+      <a
+        ref={ref as React.Ref<HTMLAnchorElement>}
+        href={href}
+        className={cn(base, className)}
+        {...anchorProps}
+      >
+        {children}
+      </a>
+    )
+  }
+)
 
 Button.displayName = "Button"
 

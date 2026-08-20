@@ -4,6 +4,7 @@ import Booking from "@/components/Booking"
 import Portfolio from "@/components/Portfolio"
 import Services from "@/components/Services"
 import About from "@/components/About"
+import Testimonial from "@/components/Testimonial"
 import ScrollbarIndicator from "@/components/ScrollbarIndicator"
 
 function App() {
@@ -15,6 +16,8 @@ function App() {
       <Services />
       <div className="spacer h-100 "></div>
       <About />
+      <div className="spacer h-50 "></div>
+      <Testimonial />
       <div className="spacer h-50 "></div>
       <Booking />
     </>
