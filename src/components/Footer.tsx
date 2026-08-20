@@ -2,7 +2,9 @@ import Bloom from '@/components/ui/Bloom'
 import Button from '@/components/ui/Button'
 
 import { BRAND_ITEM } from '@/constants/brand'
-import { FOOTER_ITEM } from '@/constants/footer'
+import { FooterItems } from '@/constants/footer'
+import { gsap, useGSAP, SplitText, ScrollTrigger } from '@/lib/gsap'
+import { useRef } from 'react'
 
 function InstaSVG() {
   return (
@@ -35,15 +37,44 @@ function MapSVG() {
 }
 
 export default function Footer() {
+  const nameRefs = useRef<Array<HTMLSpanElement | null>>([])
+  const studioRef = useRef<HTMLDivElement | null>(null)
+  
+
+  useGSAP(() => {
+    const names = nameRefs.current
+    const studio = studioRef.current
+    if (!names || !studio) return
+    // console.log(names);
+
+    names.map((el) => {
+      const anim = gsap.timeline().to(el, { xPercent: -100, duration: 50, ease: 'none', repeat: -1 })
+      ScrollTrigger.create({
+        // markers: true,
+        trigger: el,
+        animation: anim,
+        start: 'top bottom',
+        toggleActions: 'play none none pause'
+      })
+    })
+
+    SplitText.create(studio, { type: 'chars' })
+
+  })  
+
   return (
     <footer className="min-h-80 w-full grid grid-cols-1 grid-rows-[auto_auto_1fr_auto] gap-8 items-center">
 
-      <div className="pages flex flex-wrap gap-2 justify-center max-w-60 mx-auto pointer-events-none">
-        <Button href='/home' className="bg-inksoft text-white text-xs rounded px-2 py-1">home</Button>
-        <Button href='/about' className="bg-inksoft text-white text-xs rounded px-2 py-1">about</Button>
-        <Button href='/services' className="bg-inksoft text-white text-xs rounded px-2 py-1">services</Button>
-        <Button href='/works' className="bg-inksoft text-white text-xs rounded px-2 py-1">works</Button>
-        <Button href='/faqs' className="bg-inksoft text-white text-xs rounded px-2 py-1">faqs</Button>
+      <div className="pages flex flex-wrap gap-2 justify-center max-w-60 mx-auto pointer-events-none mt-8">
+        {FooterItems.pages.map((item, idx) => (
+          <Button
+            key={idx}
+            href={`/${item}`}
+            className="bg-inksoft text-white text-xs rounded px-2 py-1"
+          >
+            {item}
+          </Button>
+        ))}
       </div>
 
       <div className="links flex gap-2 justify-center px-4">
@@ -56,22 +87,26 @@ export default function Footer() {
 
       <div className="flex flex-col justify-center items-center relative overflow-hidden">
         <div
-          className='font-black font-curvy text-9xl leading-[1.2] bg-linear-to-r from-rose via-rose to-rosedeep bg-clip-text text-transparent px-4 text-nowrap opacity-10'
+          className='flex opacity-10'
         >
-          {BRAND_ITEM.nameShort}
+          {Array.from({ length: 5 }).map((_, i) => (
+            <span
+              ref={(el) => { nameRefs.current[i] = el }}
+              key={i}
+              className='font-black font-curvy text-9xl leading-[1.2] bg-linear-to-r from-rose via-rose to-rosedeep bg-clip-text text-transparent px-4 text-nowrap'
+            >
+              {BRAND_ITEM.nameShort}
+            </span>
+          ))}
         </div>
-        <div className="uppercase tracking-[5vw] text-inksoft opacity-50">
-          {BRAND_ITEM.studio}
-        </div>
+        <div ref={studioRef} className="uppercase text-inksoft opacity-50 flex gap-8 ">{BRAND_ITEM.studio}</div>
       </div>
 
       <div className="w-full grid grid-rows-[auto_auto] gap-1 text-xs font-serif font-extralight px-2 pb-2">
         <div className="grid grid-cols-[0.5rem_1.25rem_1fr_1.25rem_0.5rem] gap-1 h-px w-full">
-          <div className="bg-rose/20"></div>
-          <div className="bg-rose/20"></div>
-          <div className="bg-rose/20"></div>
-          <div className="bg-rose/20"></div>
-          <div className="bg-rose/20"></div>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="bg-rose/20"></div>
+          ))}
         </div>
         <div className="grid grid-cols-2 items-center w-full">
           <div className="justify-self-start">made with ❤️</div>
