@@ -127,7 +127,7 @@ export default function Testimonial() {
   }, [btnText])
 
   return (
-    <section id="testimonial" className="flex flex-col items-center text-center px-8 max-w-3xl mx-auto w-full relative overflow-hidden">
+    <section id="testimonial" className="flex flex-col items-center text-center px-8 max-w-3xl mx-auto w-full relative">
       
       <h2 className="text-sm uppercase tracking-[0.25rem] text-rose">
         Kind Words
