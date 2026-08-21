@@ -21,7 +21,7 @@ function App() {
       <Testimonial />
       <div className="spacer h-50 "></div>
       <Booking />
-      <div className="spacer h-20 "></div>
+      <div className="spacer h-50 "></div>
       <Footer />
     </>
   )
