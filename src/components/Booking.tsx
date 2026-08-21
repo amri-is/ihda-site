@@ -91,29 +91,28 @@ export default function Booking() {
     <section
       ref={sectionRef}
       id="booking"
-      className="relative h-[80svh] flex flex-col justify-center items-center px-8 max-w-3xl mx-auto text-center overflow-hidden"
+      className="relative h-svh flex flex-col justify-center items-center px-8 max-w-3xl mx-auto text-center overflow-hidden"
     >
 
-      <div ref={bloomRef} className="-z-10 absolute flex items-center justify-center opacity-10 scale-150">
+      <div ref={bloomRef} className="-z-10 absolute flex items-center justify-center opacity-10 scale-200">
         <Bloom size="large" flip/>
       </div>
 
-      <h2 ref={eyebrowRef} className="booking-in text-sm uppercase tracking-widest text-rose">
+      <h2 ref={eyebrowRef} className="text-xs uppercase tracking-[.25em] text-rose">
         Ready when you are
       </h2>
 
-      <h1 ref={titleRef} className="booking-in font-serif font-normal text-4xl leading-tight">
+      <h1 ref={titleRef} className="font-serif text-5xl/12 max-w-3xl">
         Let's create your
-        <br />
-        <span className="text-rosedeep text-[2.8rem] italic font-curvy font-black">
-          perfect&nbsp;
+        <span className="font-curvy text-[3.5rem] text-rose font-black">
+          &nbsp;perfect&nbsp;
         </span>
         look.
       </h1>
 
       <p
         ref={bodyRef}
-        className="booking-in mt-8 text-ink/50 max-w-md mx-auto"
+        className="text-base/4.5 text-inksoft max-w-md mt-4"
       >
         Tell us about your event,
         preferred style, and date.
