@@ -58,6 +58,7 @@ export default function Footer() {
       })
     })
 
+    // split text into chars and give it gap via its parent
     SplitText.create(studio, { type: 'chars' })
 
   })  
@@ -65,41 +66,40 @@ export default function Footer() {
   return (
     <footer className="min-h-80 w-full grid grid-cols-1 grid-rows-[auto_auto_1fr_auto] gap-8 items-center">
 
-      <div className="pages flex flex-wrap gap-2 justify-center max-w-60 mx-auto pointer-events-none mt-8">
+      <div className="pages flex flex-wrap gap-1 justify-center max-w-60 mx-auto mt-8">
         {FooterItems.pages.map((item, idx) => (
           <Button
             key={idx}
             href={`/${item}`}
-            className="bg-inksoft text-white text-xs rounded px-2 py-1"
+            className="text-xs px-3 py-1 pointer-events-none"
           >
             {item}
           </Button>
         ))}
       </div>
 
-      <div className="links flex gap-2 justify-center px-4">
-        <Button href={BRAND_ITEM.wa} className="bg-inksoft text-white rounded p-2"><WhatsappSVG/></Button>
-        <Button href={BRAND_ITEM.hairdo} className="bg-inksoft text-white rounded p-2 text-xs/0">makeup&nbsp;<InstaSVG/></Button>
-        <Button href={BRAND_ITEM.mua} className="bg-inksoft text-white rounded p-2 text-xs/0">hairdo&nbsp;<InstaSVG/></Button>
-        <Button href={BRAND_ITEM.tiktok} className="bg-inksoft text-white rounded p-2"><TiktokSVG/></Button>
-        <Button href={BRAND_ITEM.map} className="bg-inksoft text-white rounded p-2"><MapSVG/></Button>
+      <div className="links flex gap-1 justify-center px-4">
+        <Button href={BRAND_ITEM.hairdo} className="p-2 px-3 text-xs/0">makeup&nbsp;<InstaSVG/></Button>
+        <Button href={BRAND_ITEM.mua} className="p-2 px-3 text-xs/0">hairdo&nbsp;<InstaSVG/></Button>
+        <Button href={BRAND_ITEM.tiktok} className="p-2"><TiktokSVG/></Button>
+        <Button href={BRAND_ITEM.map} className="p-2"><MapSVG/></Button>
       </div>
 
-      <div className="flex flex-col justify-center items-center relative overflow-hidden">
+      <div className="flex flex-col justify-center items-center relative overflow-hidden opacity-10">
         <div
-          className='flex opacity-10'
+          className='flex gap-8'
         >
           {Array.from({ length: 5 }).map((_, i) => (
             <span
               ref={(el) => { nameRefs.current[i] = el }}
               key={i}
-              className='font-black font-curvy text-9xl leading-[1.2] bg-linear-to-r from-rose via-rose to-rosedeep bg-clip-text text-transparent px-4 text-nowrap'
+              className='font-black font-curvy text-9xl text-rose text-nowrap'
             >
               {BRAND_ITEM.nameShort}
             </span>
           ))}
         </div>
-        <div ref={studioRef} className="uppercase text-inksoft opacity-50 flex gap-8 ">{BRAND_ITEM.studio}</div>
+        <div ref={studioRef} className="uppercase flex gap-8 ">{BRAND_ITEM.studio}</div>
       </div>
 
       <div className="w-full grid grid-rows-[auto_auto] gap-1 text-xs font-serif font-extralight px-2 pb-2">
