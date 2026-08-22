@@ -71,7 +71,7 @@ export default function Footer() {
           <Button
             key={idx}
             href={`/${item}`}
-            className="text-xs px-3 py-1 pointer-events-none"
+            className="text-xs/0 px-3 py-3.5 pointer-events-none"
           >
             {item}
           </Button>
