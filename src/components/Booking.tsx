@@ -3,115 +3,61 @@ import { useRef } from "react"
 import Bloom from "@/components/ui/Bloom"
 import Button from "@/components/ui/Button"
 
-import { gsap, useGSAP, SplitText } from "@/lib/gsap";
-
+import { gsap, useGSAP } from "@/lib/gsap";
 
 export default function Booking() {
   const sectionRef = useRef<HTMLElement | null>(null)
-  const bloomRef = useRef<HTMLDivElement | null>(null)
-  const eyebrowRef = useRef<HTMLDivElement | null>(null)
-  const titleRef = useRef<HTMLDivElement | null>(null)
-  const bodyRef = useRef<HTMLDivElement | null>(null)
-  const btnRef = useRef<HTMLAnchorElement | null>(null)
-  const btnTextRef = useRef<HTMLSpanElement | null>(null)
+  const titleRef = useRef<HTMLSpanElement | null>(null)
 
   useGSAP(() => {
-    const EASE = 'power2.out'
-    const DUR = 1
-
-    const eyebrow = eyebrowRef.current
+    const section = sectionRef.current
     const title = titleRef.current
-    const body = bodyRef.current
-    const btn = btnRef.current
-    const btnText = btnTextRef.current
+    if (!section || !title) return
 
-    const tl = gsap.timeline({
+    const text = title.innerText
+
+    gsap.set(title, {
+      text: "",
+      // autoAlpha: 0,
+    })
+
+    gsap.to(title, {
+      duration: 0.5,
+      // autoAlpha: 1,
+      ease: 'power4.out',
+      text: text,
       scrollTrigger: {
         // markers: true,
-        id: 'booking',
-        trigger: sectionRef.current,
-        start: '10% 30%',
+        trigger: title,
+        start: 'top center',
         toggleActions: 'play none none none',
       }
     })
-    const eyebrowSplit = SplitText.create(eyebrow, {type: 'words', mask: 'words'})
-    const titleSplit = SplitText.create(title, {type: 'words'})
-    const bodySplit = SplitText.create(body, {type: 'words', mask: 'words'})
-    const btnTextSplit = SplitText.create(btnText, {type: 'words'})
-
-    tl.from(eyebrowSplit.words, {
-      yPercent: -100, 
-      autoAlpha: 0, 
-      ease: EASE, 
-      easeReverse: true, 
-      stagger: { from: 'start', amount: 0.5 }, 
-      duration: DUR,
-    })
-
-    tl.add(gsap.from(titleSplit.words, {
-      xPercent: -50, 
-      filter: 'blur(1rem)', 
-      autoAlpha: 0, 
-      ease: EASE, 
-      easeReverse: true,
-      stagger: { from: 'start', amount: 0.5 }, 
-      duration: DUR,
-    }), 0)
-
-    tl.add(gsap.from(bodySplit.words, {
-      yPercent: 100, 
-      autoAlpha: 0, 
-      ease: EASE, 
-      easeReverse: true,
-      stagger: { from: 'start', amount: 0.5 }, 
-      duration: DUR,
-    }), 0)
-
-    tl.add(gsap.from(btn, {
-      width: 0, 
-      opacity: 0, 
-      duration: DUR, 
-      ease: EASE, 
-      easeReverse: true,
-    }), 0)
-
-    tl.add(gsap.from(btnTextSplit.words, {
-      yPercent: -300, 
-      opacity: 0, 
-      rotate: 'random(90,-90, 45)',
-      ease: 'back.out', 
-      easeReverse: true,
-      stagger: { from: 'start', each: 0.1 }, 
-      duration: DUR,
-    }), 0)
-
   }, { scope: sectionRef })
 
   return (
     <section
       ref={sectionRef}
       id="booking"
-      className="relative h-svh flex flex-col justify-center items-center px-8 max-w-3xl mx-auto text-center overflow-hidden"
+      className="h-lvh flex flex-col items-start justify-center px-4 max-w-3xl mx-auto w-full relative overflow-hidden "
     >
 
-      <div ref={bloomRef} className="-z-10 absolute flex items-center justify-center opacity-10 scale-200">
+      <div className="-z-10 absolute w-full flex items-center justify-center opacity-10 scale-200">
         <Bloom size="large" flip/>
       </div>
 
-      <h2 ref={eyebrowRef} className="text-xs uppercase tracking-[.25em] text-rose">
+      <h2 className="text-xs uppercase tracking-[.25em] text-rose">
         Ready when you are
       </h2>
 
-      <h1 ref={titleRef} className="font-serif text-5xl/12 max-w-3xl">
-        Let's create your
-        <span className="font-curvy text-[3.5rem] text-rose font-black">
-          &nbsp;perfect&nbsp;
+      <h1 className="font-serif text-5xl/12 max-w-3xl">
+        Let's make your look&nbsp;
+        <span ref={titleRef} className="font-curvy text-[3.5rem]/5 font-black text-rose">
+          perfect
         </span>
-        look.
       </h1>
 
       <p
-        ref={bodyRef}
         className="text-base/4.5 text-inksoft max-w-md mt-4"
       >
         Tell us about your event,
@@ -123,11 +69,10 @@ export default function Booking() {
       </p>
 
       <Button
-        ref={btnRef}
         href="#booking"
         className="mt-4 overflow-hidden text-nowrap"
       >
-        <span ref={btnTextRef}>Book a session</span>
+        <span>Book now</span>
       </Button>
 
     </section>
