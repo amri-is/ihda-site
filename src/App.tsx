@@ -6,6 +6,7 @@ import Services from "@/components/Services"
 import About from "@/components/About"
 import Testimonial from "@/components/Testimonial"
 import ScrollbarIndicator from "@/components/ScrollbarIndicator"
+import Footer from "@/components/Footer"
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
       <Testimonial />
       <div className="spacer h-50 "></div>
       <Booking />
+      <div className="spacer h-50 "></div>
+      <Footer />
     </>
   )
 }

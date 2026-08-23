@@ -9,7 +9,7 @@ type ButtonProps = (ButtonAsAnchor | ButtonAsButton) & { children: ReactNode }
 const Button = forwardRef<HTMLAnchorElement | HTMLButtonElement, ButtonProps>(
   function Button({ children, className, as = "a", ...props }, ref) {
     const base =
-      "flex items-center justify-center px-4 py-2 rounded-full text-sm tracking-wider bg-ink text-bg w-fit"
+      "flex items-center justify-center px-4 py-2 rounded-full text-sm tracking-wider bg-inksoft text-bg w-fit"
 
     if (as === "button") {
       return (

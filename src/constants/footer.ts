@@ -1,6 +1,10 @@
-export const FOOTER_ITEM = {
-  note: [
-    'Serving Salatiga and nearby city',
-    'Home visits available'
-  ]
+export const FooterItems = {
+  pages: [
+    'home',
+    'works',
+    'services',
+    'faqs',
+    'about',
+    'contact',
+  ],
 }
