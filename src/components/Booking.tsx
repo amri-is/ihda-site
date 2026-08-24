@@ -3,36 +3,42 @@ import { useRef } from "react"
 import Bloom from "@/components/ui/Bloom"
 import Button from "@/components/ui/Button"
 
-import { gsap, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP, ScrollTrigger, SplitText } from "@/lib/gsap";
 
 export default function Booking() {
   const sectionRef = useRef<HTMLElement | null>(null)
-  const titleRef = useRef<HTMLSpanElement | null>(null)
+  const emphasizeRef = useRef<HTMLSpanElement | null>(null)
 
   useGSAP(() => {
     const section = sectionRef.current
-    const title = titleRef.current
-    if (!section || !title) return
+    const emphasize = emphasizeRef.current
+    if (!section || !emphasize) return
 
-    const text = title.innerText
+    const emSplit = SplitText.create(emphasize, { type: 'words chars' })
 
-    gsap.set(title, {
-      text: "",
-      // autoAlpha: 0,
-    })
-
-    gsap.to(title, {
-      duration: 0.5,
-      // autoAlpha: 1,
-      ease: 'power4.out',
-      text: text,
-      scrollTrigger: {
-        // markers: true,
-        trigger: title,
-        start: 'top center',
-        toggleActions: 'play none none none',
+    const tl = gsap.timeline({ paused: true })
+    
+    tl.from(emSplit.chars, {
+      autoAlpha: 0,
+      // duration: 1,
+      xPercent: -100,
+      ease: 'power4',
+      stagger: {
+        from: 'start',
+        each: 0.05,
       }
     })
+    // tl.play(0)
+
+    ScrollTrigger.create({
+      // markers: true,
+      animation: tl,
+      trigger: emphasize,
+      start: 'top 75%',
+      end: 'bottom 75%',
+      toggleActions: 'play none none none',
+    })
+
   }, { scope: sectionRef })
 
   return (
@@ -51,8 +57,8 @@ export default function Booking() {
       </h2>
 
       <h1 className="font-serif text-5xl/12 max-w-3xl">
-        Let's make your look&nbsp;
-        <span ref={titleRef} className="font-curvy text-[3.5rem]/5 font-black text-rose">
+        Let's make your look{' '}
+        <span ref={emphasizeRef} className="font-curvy text-[3.5rem]/5 font-black text-rose">
           perfect
         </span>
       </h1>
@@ -63,9 +69,7 @@ export default function Booking() {
         Tell us about your event,
         preferred style, and date.
         We will help create a look
-        that 
-        <span className="text-ink">&nbsp;feels&nbsp;</span>
-        like you
+        that feels like you
       </p>
 
       <Button
