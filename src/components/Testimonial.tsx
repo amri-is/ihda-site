@@ -69,15 +69,15 @@ export default function Testimonial() {
     if (!frontEl) return
 
     // alternate direction
-    const dir = currentIdx % 2 === 0 ? 1 : -1
+    // const dir = currentIdx % 2 === 0 ? 1 : -1
 
     const randomRotate = getRange(90, 45)
 
     // swipe anim
     gsap.to(frontEl, {
-      xPercent: dir * 100,
+      xPercent:  100,
       autoAlpha: 0,
-      rotate: dir * randomRotate,
+      rotate:  randomRotate,
       duration: 0.5,
       ease: 'back.in',
       onEnter: () => {
@@ -127,17 +127,24 @@ export default function Testimonial() {
   }, [btnText])
 
   return (
-    <section id="testimonial" className="flex flex-col items-center text-center px-8 max-w-3xl mx-auto w-full relative">
+    <section id="testimonial" className="flex flex-col items-start justify-center px-4 max-w-3xl mx-auto relative overflow-hidden">
       
-      <h2 className="text-sm uppercase tracking-[0.25rem] text-rose">
+      <h2 className="text-xs uppercase tracking-[.25em] text-rose">
         Kind Words
       </h2>
-      <h1 className="font-serif font-normal text-4xl leading-tight">
-        From past&nbsp;
-        <span className="text-rosedeep text-[2.8rem] italic font-curvy font-black">
+      <h1 className="font-serif text-5xl/12 max-w-3xl">
+        From past{' '}
+        <span className="font-curvy text-[3.75rem] font-black text-rose">
           clients
         </span>
       </h1>
+
+      <p className="text-base/4.5 text-inksoft max-w-md mt-4">
+        Different people tells different story.
+        Here's what our clients{' '}
+        <span className="text-ink">say</span>
+        {' '}about their experience.
+      </p>
 
       {/* card stack container, also the ScrollTrigger trigger element */}
       <div ref={commentWrapRef} className="comments relative w-full min-h-80 flex justify-center items-center">
@@ -182,7 +189,7 @@ export default function Testimonial() {
           handleBtnAnim()
         }}
         disabled={locked}
-        className="mb-10"
+        className="self-center mb-10"
       >
         next
       </Button>

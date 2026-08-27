@@ -212,7 +212,7 @@ function Services() {
                 </p>
               </header>
               <div className="relative">
-                <div className="img-stack aspect-square overflow-hidden relative rounded-sm flex items-center justify-center pointer-events-none ">
+                <div className="img-stack aspect-square overflow-hidden relative rounded-sm flex items-center justify-center ">
                   {item.imgs.map((img, imgIdx) => (
                     <img
                       key={`${img}-${imgIdx}`}
@@ -220,7 +220,7 @@ function Services() {
                         if (!imgsRefs.current[idx]) imgsRefs.current[idx] = []
                         imgsRefs.current[idx][imgIdx] = el
                       }}
-                      className="absolute object-cover object-center"
+                      className="absolute object-cover object-center "
                       src={img}
                     />
                   ))}
@@ -241,8 +241,8 @@ function Services() {
           </div>
         ))}
 
-        <div className="border border-dashed p-3 rounded pointer-events-none">
-          <a href="#price-list" className="bg-rose/15 h-8 flex gap-4 rounded-sm text-xs items-center justify-center uppercase pointer-events-auto">
+        <div className="border border-dashed p-3 rounded ">
+          <a href="#price-list" className="bg-rose/15 h-8 flex gap-4 rounded-sm text-xs items-center justify-center uppercase ">
             Full Service List
           </a>
         </div>

@@ -39,7 +39,6 @@ function MapSVG() {
 export default function Footer() {
   const nameRefs = useRef<Array<HTMLSpanElement | null>>([])
   const studioRef = useRef<HTMLDivElement | null>(null)
-  
 
   useGSAP(() => {
     const names = nameRefs.current
@@ -71,7 +70,7 @@ export default function Footer() {
           <Button
             key={idx}
             href={`/${item}`}
-            className="text-xs/0 px-3 py-3.5 pointer-events-none"
+            className="text-xs/0 px-3 py-3.5 "
           >
             {item}
           </Button>
@@ -79,8 +78,8 @@ export default function Footer() {
       </div>
 
       <div className="links flex gap-1 justify-center px-4">
-        <Button href={BRAND_ITEM.hairdo} className="p-2 px-3 text-xs/0">makeup&nbsp;<InstaSVG/></Button>
-        <Button href={BRAND_ITEM.mua} className="p-2 px-3 text-xs/0">hairdo&nbsp;<InstaSVG/></Button>
+        <Button href={BRAND_ITEM.mua} className="p-2 px-3 text-xs/0">makeup&nbsp;<InstaSVG/></Button>
+        <Button href={BRAND_ITEM.hairdo} className="p-2 px-3 text-xs/0">hairdo&nbsp;<InstaSVG/></Button>
         <Button href={BRAND_ITEM.tiktok} className="p-2"><TiktokSVG/></Button>
         <Button href={BRAND_ITEM.map} className="p-2"><MapSVG/></Button>
       </div>
@@ -99,7 +98,12 @@ export default function Footer() {
             </span>
           ))}
         </div>
-        <div ref={studioRef} className="uppercase flex gap-8 ">{BRAND_ITEM.studio}</div>
+        <div
+          ref={studioRef}
+          className="uppercase flex gap-8 font-black text-rose text-xl mt-5"
+        >
+          {BRAND_ITEM.studio}
+        </div>
       </div>
 
       <div className="w-full grid grid-rows-[auto_auto] gap-1 text-xs font-serif font-extralight px-2 pb-2">
