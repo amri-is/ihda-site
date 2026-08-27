@@ -180,7 +180,7 @@ function About() {
                 }}
                 key={imgIdx}
                 src={img} alt=""
-                className="absolute w-full h-full pointer-events-none object-cover object-center" />
+                className="absolute w-full h-full object-cover object-center" />
             ))}
 
           </div>
