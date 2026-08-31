@@ -69,7 +69,7 @@ export default function Footer() {
         {FooterItems.pages.map((item, idx) => (
           <Button
             key={idx}
-            href={`/${item}`}
+            href={`/${item === 'home' ? '' : item}`}
             className="text-xs/0 px-3 py-3.5 "
           >
             {item}
