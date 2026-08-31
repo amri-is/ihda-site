@@ -1,4 +1,5 @@
 import { forwardRef, type ReactNode } from "react"
+import { Link } from "react-router-dom"
 import { cn } from "@/lib/utils"
 
 type ButtonAsAnchor = { as?: "a" } & React.ComponentPropsWithoutRef<"a">
@@ -24,6 +25,15 @@ const Button = forwardRef<HTMLAnchorElement | HTMLButtonElement, ButtonProps>(
     }
 
     const { href = "#", ...anchorProps } = props as React.ComponentPropsWithoutRef<"a">
+
+    if (href.startsWith("/")) {
+      return (
+        <Link to={href} className={cn(base, className)} {...anchorProps}>
+          {children}
+        </Link>
+      )
+    }
+
     return (
       <a
         ref={ref as React.Ref<HTMLAnchorElement>}
