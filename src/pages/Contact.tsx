@@ -9,6 +9,8 @@ import ScrollbarIndicator from "@/components/ScrollbarIndicator"
 import ContactForm from "@/components/ContactForm"
 import BookingForm from "@/components/BookingForm"
 
+import { cn } from "@/lib/utils"
+
 export default function Contact() {
   const [tab, setTab] = useState<Tab>("contact")
 
@@ -32,19 +34,23 @@ export default function Contact() {
         <div className="flex gap-2 w-full mt-6 mb-2">
           <Button
             as="button"
+            type="button"
             onClick={() => setTab("contact")}
-            className={`flex-1 py-2 rounded text-sm font-semibold ${
+            className={cn(
+              "flex-1 py-2 rounded text-sm font-semibold",
               tab === "contact" ? "bg-rose text-white" : "bg-rose/15 text-inksoft"
-            }`}
+            )}
           >
             Tanya-tanya
           </Button>
           <Button
             as="button"
+            type="button"
             onClick={() => setTab("booking")}
-            className={`flex-1 py-2 rounded text-sm font-semibold ${
+            className={cn(
+              "flex-1 py-2 rounded text-sm font-semibold",
               tab === "booking" ? "bg-rose text-white" : "bg-rose/15 text-inksoft"
-            }`}
+            )}
           >
             Booking Sekarang
           </Button>

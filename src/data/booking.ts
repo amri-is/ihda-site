@@ -104,3 +104,20 @@ export const bookingFields = {
     required: true,
   },
 }
+
+export const contactFields = {
+  nama: {
+    label: "Nama",
+    name: "nama",
+    type: "text",
+    placeholder: "Anya Geraldine",
+    required: true,
+  },
+  pesan: {
+    label: "Pesan",
+    name: "pesan",
+    row: 4,
+    placeholder: "Mau",
+    required: true,
+  },
+}

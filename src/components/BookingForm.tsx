@@ -9,14 +9,14 @@ import { BRAND_ITEM } from "@/constants/brand"
 import { bookingFields, initBookingData } from "@/data/booking"
 import type { BookingData, LocationType } from "@/data/booking"
 
-import { convertDate } from "@/lib/utils"
+import { cn, convertDate } from "@/lib/utils"
 
 export default function BookingForm() {
   const [bookingData, setBookingData] = useState<BookingData>(initBookingData)
 
-  const labelClass = "flex flex-col gap-1.5 font-semibold text-sm text-inksoft"
-
-  const handleBookingChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleBookingChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target
     setBookingData((prev) => ({ ...prev, [name]: value }))
   }
@@ -65,7 +65,7 @@ Lokasi Makeup: ${locationLine}`
   }
 
   return (
-    <form onSubmit={handleBookingSubmit} className="flex flex-col gap-4 w-full bg-rose/15 p-4 rounded">
+    <form onSubmit={handleBookingSubmit} className="flex flex-col gap-4 w-full bg-rose/15 p-4 rounded text-sm text-inksoft font-semibold">
       <InputField field={bookingFields.nama} value={bookingData.nama} onChange={handleBookingChange} />
       <InputField field={bookingFields.instagram} value={bookingData.instagram} onChange={handleBookingChange} />
       <InputField field={bookingFields.acara} value={bookingData.acara} onChange={handleBookingChange} />
@@ -82,24 +82,28 @@ Lokasi Makeup: ${locationLine}`
         <InputField field={bookingFields.hairdoCount} value={bookingData.hairdoCount} onChange={handleBookingChange} />
       </div>
 
-      <div className={labelClass}>
-        <div className="flex gap-1">Lokasi Makeup</div>
-        <div className="flex gap-2">
+      <div className="flex flex-col gap-1.5">
+        <div className="flex">Lokasi Makeup</div>
+        <div className="flex gap-3">
           <Button
             as="button"
+            type="button"
             onClick={() => setLocationType("studio")}
-            className={`flex-1 py-2 rounded text-sm font-semibold ${
+            className={cn(
+              "flex-1 py-2 rounded text-sm font-semibold",
               bookingData.locationType === "studio" ? "bg-rose text-white" : "bg-bg text-inksoft"
-            }`}
+            )}
           >
             Di Studio
           </Button>
           <Button
             as="button"
+            type="button"
             onClick={() => setLocationType("home")}
-            className={`flex-1 py-2 rounded text-sm font-semibold ${
+            className={cn(
+              "flex-1 py-2 rounded text-sm font-semibold",
               bookingData.locationType === "home" ? "bg-rose text-white" : "bg-bg text-inksoft"
-            }`}
+            )}
           >
             Home Service
           </Button>
@@ -111,7 +115,7 @@ Lokasi Makeup: ${locationLine}`
           href={BRAND_ITEM.map}
           target="_blank"
           rel="noreferrer"
-          className="text-xs text-rosedeep underline -mt-2"
+          className="text-sm text-rosedeep underline"
         >
           Lihat lokasi studio di Maps
         </a>
