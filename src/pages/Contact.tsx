@@ -6,49 +6,21 @@ import ScrollbarIndicator from "@/components/ScrollbarIndicator"
 
 import { BRAND_ITEM } from "@/constants/brand"
 
-import { convertDate } from "@/lib/utils";
+import {
+  inputBookingFields,
+  initContactData,
+  initBookingData,
+} from "@/data/booking"
+import type {
+  ContactData,
+  BookingData,
+  LocationType,
+  Tab,
+} from "@/data/booking"
+
+import { cn, convertDate } from "@/lib/utils"
 import { useState } from "react"
 import type { ChangeEvent, SyntheticEvent } from "react"
-
-type LocationType = "studio" | "home"
-
-interface BookingData {
-  nama: string
-  tanggal: string
-  acara: string
-  jumlahOrang: string
-  instagram: string
-  hijabCount: string
-  hairdoCount: string
-  jam: string
-  lokasi: string
-  locationType: LocationType
-}
-
-interface ContactData {
-  nama: string
-  pesan: string
-}
-
-const initBookingData: BookingData = {
-  nama: "",
-  tanggal: "",
-  acara: "",
-  jumlahOrang: "",
-  instagram: "",
-  hijabCount: "",
-  hairdoCount: "",
-  jam: "",
-  lokasi: "",
-  locationType: "studio",
-}
-
-const initContactData: ContactData = {
-  nama: "",
-  pesan: "",
-}
-
-type Tab = "contact" | "booking"
 
 export default function BookingForm() {
   const [tab, setTab] = useState<Tab>("contact")
@@ -58,9 +30,7 @@ export default function BookingForm() {
   const inputClass = "w-full px-3 py-2 rounded text-sm focus:outline-none focus:border-rose bg-bg"
   const labelClass = "flex flex-col gap-1.5 font-semibold text-sm text-inksoft"
 
-  const handleBookingChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleBookingChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setBookingData((prev) => ({ ...prev, [name]: value }))
   }
@@ -81,13 +51,13 @@ export default function BookingForm() {
   }
 
   const hairdoCountNum = Number(bookingData.hairdoCount) || 0
-  const hijabCountNum = Number(bookingData.hijabCount) || 0
+  const hijabdoCountNum = Number(bookingData.hijabdoCount) || 0
 
   const handleBookingSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const hijabHairdoLine = [
-      hijabCountNum > 0 ? `Hijab ${hijabCountNum} org` : null,
+      hijabdoCountNum > 0 ? `Hijab ${hijabdoCountNum} org` : null,
       hairdoCountNum > 0 ? `Hairdo ${hairdoCountNum} org` : null,
     ]
       .filter(Boolean)
@@ -128,7 +98,7 @@ Lokasi Makeup: ${locationLine}`
   return (
     <>
       <ScrollbarIndicator />
-      <section className="flex flex-col items-center p-4">
+      <section className="flex flex-col items-center px-4 pt-4">
         <h1 className="font-serif text-5xl/12 max-w-3xl self-start">
           Get in{' '}
           <span className="font-curvy text-[3.75rem] font-black text-rose">
@@ -145,19 +115,25 @@ Lokasi Makeup: ${locationLine}`
         <div className="flex gap-2 w-full mt-6 mb-2">
           <Button
             as="button"
+            type="button"
             onClick={() => switchTab("contact")}
-            className={`flex-1 py-2 rounded text-sm font-semibold ${
+            className={cn(
+              "flex-1 py-2 rounded text-sm font-semibold",
               tab === "contact" ? "bg-rose text-white" : "bg-rose/15 text-inksoft"
-            }`}
+            )}
           >
             Tanya-tanya
           </Button>
           <Button
             as="button"
+            type="button"
             onClick={() => switchTab("booking")}
-            className={`flex-1 py-2 rounded text-sm font-semibold ${
+            className={cn(
+              "flex-1 py-2 rounded text-sm font-semibold",
               tab === "booking" ? "bg-rose text-white" : "bg-rose/15 text-inksoft"
-            }`}
+            )
+              
+            }
           >
             Booking Sekarang
           </Button>
@@ -204,126 +180,57 @@ Lokasi Makeup: ${locationLine}`
         {tab === "booking" && (
           <form onSubmit={handleBookingSubmit} className="flex flex-col gap-4 w-full bg-rose/15 p-4 rounded">
 
-            <label className={labelClass}>
-              <div className="flex gap-1">
-                Nama<span className="text-rose">*</span>
-              </div>
-              <input
-                name="nama"
-                type="text"
-                placeholder="Anya Geraldine"
-                required
-                value={bookingData.nama}
-                onChange={handleBookingChange}
-                className={inputClass}
-              />
-            </label>
+            <InputField
+              field={inputBookingFields.nama}
+              value={bookingData.nama}
+              onChange={handleBookingChange}
+            />
 
-            <label className={labelClass}>
-              Instagram
-              <input
-                name="instagram"
-                type="text"
-                placeholder="@username"
-                required
-                value={bookingData.instagram}
-                onChange={handleBookingChange}
-                className={inputClass}
-              />
-            </label>
+            <InputField
+              field={inputBookingFields.instagram}
+              value={bookingData.instagram}
+              onChange={handleBookingChange}
+            />
 
-            <label className={labelClass}>
-              <div className="flex gap-1">
-                Untuk Acara<span className="text-rose">*</span>
-              </div>
-              <input
-                name="acara"
-                type="text"
-                placeholder="Wisuda, prewed, dll"
-                required
-                value={bookingData.acara}
-                onChange={handleBookingChange}
-                className={inputClass}
-              />
-            </label>
+            <InputField
+              field={inputBookingFields.acara}
+              value={bookingData.acara}
+              onChange={handleBookingChange}
+            />
+
 
             <div className="grid grid-cols-2 gap-3">
-              <label className={labelClass}>
-                <div className="flex gap-1">
-                  Tanggal<span className="text-rose">*</span>
-                </div>
-                <input
-                  name="tanggal"
-                  type="date"
-                  required
-                  value={bookingData.tanggal}
-                  onChange={handleBookingChange}
-                  className={inputClass}
-                />
-              </label>
+              <InputField
+                field={inputBookingFields.tanggal}
+                value={bookingData.tanggal}
+                onChange={handleBookingChange}
+              />
 
-              <label className={labelClass}>
-                <div className="flex gap-1">
-                  Jumlah Orang<span className="text-rose">*</span>
-                </div>
-                <input
-                  name="jumlahOrang"
-                  type="number"
-                  min={1}
-                  placeholder="3"
-                  required
-                  value={bookingData.jumlahOrang}
-                  onChange={handleBookingChange}
-                  className={inputClass}
-                />
-              </label>
+              <InputField
+                field={inputBookingFields.jumlahOrang}
+                value={bookingData.jumlahOrang}
+                onChange={handleBookingChange}
+              />
+
             </div>
 
-            <label className={labelClass}>
-              <div className="flex gap-1">
-                Jam Acara / Siap Jam<span className="text-rose">*</span>
-              </div>
-              <input
-                name="jam"
-                type="text"
-                placeholder="cth: siap jam 07.00, acara jam 09.00"
-                required
-                value={bookingData.jam}
-                onChange={handleBookingChange}
-                className={inputClass}
-              />
-            </label>
+            <InputField
+              field={inputBookingFields.jam}
+              value={bookingData.jam}
+              onChange={handleBookingChange}
+            />
 
             <div className="grid grid-cols-2 gap-3">
-              <label className={labelClass}>
-                <div className="flex gap-1">
-                  Hijab (org)
-                </div>
-                <input
-                  name="hijabCount"
-                  type="number"
-                  min={0}
-                  placeholder="0"
-                  value={bookingData.hijabCount}
-                  onChange={handleBookingChange}
-                  className={inputClass}
-                />
-              </label>
-
-              <label className={labelClass}>
-                <div className="flex gap-1">
-                  Hairdo (org)
-                </div>
-                <input
-                  name="hairdoCount"
-                  type="number"
-                  min={0}
-                  placeholder="0"
-                  value={bookingData.hairdoCount}
-                  onChange={handleBookingChange}
-                  className={inputClass}
-                />
-              </label>
+              <InputField
+                field={inputBookingFields.hijabdoCount}
+                value={bookingData.hijabdoCount}
+                onChange={handleBookingChange}
+              />
+              <InputField
+                field={inputBookingFields.hairdoCount}
+                value={bookingData.hairdoCount}
+                onChange={handleBookingChange}
+              />
             </div>
 
             <div className={labelClass}>
@@ -331,22 +238,26 @@ Lokasi Makeup: ${locationLine}`
                 Lokasi Makeup
               </div>
 
-              <div className="flex gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <Button
                   as="button"
+                  type="button"
                   onClick={() => setLocationType("studio")}
-                  className={`flex-1 py-2 rounded text-sm font-semibold ${
+                  className={cn(
+                    "flex-1 py-2 rounded text-sm font-semibold",
                     bookingData.locationType === "studio" ? "bg-rose text-white" : "bg-bg text-inksoft"
-                  }`}
+                  )}
                 >
                   Di Studio
                 </Button>
                 <Button
                   as="button"
+                  type="button"
                   onClick={() => setLocationType("home")}
-                  className={`flex-1 py-2 rounded text-sm font-semibold ${
+                  className={cn(
+                    "flex - 1 py - 2 rounded text - sm font - semibold",
                     bookingData.locationType === "home" ? "bg-rose text-white" : "bg-bg text-inksoft"
-                  }`}
+                  )}
                 >
                   Home Service
                 </Button>
@@ -365,18 +276,11 @@ Lokasi Makeup: ${locationLine}`
             )}
 
             {bookingData.locationType === "home" && (
-              <label className={labelClass}>
-                Lokasi Makeup (Maps)
-                <input
-                  name="lokasi"
-                  type="url"
-                  placeholder="Tempel link Google Maps"
-                  required
-                  value={bookingData.lokasi}
-                  onChange={handleBookingChange}
-                  className={inputClass}
-                />
-              </label>
+              <InputField
+                field={inputBookingFields.lokasi}
+                value={bookingData.lokasi}
+                onChange={handleBookingChange}
+              />
             )}
 
             <div className="bg-bg border border-dashed rounded px-3.5 py-3 text-xs text-rose font-light">
@@ -400,5 +304,39 @@ Lokasi Makeup: ${locationLine}`
       <div className="spacer h-50"></div>
       <Footer />
     </>
+  )
+}
+
+type FieldProps = {
+  field: {
+    label: string
+    name: string
+    type: string
+    min?: number | null
+    placeholder?: string | null
+    required: boolean
+  }
+  value?: string
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+}
+
+function InputField({ field, value = "", onChange }: FieldProps) {
+  return (
+    <label className="flex flex-col gap-1.5 font-semibold text-sm text-inksoft">
+      <div className="flex gap-1 items-center">
+        <span>{field.label}</span>
+        {field.required && <span className="text-rose">*</span>}
+      </div>
+      <input
+        name={field.name}
+        type={field.type}
+        min={field.min ?? undefined}
+        placeholder={field.placeholder ?? undefined}
+        required={field.required}
+        value={value}
+        onChange={onChange}
+        className="w-full px-3 py-2 rounded text-sm focus:outline-none focus:border-rose bg-bg"
+      />
+    </label>
   )
 }
