@@ -34,7 +34,7 @@ export default function InputField({ field, as = "input", value = "", onChange }
           name={field.name}
           placeholder={field.placeholder ?? undefined}
           required={field.required}
-          rows={field.rows ?? 4}
+          rows={field.rows ?? 2}
           value={value}
           onChange={onChange}
           className={inputClass}

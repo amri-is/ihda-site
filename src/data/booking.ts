@@ -116,8 +116,8 @@ export const contactFields = {
   pesan: {
     label: "Pesan",
     name: "pesan",
-    row: 4,
-    placeholder: "Mau",
+    rows: 4,
+    placeholder: "Mau tanya-tanya soal harga, ketersediaan tanggal, dll",
     required: true,
   },
 }
