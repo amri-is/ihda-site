@@ -37,18 +37,7 @@ export const initContactData: ContactData = {
   pesan: "",
 }
 
-export interface inputBookingData {
-  field: {
-    label: string
-    name: string
-    type: string
-    min?: number | null
-    placeholder?: string | null
-    required: boolean
-  }
-}
-
-export const inputBookingFields = {
+export const bookingFields = {
   nama: {
     label: "Nama",
     name: "nama",

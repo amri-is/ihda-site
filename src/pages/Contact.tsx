@@ -1,105 +1,21 @@
-import "@/App.css"
+import { useState } from "react"
+
+import type { Tab } from "@/data/booking"
+
 import Button from "@/components/ui/Button"
-import InputField from "@/components/ui/InputField"
 
 import Footer from "@/components/Footer"
 import ScrollbarIndicator from "@/components/ScrollbarIndicator"
+import ContactForm from "@/components/ContactForm"
+import BookingForm from "@/components/BookingForm"
 
-import { BRAND_ITEM } from "@/constants/brand"
-
-import {
-  inputBookingFields,
-  initContactData,
-  initBookingData,
-} from "@/data/booking"
-import type {
-  ContactData,
-  BookingData,
-  LocationType,
-  Tab,
-} from "@/data/booking"
-
-import { cn, convertDate } from "@/lib/utils"
-import { useState } from "react"
-import type { ChangeEvent, SyntheticEvent } from "react"
-
-export default function BookingForm() {
+export default function Contact() {
   const [tab, setTab] = useState<Tab>("contact")
-  const [bookingData, setBookingData] = useState<BookingData>(initBookingData)
-  const [contactData, setContactData] = useState<ContactData>(initContactData)
-
-  const inputClass = "w-full px-3 py-2 rounded text-sm focus:outline-none focus:border-rose bg-bg"
-  const labelClass = "flex flex-col gap-1.5 font-semibold text-sm text-inksoft"
-
-  const handleBookingChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setBookingData((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const handleContactChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target
-    setContactData((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const setLocationType = (locationType: LocationType) => {
-    setBookingData((prev) => ({ ...prev, locationType, lokasi: locationType === "studio" ? "" : prev.lokasi }))
-  }
-
-  const switchTab = (next: Tab) => {
-    setTab(next)
-  }
-
-  const hairdoCountNum = Number(bookingData.hairdoCount) || 0
-  const hijabdoCountNum = Number(bookingData.hijabdoCount) || 0
-
-  const handleBookingSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    const hijabHairdoLine = [
-      hijabdoCountNum > 0 ? `Hijab ${hijabdoCountNum} org` : null,
-      hairdoCountNum > 0 ? `Hairdo ${hairdoCountNum} org` : null,
-    ]
-      .filter(Boolean)
-      .join(", ")
-    
-    const locationLine = bookingData.locationType === "studio"
-        ? `Di Studio (${BRAND_ITEM.map})`
-      : `Home Service - ${bookingData.lokasi}`
-    
-    const dateLine = convertDate(bookingData.tanggal)
-
-    const msg = `Form Booking ihdalathif_makeup
-
-Nama: ${bookingData.nama}
-Tanggal: ${dateLine}
-Acara: ${bookingData.acara}
-Jumlah orang: ${bookingData.jumlahOrang}
-Instagram: ${bookingData.instagram ? bookingData.instagram : '-'}
-Hijab/Hairdo: ${hijabHairdoLine ? hijabHairdoLine : '-'}
-Jam acara/siap jam: ${bookingData.jam}
-Lokasi Makeup: ${locationLine}`
-
-    const url = `https://wa.me/${BRAND_ITEM.tel}?text=${encodeURIComponent(msg)}`
-    window.open(url, "_blank")
-    // setBookingData(initBookingData)
-  }
-
-  const handleContactSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    const msg = `Halo, Kak Ihda. Aku, ${contactData.nama}, mau tanya-tanya nih. ${contactData.pesan}`
-
-    const url = `https://wa.me/${BRAND_ITEM.tel}?text=${encodeURIComponent(msg)}`
-    window.open(url, "_blank")
-    // setContactData(initContactData)
-  }
 
   return (
     <>
       <ScrollbarIndicator />
-      <section className="flex flex-col items-center px-4 pt-4">
+      <section className="flex flex-col items-center p-4">
         <h1 className="font-serif text-5xl/12 max-w-3xl self-start">
           Get in{' '}
           <span className="font-curvy text-[3.75rem] font-black text-rose">
@@ -116,191 +32,26 @@ Lokasi Makeup: ${locationLine}`
         <div className="flex gap-2 w-full mt-6 mb-2">
           <Button
             as="button"
-            type="button"
-            onClick={() => switchTab("contact")}
-            className={cn(
-              "flex-1 py-2 rounded text-sm font-semibold",
+            onClick={() => setTab("contact")}
+            className={`flex-1 py-2 rounded text-sm font-semibold ${
               tab === "contact" ? "bg-rose text-white" : "bg-rose/15 text-inksoft"
-            )}
+            }`}
           >
             Tanya-tanya
           </Button>
           <Button
             as="button"
-            type="button"
-            onClick={() => switchTab("booking")}
-            className={cn(
-              "flex-1 py-2 rounded text-sm font-semibold",
+            onClick={() => setTab("booking")}
+            className={`flex-1 py-2 rounded text-sm font-semibold ${
               tab === "booking" ? "bg-rose text-white" : "bg-rose/15 text-inksoft"
-            )
-              
-            }
+            }`}
           >
             Booking Sekarang
           </Button>
         </div>
 
-        {tab === "contact" && (
-          <form onSubmit={handleContactSubmit} className="flex flex-col gap-4 w-full bg-rose/15 p-4 rounded">
-            <label className={labelClass}>
-              <div className="flex gap-1">
-                Nama<span className="text-rose">*</span>
-              </div>
-              <input
-                name="nama"
-                type="text"
-                placeholder="Anya Geraldine"
-                required
-                value={contactData.nama}
-                onChange={handleContactChange}
-                className={inputClass}
-              />
-            </label>
-
-            <label className={labelClass}>
-              <div className="flex gap-1">
-                Pesan<span className="text-rose">*</span>
-              </div>
-              <textarea
-                name="pesan"
-                placeholder="Mau tanya-tanya soal harga, ketersediaan tanggal, dll"
-                required
-                rows={4}
-                value={contactData.pesan}
-                onChange={handleContactChange}
-                className={inputClass}
-              />
-            </label>
-
-            <Button as="button" type="submit" className="self-center">
-              Kirim Pesan
-            </Button>
-          </form>
-        )}
-
-        {tab === "booking" && (
-          <form onSubmit={handleBookingSubmit} className="flex flex-col gap-4 w-full bg-rose/15 p-4 rounded">
-
-            <InputField
-              field={inputBookingFields.nama}
-              value={bookingData.nama}
-              onChange={handleBookingChange}
-            />
-
-            <InputField
-              field={inputBookingFields.instagram}
-              value={bookingData.instagram}
-              onChange={handleBookingChange}
-            />
-
-            <InputField
-              field={inputBookingFields.acara}
-              value={bookingData.acara}
-              onChange={handleBookingChange}
-            />
-
-
-            <div className="grid grid-cols-2 gap-3">
-              <InputField
-                field={inputBookingFields.tanggal}
-                value={bookingData.tanggal}
-                onChange={handleBookingChange}
-              />
-
-              <InputField
-                field={inputBookingFields.jumlahOrang}
-                value={bookingData.jumlahOrang}
-                onChange={handleBookingChange}
-              />
-
-            </div>
-
-            <InputField
-              field={inputBookingFields.jam}
-              value={bookingData.jam}
-              onChange={handleBookingChange}
-            />
-
-            <div className="grid grid-cols-2 gap-3">
-              <InputField
-                field={inputBookingFields.hijabdoCount}
-                value={bookingData.hijabdoCount}
-                onChange={handleBookingChange}
-              />
-              <InputField
-                field={inputBookingFields.hairdoCount}
-                value={bookingData.hairdoCount}
-                onChange={handleBookingChange}
-              />
-            </div>
-
-            <div className={labelClass}>
-              <div className="flex gap-1">
-                Lokasi Makeup
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <Button
-                  as="button"
-                  type="button"
-                  onClick={() => setLocationType("studio")}
-                  className={cn(
-                    "flex-1 py-2 rounded text-sm font-semibold",
-                    bookingData.locationType === "studio" ? "bg-rose text-white" : "bg-bg text-inksoft"
-                  )}
-                >
-                  Di Studio
-                </Button>
-                <Button
-                  as="button"
-                  type="button"
-                  onClick={() => setLocationType("home")}
-                  className={cn(
-                    "flex - 1 py - 2 rounded text - sm font - semibold",
-                    bookingData.locationType === "home" ? "bg-rose text-white" : "bg-bg text-inksoft"
-                  )}
-                >
-                  Home Service
-                </Button>
-              </div>
-            </div>
-
-            {bookingData.locationType === "studio" && (
-              <a
-                href={BRAND_ITEM.map}
-                target="_blank"
-                rel="noreferrer"
-                className="text-xs text-rosedeep underline -mt-2"
-              >
-                Lihat lokasi studio di Maps
-              </a>
-            )}
-
-            {bookingData.locationType === "home" && (
-              <InputField
-                field={inputBookingFields.lokasi}
-                value={bookingData.lokasi}
-                onChange={handleBookingChange}
-              />
-            )}
-
-            <div className="bg-bg border border-dashed rounded px-3.5 py-3 text-xs text-rose font-light">
-              <div className="text-sm mb-1">Syarat & Ketentuan:</div>
-              <div>* Hairdo per orang = Rp85.000</div>
-              <div>* Home service = Rp2.500/Km</div>
-              <div>** DP 50k/person untuk fix booking</div>
-              <div>** Tf ke LOREM IMPSUM (Example Bank) 123456789</div>
-              <div>** CANCEL = DP hangus</div>
-            </div>
-
-            <div className="flex gap-3 justify-center">
-              <Button as="button" type="submit" >
-                Kirim Booking
-              </Button>
-            </div>
-          </form>
-          
-        )}
+        {tab === "contact" && <ContactForm />}
+        {tab === "booking" && <BookingForm />}
       </section>
       <div className="spacer h-50"></div>
       <Footer />
