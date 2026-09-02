@@ -82,7 +82,7 @@ Lokasi Makeup: ${locationLine}`
   return (
     <>
       <ScrollbarIndicator />
-      <section className="flex flex-col justify-center px-4 pt-4">
+      <section className="flex flex-col justify-center px-4 pt-4 max-w-3xl mx-auto">
         <h1 className="font-serif text-5xl/12 max-w-3xl self-start">
           Get in{' '}
           <span className="font-curvy text-[3.75rem] font-black text-rose">
