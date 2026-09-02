@@ -1,4 +1,3 @@
-import { useState } from "react"
 import type { ChangeEvent, SyntheticEvent } from "react"
 
 import Button from "@/components/ui/Button"
@@ -6,80 +5,40 @@ import InputField from "@/components/ui/InputField"
 
 import { BRAND_ITEM } from "@/constants/brand"
 
-import { bookingFields, initBookingData } from "@/data/booking"
+import { bookingFields } from "@/data/booking"
 import type { BookingData, LocationType } from "@/data/booking"
 
-import { cn, convertDate } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 
-export default function BookingForm() {
-  const [bookingData, setBookingData] = useState<BookingData>(initBookingData)
+type BookingFormProps = {
+  data: BookingData
+  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  setLocationType: (locationType: LocationType) => void
+  onSubmit: (e: SyntheticEvent<HTMLFormElement>) => void
+}
 
-  const handleBookingChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target
-    setBookingData((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const setLocationType = (locationType: LocationType) => {
-    setBookingData((prev) => ({
-      ...prev,
-      locationType,
-      lokasi: locationType === "studio" ? "" : prev.lokasi,
-    }))
-  }
-
-  const hairdoCountNum = Number(bookingData.hairdoCount) || 0
-  const hijabdoCountNum = Number(bookingData.hijabdoCount) || 0
-
-  const handleBookingSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    const hijabHairdoLine = [
-      hijabdoCountNum > 0 ? `Hijab ${hijabdoCountNum} org` : null,
-      hairdoCountNum > 0 ? `Hairdo ${hairdoCountNum} org` : null,
-    ]
-      .filter(Boolean)
-      .join(", ")
-
-    const locationLine = bookingData.locationType === "studio"
-      ? `Di Studio (${BRAND_ITEM.map})`
-      : `Home Service - ${bookingData.lokasi}`
-
-    const dateLine = convertDate(bookingData.tanggal)
-
-    const msg = `Form Booking ihdalathif_makeup
-
-Nama: ${bookingData.nama}
-Tanggal: ${dateLine}
-Acara: ${bookingData.acara}
-Jumlah orang: ${bookingData.jumlahOrang}
-Instagram: ${bookingData.instagram ? bookingData.instagram : '-'}
-Hijab/Hairdo: ${hijabHairdoLine ? hijabHairdoLine : '-'}
-Jam acara/siap jam: ${bookingData.jam}
-Lokasi Makeup: ${locationLine}`
-
-    const url = `https://wa.me/${BRAND_ITEM.tel}?text=${encodeURIComponent(msg)}`
-    window.open(url, "_blank")
-    // setBookingData(initBookingData)
-  }
-
+export default function BookingForm({
+  data,
+  onChange,
+  setLocationType,
+  onSubmit,
+}: BookingFormProps) {
   return (
-    <form onSubmit={handleBookingSubmit} className="flex flex-col gap-4 w-full bg-rose/15 p-4 rounded text-sm text-inksoft font-semibold">
-      <InputField field={bookingFields.nama} value={bookingData.nama} onChange={handleBookingChange} />
-      <InputField field={bookingFields.instagram} value={bookingData.instagram} onChange={handleBookingChange} />
-      <InputField field={bookingFields.acara} value={bookingData.acara} onChange={handleBookingChange} />
+    <form onSubmit={onSubmit} className="flex flex-col gap-4 w-full bg-rose/15 p-4 rounded text-sm text-inksoft font-semibold">
+      <InputField field={bookingFields.nama} value={data.nama} onChange={onChange} />
+      <InputField field={bookingFields.instagram} value={data.instagram} onChange={onChange} />
+      <InputField field={bookingFields.acara} value={data.acara} onChange={onChange} />
 
       <div className="grid grid-cols-2 gap-3">
-        <InputField field={bookingFields.tanggal} value={bookingData.tanggal} onChange={handleBookingChange} />
-        <InputField field={bookingFields.jumlahOrang} value={bookingData.jumlahOrang} onChange={handleBookingChange} />
+        <InputField field={bookingFields.tanggal} value={data.tanggal} onChange={onChange} />
+        <InputField field={bookingFields.jumlahOrang} value={data.jumlahOrang} onChange={onChange} />
       </div>
 
-      <InputField field={bookingFields.jam} value={bookingData.jam} onChange={handleBookingChange} />
+      <InputField field={bookingFields.jam} value={data.jam} onChange={onChange} />
 
       <div className="grid grid-cols-2 gap-3">
-        <InputField field={bookingFields.hijabdoCount} value={bookingData.hijabdoCount} onChange={handleBookingChange} />
-        <InputField field={bookingFields.hairdoCount} value={bookingData.hairdoCount} onChange={handleBookingChange} />
+        <InputField field={bookingFields.hijabdoCount} value={data.hijabdoCount} onChange={onChange} />
+        <InputField field={bookingFields.hairdoCount} value={data.hairdoCount} onChange={onChange} />
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -91,7 +50,7 @@ Lokasi Makeup: ${locationLine}`
             onClick={() => setLocationType("studio")}
             className={cn(
               "flex-1 py-2 rounded text-sm font-semibold",
-              bookingData.locationType === "studio" ? "bg-rose text-white" : "bg-bg text-inksoft"
+              data.locationType === "studio" ? "bg-rose text-white" : "bg-bg text-inksoft"
             )}
           >
             Di Studio
@@ -102,7 +61,7 @@ Lokasi Makeup: ${locationLine}`
             onClick={() => setLocationType("home")}
             className={cn(
               "flex-1 py-2 rounded text-sm font-semibold",
-              bookingData.locationType === "home" ? "bg-rose text-white" : "bg-bg text-inksoft"
+              data.locationType === "home" ? "bg-rose text-white" : "bg-bg text-inksoft"
             )}
           >
             Home Service
@@ -110,7 +69,7 @@ Lokasi Makeup: ${locationLine}`
         </div>
       </div>
 
-      {bookingData.locationType === "studio" && (
+      {data.locationType === "studio" && (
         <a
           href={BRAND_ITEM.map}
           target="_blank"
@@ -121,8 +80,8 @@ Lokasi Makeup: ${locationLine}`
         </a>
       )}
 
-      {bookingData.locationType === "home" && (
-        <InputField field={bookingFields.lokasi} value={bookingData.lokasi} onChange={handleBookingChange} />
+      {data.locationType === "home" && (
+        <InputField field={bookingFields.lokasi} value={data.lokasi} onChange={onChange} />
       )}
 
       <div className="bg-bg border border-dashed rounded px-3.5 py-3 text-xs text-rose font-light">
