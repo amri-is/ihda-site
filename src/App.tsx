@@ -1,5 +1,6 @@
 import "@/App.css"
 import Home from "@/pages/Home"
+import Services from "@/pages/Services"
 
 import { gsap } from '@/lib/gsap'
 import { ReactLenis } from 'lenis/react'
@@ -26,6 +27,7 @@ function App() {
       <ReactLenis root options={{ autoRaf: false }} ref={lenisRef} />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/services" element={<Services />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
