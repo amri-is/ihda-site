@@ -1,21 +1,18 @@
-// ihdalathif_makeup — Service + Price Data 2026
-// Single source of truth: copy (ID), tags, images, and per-item pricing.
-
 export type PriceItem = {
-  name: string;
-  price: number; // IDR
-  note?: string; // item-level extra (beyond category note)
-};
+  name: string
+  price: number 
+  note?: string 
+}
 
 export type ServiceCategory = {
-  slug: string; // stable key for routing/lookup, joins UI <-> data
-  title: string;
-  body: string; // elegant Indonesian copy
-  note?: string; // perk applied to every item in category
-  imgs: string[]; // TODO: swap placeholders for real shoot photos per category
-  tags: string[]; // mirrors items[].name (lowercased) 1:1 for search/filter
-  items: PriceItem[];
-};
+  slug: string // stable key for routing/lookup, joins UI <-> data
+  title: string
+  body: string // elegant Indonesian copy
+  note?: string // perk applied to every item in category
+  imgs: string[] // TODO: swap placeholders for real shoot photos per category
+  tags: string[] // mirrors items[].name (lowercased) 1:1 for search/filter
+  items: PriceItem[]
+}
 
 export const ServiceData: ServiceCategory[] = [
   {
@@ -84,16 +81,16 @@ export const ServiceData: ServiceCategory[] = [
     items: [
       { name: "Hairdo Reguler / Graduation", price: 85000, note: "by hairstylist" },
       { name: "Hijabdo Only", price: 35000, note: "tanpa makeup" },
-      { name: "Press On Nails", price: 50000, note: "start price" },
-      { name: "Softlens", price: 40000, note: "start price" },
+      { name: "Press On Nails", price: 50000, note: "start from" },
+      { name: "Softlens", price: 40000, note: "start from" },
       { name: "Homeservice", price: 2500, note: "per km" },
     ],
   },
-];
+]
 
 export const contact = {
   instagram: "ihdalathif_makeup",
   phone: "083806816398",
   link: "taplink.cc/ihdalathif",
   year: 2026,
-};
+}

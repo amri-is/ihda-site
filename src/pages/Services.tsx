@@ -1,10 +1,52 @@
 import Footer from "@/components/Footer";
 import { ServiceData } from "@/data/services";
+import { useRef } from "react";
+import { gsap, useGSAP, ScrollTrigger } from "@/lib/gsap";
+import Booking from "@/components/Booking";
 
 export default function Services() {
+  const sectionRef = useRef<HTMLDivElement | null>(null)
+  const cardRefs = useRef<Array<HTMLDivElement | null>>([])
+  const innerCardRefs = useRef<Array<HTMLDivElement | null>>([])
+
+  const timelinesRef = useRef<Array<gsap.core.Timeline | null>>([])
+
+  useGSAP(() => {
+    gsap.defaults({ease: 'power2.inOut', duration: 0.5 })
+    cardRefs.current.forEach((el, i) => {
+      if (!el) return
+
+      timelinesRef.current[i] = gsap.timeline({ paused: true })
+        .fromTo(
+          el,
+          { height: '3.5rem', autoAlpha: 0.75 },
+          { height: 'auto', autoAlpha: 1 },
+        )
+
+      // set initial timeline position to match initial attr, no animation on load
+      if (el.dataset.expanded === 'true') {
+        timelinesRef.current[i]?.progress(1)
+      }
+
+      const observer = new MutationObserver(() => {
+        const expanded = el.dataset.expanded === 'true'
+        expanded ? timelinesRef.current[i]?.play() : timelinesRef.current[i]?.reverse()
+      })
+      observer.observe(el, { attributes: true, attributeFilter: ['data-expanded'] })
+    })
+  }, { scope: sectionRef })
+
+  function toggleCard(idx: number) {
+    const cards = cardRefs.current
+    cards.forEach((el, i) => {
+      if (!el) return
+      el.dataset.expanded = i === idx ? 'true' : 'false'
+      // el.classList = 'text-ink'
+    })
+  }
   return (
     <>
-      <section className="flex flex-col items-start justify-center px-4 pt-4 max-w-3xl mx-auto relative overflow-hidden">
+      <section ref={sectionRef} className="flex flex-col items-start justify-center px-4 pt-4 max-w-3xl mx-auto relative overflow-hidden">
         <h2 className="text-xs uppercase tracking-[.25em] text-rose">
           What we do
         </h2>
@@ -26,58 +68,49 @@ export default function Services() {
         {ServiceData.map((item, idx) => (
           <div
             key={idx}
-            // ref={(el) => { cardRefs.current[idx] = el }}
-            data-expanded={false}
-            className="bg-rose/15 min-h-0 rounded overflow-hidden"
+            ref={(el) => { cardRefs.current[idx] = el }}
+            onClick={() => toggleCard(idx)}
+            data-expanded={idx === 0}
+            className="bg-rose/75 min-h-0 rounded overflow-hidden"
           >
             <div
-              // ref={(el) => { innerRefs.current[idx] = el }}
+              ref={(el) => { innerCardRefs.current[idx] = el }}
               className="flex flex-col p-4"
             >
-              <header className="flex flex-col">
-                <h1 className="text-2xl/6 font-serif">
+              <header className="flex items-center justify-between">
+                <h1 className="text-2xl/6 font-serif text-white">
                   {item.title}
                 </h1>
-                <div className="spacer h-1"></div>
-                <p className="text-sm/3.5 text-inksoft">
-                  {item.body}
-                </p>
-                {item.note && (
-                  <>
-                    <div className="spacer h-2"></div>
-                    <div className="text-inksoft text-[0.675rem]/[0.675rem] self-end">
-                      *{item.note}
-                    </div>
-                  </>
-                )}
+                <span className="text-5xl/0 text-white/50 font-curvy translate-x-2">
+                  0{idx + 1}
+                </span>
               </header>
               <div className="spacer h-4"></div>
+              <p className="text-sm/3.5 text-white">
+                {item.body}
+              </p>
+              {item.note && (
+                <>
+                  <div className="spacer h-2"></div>
+                  <div className="text-white/50 text-[0.675rem]/[0.675rem] self-end italic">
+                    *{item.note}
+                  </div>
+                </>
+              )}
+              <div className="spacer h-4"></div>
               <div className="relative grid cols-2 rows-1">
-                {/* <div className="img-stack aspect-square overflow-hidden relative rounded-sm flex items-center justify-center ">
-                  {item.imgs.map((img, imgIdx) => (
-                    <img
-                      key={`${img}-${imgIdx}`}
-                      // ref={(el) => {
-                      //   if (!imgsRefs.current[idx]) imgsRefs.current[idx] = []
-                      //   imgsRefs.current[idx][imgIdx] = el
-                      // }}
-                      className="absolute object-cover object-center pointer-events-none"
-                      src={img}
-                    />
-                  ))}
-                </div> */}
                 <div className="flex flex-col gap-2">
                   {item.items.map((items, itemsIdx) => (
                     <div
                       key={`${items}-${itemsIdx}`}
-                      className="items w-full flex items-center justify-between p-3 bg-white/75 rounded"
+                      className="items w-full flex items-center justify-between p-3 gap-4 bg-bg rounded "
                     >
                       <div className="flex flex-col gap-0.5">
                         <div className="font-serif text-lg/4.5">
                           {items.name}
                         </div>
                         {items.note && (
-                          <div className="text-inksoft text-[0.675rem]/[0.675rem]">
+                          <div className="text-inksoft text-[0.675rem]/[0.675rem] italic">
                             *{items.note}
                           </div>
                         )}
@@ -96,6 +129,7 @@ export default function Services() {
         ))}
         </div>
       </section>
+      <Booking />
       <Footer />
     </>
   )
