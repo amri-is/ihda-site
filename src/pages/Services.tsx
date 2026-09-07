@@ -36,11 +36,11 @@ export default function Services() {
 
     // measure target expand height
     // this is not an animation so user will not see any changes
-
+    // 
     // expand next card 
     gsap.set(nextEl, { height: 'auto' })
+    
     // read next card height
-
     const expandH = nextEl.scrollHeight
     // console.log('next el height:', expandH)
 
@@ -55,7 +55,7 @@ export default function Services() {
     }
     // expand new card to measured px height
     tl.to(nextEl, { height: expandH, autoAlpha: 1 }, 0)
-    // return to auto so content reflow when screen width changes
+    // return card's height to auto so content reflow when screen width changes
     tl.set(nextEl, { height: 'auto' })
   }
 
@@ -67,7 +67,9 @@ export default function Services() {
         </h2>
         <h1 className="font-serif text-5xl/12 max-w-3xl ">
           Four ways to be{' '}
-          <span className="font-curvy text-[3.75rem] font-black text-rose">stylized.</span>
+          <span className="font-curvy text-[3.75rem] font-black text-rose">
+            stylized.
+          </span>
         </h1>
         <p className="text-base/4.5 text-inksoft max-w-md mt-4">
           Every service is built around the occasion, not a fixed formula — the same trained hand, your call.
@@ -80,9 +82,7 @@ export default function Services() {
               onClick={() => toggleCard(idx)}
               className="bg-rose/75 rounded overflow-hidden relative"
             >
-              <div
-                className="flex flex-col p-4 "
-              >
+              <div className="flex flex-col p-4 ">
                 <h1 className="text-2xl/6 font-serif text-white overflow-hidden text-nowrap truncate">
                   {item.title}
                 </h1>
