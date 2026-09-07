@@ -1,177 +1,96 @@
-export type ServiceItem = {
-  title: string
-  body: string
-  imgs: string[]
-  tags: string[]
-}
-
-export const ServiceData: ServiceItem[] = [
-  {
-    title: 'Reguler',
-    body: 'Every booking in this category includes a complimentary simple hijab styling to complete your look for the day.',
-    imgs: [
-      'https://assets.codepen.io/7558/flame-glow-blur-001.jpg',
-      'https://assets.codepen.io/7558/flame-glow-blur-002.jpg',
-      'https://assets.codepen.io/7558/flame-glow-blur-003.jpg',
-    ],
-    tags: [
-      'family bride',
-      'among tamu',
-      'yearbook',
-      'wedding guest',
-      'brides maid',
-    ]
-  },
-  {
-    title: 'Graduation',
-    body: 'Enjoy a complimentary simple hijab styling alongside professional assistance with putting on your graduation gown.',
-    imgs: [
-      'https://assets.codepen.io/7558/flame-glow-blur-004.jpg',
-      'https://assets.codepen.io/7558/flame-glow-blur-005.jpg',
-      'https://assets.codepen.io/7558/flame-glow-blur-006.jpg',
-    ],
-    tags: [
-      'wasana warsa',
-      'promnight',
-      'ceremony',
-    ]
-  },
-  {
-    title: 'Special Occasion',
-    body: 'This package includes a free simple hijab styling, with specific individual services also featuring a complimentary softlens.',
-    imgs: [
-      'https://assets.codepen.io/7558/flame-glow-blur-007.jpg',
-      'https://assets.codepen.io/7558/flame-glow-blur-008.jpg',
-      'https://assets.codepen.io/7558/flame-glow-blur-009.jpg',
-    ],
-    tags: [
-      'brides mom',
-      'pendamping wisuda',
-      'fashion show',
-      'engagement',
-      'prewedding',
-    ]
-  },
-  {
-    title: 'Add On',
-    body: 'Customize your experience further with styling add-ons, premium extras, or convenient at-home services tailored to your exact needs.',
-    imgs: [
-      'https://assets.codepen.io/7558/flame-glow-blur-001.jpg',
-      'https://assets.codepen.io/7558/flame-glow-blur-002.jpg',
-      'https://assets.codepen.io/7558/flame-glow-blur-003.jpg',
-    ],
-    tags: [
-      'hair-do',
-      'hijab-do',
-      'press on nails',
-      'softlens',
-      'home service',
-    ]
-  },
-]
-
 export type PriceItem = {
-  item: string;
-  price: string;
-  note?: string;
+  name: string
+  price: number 
+  note?: string 
 }
 
-export type PriceCategory = {
-  category: string;
-  note?: string;
-  items: PriceItem[];
+export type ServiceCategory = {
+  slug: string // stable key for routing/lookup, joins UI <-> data
+  title: string
+  body: string // elegant Indonesian copy
+  note?: string // perk applied to every item in category
+  imgs: string[] // TODO: swap placeholders for real shoot photos per category
+  tags: string[] // mirrors items[].name (lowercased) 1:1 for search/filter
+  items: PriceItem[]
 }
 
-export const PriceList: PriceCategory[] = [
+export const ServiceData: ServiceCategory[] = [
   {
-    category: 'Reguler',
-    note: 'Free simple hijabdo',
+    slug: "reguler",
+    title: "Reguler",
+    body: "Riasan sederhana nan menawan untuk momen berharga sehari-hari — mendampingi keluarga di hari bahagia, mengabadikan kenangan yearbook, hadir sebagai tamu undangan, atau tampil anggun sebagai bridesmaid.",
+    note: "free simple hijabdo",
+    imgs: [
+      "https://assets.codepen.io/7558/flame-glow-blur-001.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-002.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-003.jpg",
+    ],
+    tags: ["family bride", "among tamu", "yearbook", "wedding guest", "bridesmaid"],
     items: [
-      {
-        item: 'Family Bride / Among Tamu',
-        price: '200K',
-      },
-      {
-        item: 'Yearbook',
-        price: '200K',
-      },
-      {
-        item: 'Wedding Guest',
-        price: '200K',
-      },
-      {
-        item: 'Bridesmaid',
-        price: '200K',
-      },
+      { name: "Family Bride / Among Tamu", price: 200000 },
+      { name: "Yearbook", price: 200000 },
+      { name: "Wedding Guest", price: 200000 },
+      { name: "Bridesmaid", price: 200000 },
     ],
   },
   {
-    category: 'Graduation',
-    note: 'Free simple hijabdo & pemasangan toga',
+    slug: "graduation",
+    title: "Graduation",
+    body: "Rayakan setiap pencapaian dengan penampilan terbaik — dari wisuda SMP/SMA, malam promnight yang berkesan, hingga wisuda universitas sebagai penutup perjuangan panjang.",
+    note: "free simple hijabdo & pemasangan toga",
+    imgs: [
+      "https://assets.codepen.io/7558/flame-glow-blur-004.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-005.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-006.jpg",
+    ],
+    tags: ["wisuda smp/sma", "promnight", "graduation univ"],
     items: [
-      {
-        item: 'Wasana Warsa SMP / SMA',
-        price: '200K',
-      },
-      {
-        item: 'Promnight',
-        price: '200K',
-      },
-      {
-        item: 'Graduation Univ',
-        price: '250K',
-      },
+      { name: "Wisuda Warsa SMP / SMA", price: 200000 },
+      { name: "Promnight", price: 200000 },
+      { name: "Graduation Univ", price: 250000 },
     ],
   },
   {
-    category: 'Special Occasion',
-    note: 'Free simple hijabdo',
+    slug: "special-occasion",
+    title: "Special Occasion",
+    body: "Untuk momen istimewa yang layak tampil sempurna — mendampingi si buah hati di hari wisuda, memesona di atas catwalk, hingga memancarkan kebahagiaan di hari lamaran dan sesi prewedding.",
+    note: "free simple hijabdo",
+    imgs: [
+      "https://assets.codepen.io/7558/flame-glow-blur-007.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-008.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-009.jpg",
+    ],
+    tags: ["mama bride", "pendamping wisuda", "fashion show", "engagement", "prewedding"],
     items: [
-      {
-        item: 'Mama Bride / Pendamping Wisuda',
-        price: '200K',
-      },
-      {
-        item: 'Fashion Show',
-        price: '250K',
-      },
-      {
-        item: 'Engagement',
-        price: '350K',
-        note: 'Free softlens',
-      },
-      {
-        item: 'Prewedding',
-        price: '350K',
-        note: 'Free softlens',
-      },
+      { name: "Mama Bride / Pendamping Wisuda", price: 200000 },
+      { name: "Fashion Show", price: 250000 },
+      { name: "Engagement", price: 350000, note: "free softlens" },
+      { name: "Prewedding", price: 350000, note: "free softlens" },
     ],
   },
   {
-    category: 'Add On',
+    slug: "add-on",
+    title: "Add On",
+    body: "Sentuhan pelengkap untuk kesempurnaan penampilan — tatanan rambut, hijabdo, kuku, softlens, hingga layanan datang ke lokasi Anda.",
+    imgs: [
+      "https://assets.codepen.io/7558/flame-glow-blur-010.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-011.jpg",
+      "https://assets.codepen.io/7558/flame-glow-blur-012.jpg",
+    ],
+    tags: ["hair-do", "hijab-do", "press on nails", "softlens", "home service"],
     items: [
-      {
-        item: 'Hairdo Reguler / Graduation',
-        price: '85K',
-        note: 'By hairstylist',
-      },
-      {
-        item: 'Hijabdo Only',
-        price: '35K',
-        note: 'Tanpa makeup',
-      },
-      {
-        item: 'Press On Nails',
-        price: 'Start 50K',
-      },
-      {
-        item: 'Softlens',
-        price: 'Start 40K',
-      },
-      {
-        item: 'Homeservice',
-        price: '2.5K/KM',
-      },
+      { name: "Hairdo Reguler / Graduation", price: 85000, note: "by hairstylist" },
+      { name: "Hijabdo Only", price: 35000, note: "tanpa makeup" },
+      { name: "Press On Nails", price: 50000, note: "start from" },
+      { name: "Softlens", price: 40000, note: "start from" },
+      { name: "Homeservice", price: 2500, note: "per km" },
     ],
   },
 ]
+
+export const contact = {
+  instagram: "ihdalathif_makeup",
+  phone: "083806816398",
+  link: "taplink.cc/ihdalathif",
+  year: 2026,
+}
