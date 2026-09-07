@@ -4,6 +4,8 @@ import Services from "@/pages/Services"
 import About from "@/pages/About"
 import Contact from "@/pages/Contact"
 
+import ScrollbarIndicator from "@/components/ScrollbarIndicator"
+
 import { gsap } from '@/lib/gsap'
 import { ReactLenis } from 'lenis/react'
 import type { LenisRef } from 'lenis/react'
@@ -27,6 +29,7 @@ function App() {
   return (
     <BrowserRouter>
       <ReactLenis root options={{ autoRaf: false }} ref={lenisRef} />
+      <ScrollbarIndicator />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/services" element={<Services />} />

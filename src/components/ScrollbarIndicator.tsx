@@ -1,41 +1,67 @@
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef } from "react"
+import { gsap, useGSAP, ScrollTrigger } from "@/lib/gsap"
 
 export default function ScrollbarIndicator() {
-  const trackRef = useRef<HTMLDivElement | null>(null);
-  const thumbRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null)
+  const thumbRef = useRef<HTMLDivElement | null>(null)
 
   useGSAP(() => {
-    const wrap = trackRef.current;
-    const bar = thumbRef.current;
-    if (!wrap || !bar) return;
+    const wrap = trackRef.current
+    const bar = thumbRef.current
+    if (!wrap || !bar) return
 
-    const maxTop = () => wrap.clientHeight - bar.clientHeight;
-    let hideTimeout: ReturnType<typeof setTimeout> | undefined;
+    // furthest the thumb can travel down inside the track
+    const maxTop = () => wrap.clientHeight - bar.clientHeight
 
+    let hideTimeout: ReturnType<typeof setTimeout> | undefined
+    let documentHeight = document.documentElement.scrollHeight
+
+    // drives the thumb position off overall page scroll progress (0 -> 1)
     const st = ScrollTrigger.create({
       trigger: document.documentElement,
       start: "top top",
       end: "bottom bottom",
       onUpdate: (self) => {
-        bar.style.transform = `translateY(${self.progress * maxTop()}px)`;
-        wrap.style.opacity = "1";
-        wrap.style.visibility = "inherit";
+        gsap.set(bar, { y: self.progress * maxTop() })
+        gsap.to(wrap, { autoAlpha: 1, duration: 0.2 })
 
-        clearTimeout(hideTimeout);
+        clearTimeout(hideTimeout)
         hideTimeout = setTimeout(() => {
-          wrap.style.opacity = "0";
-          wrap.style.visibility = "hidden";
-        }, 500);
+          gsap.to(wrap, { autoAlpha: 0, duration: 0.5 })
+        }, 500)
       },
-    });
+    })
 
+    // recalc ScrollTrigger only if height actually changed
+    const refreshForDocumentHeight = () => {
+      const nextDocumentHeight = document.documentElement.scrollHeight
+      if (nextDocumentHeight === documentHeight) return
+
+      documentHeight = nextDocumentHeight
+      st.refresh() // recalc start-end positions
+    }
+
+    // catches layout-driven size changes (images, fonts, resize)
+    const resizeObserver = new ResizeObserver(refreshForDocumentHeight)
+    // catches DOM changes that affect height (content added/removed, attr changes)
+    const mutationObserver = new MutationObserver(refreshForDocumentHeight)
+
+    resizeObserver.observe(document.documentElement)
+    resizeObserver.observe(document.body)
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+    })
+
+    // cleanup
     return () => {
-      st.kill();
-      clearTimeout(hideTimeout);
-    };
-  }, []);
+      st.kill()
+      resizeObserver.disconnect()
+      mutationObserver.disconnect()
+      clearTimeout(hideTimeout)
+    }
+  }, [])
 
   return (
     <div
@@ -47,5 +73,5 @@ export default function ScrollbarIndicator() {
         className="scrollbar-indicator bg-[#888] h-[10%] w-full absolute will-change-transform rounded-bl-2xl rounded-tl-2xl"
       />
     </div>
-  );
+  )
 }

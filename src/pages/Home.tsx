@@ -10,7 +10,7 @@ import ScrollbarIndicator from "@/components/ScrollbarIndicator"
 export default function Home() {
   return (
     <>
-      <ScrollbarIndicator />
+      {/* <ScrollbarIndicator /> */}
       <Hero />
       <div className="spacer h-50 "></div>
       <Services />
