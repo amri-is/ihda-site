@@ -23,7 +23,7 @@ export default function ScrollbarIndicator() {
       end: "bottom bottom",
       onUpdate: (self) => {
         gsap.set(bar, { y: self.progress * maxTop() })
-        gsap.to(wrap, { autoAlpha: 1, duration: 0.2 })
+        gsap.to(wrap, { autoAlpha: 1, duration: 0.01 })
 
         clearTimeout(hideTimeout)
         hideTimeout = setTimeout(() => {
