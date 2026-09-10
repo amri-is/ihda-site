@@ -7,10 +7,10 @@ export type PriceItem = {
 export type ServiceCategory = {
   slug: string // stable key for routing/lookup, joins UI <-> data
   title: string
-  body: string // elegant Indonesian copy
-  note?: string // perk applied to every item in category
-  imgs: string[] // TODO: swap placeholders for real shoot photos per category
-  tags: string[] // mirrors items[].name (lowercased) 1:1 for search/filter
+  body: string 
+  note?: string 
+  imgs: string[] 
+  tags: string[] 
   items: PriceItem[]
 }
 
@@ -21,9 +21,12 @@ export const ServiceData: ServiceCategory[] = [
     body: "Riasan sederhana nan menawan untuk momen berharga sehari-hari — mendampingi keluarga di hari bahagia, mengabadikan kenangan yearbook, hadir sebagai tamu undangan, atau tampil anggun sebagai bridesmaid.",
     note: "free simple hijabdo",
     imgs: [
-      "https://assets.codepen.io/7558/flame-glow-blur-001.jpg",
-      "https://assets.codepen.io/7558/flame-glow-blur-002.jpg",
-      "https://assets.codepen.io/7558/flame-glow-blur-003.jpg",
+      "https://files.catbox.moe/hcye5v.jpeg",
+      "https://files.catbox.moe/ewpr54.jpeg",
+      "https://files.catbox.moe/s1oyug.jpeg",
+      // "https://assets.codepen.io/7558/flame-glow-blur-001.jpg",
+      // "https://assets.codepen.io/7558/flame-glow-blur-002.jpg",
+      // "https://assets.codepen.io/7558/flame-glow-blur-003.jpg",
     ],
     tags: ["family bride", "among tamu", "yearbook", "wedding guest", "bridesmaid"],
     items: [
@@ -39,9 +42,12 @@ export const ServiceData: ServiceCategory[] = [
     body: "Rayakan setiap pencapaian dengan penampilan terbaik — dari wisuda SMP/SMA, malam promnight yang berkesan, hingga wisuda universitas sebagai penutup perjuangan panjang.",
     note: "free simple hijabdo & pemasangan toga",
     imgs: [
-      "https://assets.codepen.io/7558/flame-glow-blur-004.jpg",
-      "https://assets.codepen.io/7558/flame-glow-blur-005.jpg",
-      "https://assets.codepen.io/7558/flame-glow-blur-006.jpg",
+      "https://files.catbox.moe/h14c53.jpeg",
+      "https://files.catbox.moe/1i851v.jpg",
+      "https://files.catbox.moe/rkq0sb.jpg",
+      // "https://assets.codepen.io/7558/flame-glow-blur-004.jpg",
+      // "https://assets.codepen.io/7558/flame-glow-blur-005.jpg",
+      // "https://assets.codepen.io/7558/flame-glow-blur-006.jpg",
     ],
     tags: ["wisuda smp/sma", "promnight", "graduation univ"],
     items: [
@@ -56,9 +62,13 @@ export const ServiceData: ServiceCategory[] = [
     body: "Untuk momen istimewa yang layak tampil sempurna — mendampingi si buah hati di hari wisuda, memesona di atas catwalk, hingga memancarkan kebahagiaan di hari lamaran dan sesi prewedding.",
     note: "free simple hijabdo",
     imgs: [
-      "https://assets.codepen.io/7558/flame-glow-blur-007.jpg",
-      "https://assets.codepen.io/7558/flame-glow-blur-008.jpg",
-      "https://assets.codepen.io/7558/flame-glow-blur-009.jpg",
+      "https://files.catbox.moe/x6z2lk.jpg",
+      "https://files.catbox.moe/bkiygc.jpeg",
+      "https://files.catbox.moe/kwf98v.jpeg",
+      "https://files.catbox.moe/pcvrot.jpeg",
+      // "https://assets.codepen.io/7558/flame-glow-blur-007.jpg",
+      // "https://assets.codepen.io/7558/flame-glow-blur-008.jpg",
+      // "https://assets.codepen.io/7558/flame-glow-blur-009.jpg",
     ],
     tags: ["mama bride", "pendamping wisuda", "fashion show", "engagement", "prewedding"],
     items: [
@@ -73,9 +83,11 @@ export const ServiceData: ServiceCategory[] = [
     title: "Add On",
     body: "Sentuhan pelengkap untuk kesempurnaan penampilan — tatanan rambut, hijabdo, kuku, softlens, hingga layanan datang ke lokasi Anda.",
     imgs: [
-      "https://assets.codepen.io/7558/flame-glow-blur-010.jpg",
-      "https://assets.codepen.io/7558/flame-glow-blur-011.jpg",
-      "https://assets.codepen.io/7558/flame-glow-blur-012.jpg",
+      "https://files.catbox.moe/nu2n69.jpeg",
+      "https://files.catbox.moe/bel9tf.webp",
+      // "https://assets.codepen.io/7558/flame-glow-blur-010.jpg",
+      // "https://assets.codepen.io/7558/flame-glow-blur-011.jpg",
+      // "https://assets.codepen.io/7558/flame-glow-blur-001.jpg",
     ],
     tags: ["hair-do", "hijab-do", "press on nails", "softlens", "home service"],
     items: [
