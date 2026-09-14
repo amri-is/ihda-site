@@ -1,7 +1,7 @@
 export const FooterItems = {
   pages: [
     'home',
-    'works',
+    'testimonial',
     'services',
     'faqs',
     'about',
