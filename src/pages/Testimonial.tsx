@@ -10,7 +10,7 @@ export default function Testimonial() {
           selected words
         </h2>
 
-        <h1 className="font-serif text-5xl/12 max-w-3xl mt-4">
+        <h1 className="font-serif text-5xl/12 max-w-3xl">
           More than just a{' '}
           <span className="font-curvy text-[3.75rem] font-black text-rose">
             look.
@@ -28,7 +28,7 @@ export default function Testimonial() {
               className="overflow-hidden rounded bg-white border border-line px-4 py-8"
             >
               <div className="aspect-3/2 overflow-hidden relative rounded-sm flex items-center justify-center">
-                {item.media.map((media, mediaIdx) => (
+                {item.media.slice(0,4).map((media, mediaIdx) => (
                   <img
                     key={mediaIdx}
                     src={media.src}
@@ -48,7 +48,11 @@ export default function Testimonial() {
               </div>
 
               <p className="mt-3 text-sm/3.5 text-inksoft">
+                {`\u201C`}
+                {`\u200A`}
                 {item.quote}
+                {`\u200A`}
+                {`\u201D`}
               </p>
 
               <div className="mt-4 flex flex-wrap gap-2">
