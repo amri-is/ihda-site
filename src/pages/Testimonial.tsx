@@ -1,11 +1,53 @@
 import Footer from "@/components/Footer"
 import Button from "@/components/ui/Button"
 import { testimonialData } from "@/data/testimonial"
+import { gsap, useGSAP } from "@/lib/gsap"
+import { useRef } from "react"
 
 export default function Testimonial() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const cardRefs = useRef<HTMLDivElement[]>([])
+  const imgRefs = useRef<HTMLImageElement[][]>([])
+
+  useGSAP(() => {
+    cardRefs.current.forEach((card, idx) => {
+      if (!card) return
+      const imgs = imgRefs.current[idx]
+      const imgsLen = imgs.length
+      if (!imgs || imgsLen < 2) return
+
+      gsap.set(imgs, { autoAlpha: 0 })
+      gsap.set(imgs[0], { autoAlpha: 1 })
+
+      console.log(`card-${idx}-delay`,(idx % imgsLen) * 2);
+      
+
+      const tl = gsap.timeline({
+        repeat: -1,
+        paused: true,
+        delay: (idx % imgsLen) * 1,
+        scrollTrigger: {
+          // markers: true,
+          trigger: card,
+          start: "top bottom",
+          toggleActions: "play pause resume pause",
+        },
+      })
+
+      imgs.forEach((img, i) => {
+        const next = imgs[(i + 1) % imgs.length]
+        tl.to(img, { autoAlpha: 0, duration: 1 }, `+=5`)
+          .to(next, { autoAlpha: 1, duration: 1 }, "<")
+      })
+    })
+  }, { scope: sectionRef })
+
   return (
     <>
-      <section className="flex flex-col items-start justify-center px-4 max-w-3xl mx-auto relative overflow-hidden">
+      <section
+        ref={sectionRef}
+        className="flex flex-col items-start justify-center px-4 max-w-3xl mx-auto relative overflow-hidden"
+      >
         <h2 className="text-xs uppercase tracking-[.25em] text-rose mt-4">
           selected words
         </h2>
@@ -27,10 +69,20 @@ export default function Testimonial() {
               key={idx}
               className="overflow-hidden rounded bg-white border border-line px-4 py-8"
             >
-              <div className="aspect-3/2 overflow-hidden relative rounded-sm flex items-center justify-center">
-                {item.media.slice(0,4).map((media, mediaIdx) => (
+              <div
+                ref={(el) => {
+                  if (el) cardRefs.current[idx] = el
+                }}
+                className="aspect-3/2 overflow-hidden relative rounded-sm flex items-center justify-center"
+              >
+                {item.media.slice(0, 4).map((media, mediaIdx) => (
                   <img
                     key={mediaIdx}
+                    ref={(el) => {
+                      if (!el) return
+                      if (!imgRefs.current[idx]) imgRefs.current[idx] = []
+                      imgRefs.current[idx][mediaIdx] = el
+                    }}
                     src={media.src}
                     alt={item.service}
                     className="absolute w-full h-full object-cover object-center"
@@ -68,7 +120,6 @@ export default function Testimonial() {
             </article>
           ))}
         </div>
-
       </section>
 
       <Footer />
