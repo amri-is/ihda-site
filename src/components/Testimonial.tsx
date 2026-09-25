@@ -1,4 +1,4 @@
-import { TestimonialItems } from "@/data/testimonial";
+import { testimonialData, testimonialColorData } from "@/data/testimonial";
 import { getRange } from "@/lib/utils";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { useRef, useState } from "react";
@@ -14,7 +14,7 @@ export default function Testimonial() {
   const [locked, setLocked] = useState(true)
 
   // mapping testimonial items
-  const items = TestimonialItems
+  const items = testimonialData
 
   const isLastCard = currentIdx === items.length
   const btnText = isLastCard ? 'click again!' : 'next'
@@ -146,16 +146,14 @@ export default function Testimonial() {
         {' '}about their experience.
       </p>
 
-      {/* card stack container, also the ScrollTrigger trigger element */}
       <div ref={commentWrapRef} className="comments relative w-full min-h-80 flex justify-center items-center">
-        {TestimonialItems.map((item, idx) => (
+        {testimonialData.map((item, idx) => (
           <div
             key={idx}
             ref={(el) => { commentRefs.current[idx] = el }}
             className="absolute p-5 flex flex-col gap-4 max-w-sm min-w-3xs rounded"
             style={{
-              backgroundColor: item.color,
-              // to make it look like post-it note
+              backgroundColor: `#${testimonialColorData[idx]}`,
               backgroundImage: `linear-gradient(
                 135deg,
                 transparent ${getRange(80, 90)}%, 
@@ -166,21 +164,22 @@ export default function Testimonial() {
             }}
           >
             <div className="comment text-sm">
-              {item.comment}
+              {item.quote}
             </div>
             <div className="photo flex items-center gap-4">
               <img
-                src={item.photo}
+                src={item.clientImg}
                 alt={`Testimonial client ${idx + 1}`}
                 className="size-15 object-center object-cover rounded-full"
               />
               <div className="name text-xs ml-2">
-                {item.name}
+                {item.client}
               </div>
             </div>
           </div>
         ))}
       </div>
+      
       <Button
         ref={btnRef}
         as="button"

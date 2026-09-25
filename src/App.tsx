@@ -3,6 +3,7 @@ import Home from "@/pages/Home"
 import Services from "@/pages/Services"
 import About from "@/pages/About"
 import Contact from "@/pages/Contact"
+import Testimonial from "@/pages/Testimonial"
 
 import ScrollbarIndicator from "@/components/ScrollbarIndicator"
 
@@ -33,6 +34,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/services" element={<Services />} />
+        <Route path="/testimonial" element={<Testimonial />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<Navigate to="/" replace />} />
