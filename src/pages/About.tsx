@@ -1,6 +1,7 @@
 import Footer from "@/components/Footer"
 import Button from "@/components/ui/Button"
 import { BRAND_ITEM } from "@/constants/brand"
+import { cn } from "@/lib/utils"
 
 const WHY = [
   {
@@ -17,93 +18,93 @@ const WHY = [
   },
 ]
 
+const Philosophy = [
+  {
+    title: "Soft",
+    body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus quisquam voluptatum facere mollitia porro voluptate cum quos odit quas adipisci."
+  },
+  {
+    title: "Clean",
+    body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus quisquam voluptatum facere mollitia porro voluptate cum quos odit quas adipisci."
+  },
+  {
+    title: "Fresh",
+    body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus quisquam voluptatum facere mollitia porro voluptate cum quos odit quas adipisci."
+  },
+]
+
+const FAQs = [
+  {
+    q: "Lorem Ipsum 1?",
+    a: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum, obcaecati. Error consequuntur deserunt asperiores ratione mollitia repellendus molestiae et vitae cum voluptatum dolore dignissimos optio quasi earum dolor, tempore soluta?"
+  },
+  {
+    q: "Lorem Ipsum 2?",
+    a: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum, obcaecati. Error consequuntur deserunt asperiores ratione mollitia repellendus molestiae et vitae cum voluptatum dolore dignissimos optio quasi earum dolor, tempore soluta?"
+  },
+  {
+    q: "Lorem Ipsum 3?",
+    a: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum, obcaecati. Error consequuntur deserunt asperiores ratione mollitia repellendus molestiae et vitae cum voluptatum dolore dignissimos optio quasi earum dolor, tempore soluta?"
+  },
+]
+
 export default function About() {
   return (
     <>
-      <main className="mx-auto flex w-full max-w-3xl flex-col gap-16 px-4 pb-16 pt-6">
-        {/* Hero */}
-        <section className="max-w-sm">
-          <p className="font-mono text-xs uppercase tracking-[.25em] text-rose mt-4">
+      <main className="mx-auto flex w-full max-w-3xl flex-col px-4 pb-16 pt-6">
+        {/* Hero / Story */}
+        <section className="w-full">
+          <h2 className="font-mono text-xs uppercase tracking-[.25em] text-rose mt-4 col-span-2">
             About me
-          </p>
-          <h1 className="font-serif text-5xl/12 max-w-3xl mt-2">
+          </h2>
+          <h1 className="font-serif text-5xl/12 max-w-3xl mt-2 font-semibold col-span-2">
             Hai, aku{' '}
             <span className="font-curvy text-[3.5rem] font-black text-rose">
               Ihda.
             </span>
           </h1>
-          <p className="text-base/4.5 text-inksoft max-w-md mt-4">
+          <p className="text-base/4 text-inksoft max-w-md mt-4">
             MUA di {BRAND_ITEM.city} yang bikin kamu tampil paling nyaman jadi
             dirimu sendiri, di hari yang spesial.
           </p>
         </section>
 
-        <section className="-mx-4" aria-label={`Foto ${BRAND_ITEM.firstName}`}>
+        <section className="mt-4" aria-label={`Foto ${BRAND_ITEM.firstName}`}>
           <img
             src={BRAND_ITEM.photos.hero}
             alt={`${BRAND_ITEM.firstName}, MUA di ${BRAND_ITEM.city}`}
-            className="aspect-4/5 w-full object-cover"
+            className="aspect-3/2 w-full object-cover"
           />
-          <p className="px-4 pt-4 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-inksoft">
+          {/* <p className="mt-4 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-inksoft">
             {BRAND_ITEM.name}: ruang kecil di {BRAND_ITEM.city}, dibuat untuk kamu
             dan cerita di baliknya.
-          </p>
+          </p> */}
         </section>
 
         {/* Story */}
-        <section className="-mx-1" aria-label="Ceritaku">
-          <p className="font-serif font-semibold text-inksoft text-5xl/12 max-w-3xl mt-2">
-            Awalnya cuma buat{' '}
+        <section className="mt-24" aria-label="Ceritaku">
+          <p className="font-serif font-semibold text-inksoft text-5xl/12 max-w-3xl">
+            Awalnya sih buat{' '}
             <span className="text-rose font-curvy text-[3.5rem] font-black">diri sendiri.</span>
           </p>
         </section>
 
-        <section className="grid grid-cols-[0.8fr_1fr] items-end gap-4" aria-label="Awal mula">
-          <p className="pb-2 text-sm text-inksoft self-start">
-            Aku mulai makeup buat kebutuhan sendiri. Lama-lama sadar, yang paling
-            aku suka bukan hasilnya di cermin, tapi momen orang lain lihat
-            dirinya dan tiba-tiba jadi lebih PD.
+        <section className="mt-16 grid grid-cols-2 gap-4" aria-label="Awal mula">
+          <p className="pb-2 text-sm/3.5 text-inksoft self-start">
+            Aku mulai makeup buat kebutuhan sendiri.
+            Lama-lama sadar, yang paling aku suka bukan hasilnya di cermin,
+            tapi momen orang lain lihat dirinya dan jadi lebih{' '}
+            <span className="text-ink italic">PD</span>.
           </p>
           <img
             src={BRAND_ITEM.photos.story}
             alt={`${BRAND_ITEM.firstName} merias klien`}
-            className="aspect-3/4 w-full object-cover object-center"
+            className="aspect-1/2 w-full object-cover object-center"
           />
         </section>
 
-        <section className="grid gap-4 border-l-2 border-rose pl-4" aria-label="Perjalanan">
-          <p className="font-serif text-2xl">
-            2024: mulai buka bisnis.
-          </p>
-          <p className="max-w-sm text-sm text-inksoft">
-            Nggak mulus. Banyak rintangan di awal, tapi orang-orang terdekat
-            selalu ada buat support. Itu yang bikin aku sampai di titik ini.
-          </p>
-          <p className="max-w-sm text-sm text-inksoft">
-            Aku mulai sebagai asisten MUA seorang senior, lalu didorong buat
-            berdiri sendiri supaya makin berkembang. Di jalan, aku ketemu
-            kakak-kakak MUA yang mau berbagi ilmu. Sampai sekarang aku masih
-            suka belajar hal baru, terutama lewat collab.
-          </p>
-        </section>
-
-        {/* Philosophy */}
-        <section className="-mx-1" aria-label="Gaya makeup">
-          <p className="font-serif font-semibold text-inksoft text-5xl/12 max-w-3xl mt-2">
-            Soft. Clean. {" "}
-            <span className="font-curvy text-[3.5rem] font-black text-rose">
-              Fresh.
-            </span>
-          </p>
-          <p className="mt-6 max-w-xs text-sm text-inksoft">
-            Makeup yang bagus itu yang bikin <span className="text-ink">keunikanmu</span> keluar.
-            Misal matamu sayu tapi pipimu cantik? Pipinya aku maksimalin, jadi
-            ciri khasmu.
-          </p>
-        </section>
-
         {/* Stats */}
-        <section className="border border-dashed border-inksoft px-3 py-5" aria-label="Angka">
+        {/* <section className="mt-4 border border-dashed border-inksoft px-3 py-5" aria-label="Angka">
           <div className="grid grid-cols-2 gap-4 divide-x divide-inksoft">
             {BRAND_ITEM.stats.map((s) => (
               <div key={s.label} className="text-center">
@@ -114,25 +115,90 @@ export default function About() {
               </div>
             ))}
           </div>
-          {/* <div className="mt-7 border-t border-line pt-3">
-            <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-inksoft">
-              Tersertifikasi
-            </p>
-            <p className="mt-2 font-serif text-lg">
-              Sertifikat <span className="text-rose">{BRAND_ITEM.certificate.by}</span>
-            </p>
-            {BRAND_ITEM.certificate.image && (
-              <img
-                src={BRAND_ITEM.certificate.image}
-                alt={`Sertifikat ${BRAND_ITEM.certificate.by}`}
-                className="mt-4 w-full object-cover"
-              />
-            )}
-          </div> */}
+        </section> */}
+
+        {/* awal jadi asisten */}
+        <section className="mt-4 grid grid-cols-2 gap-4">
+          <img
+            src={BRAND_ITEM.photos.story}
+            alt={``}
+            className="aspect-2/3 w-full object-cover object-center rounded"
+          />
+          <p className="max-w-sm text-sm/3.5 text-inksoft self-end">
+            Awalnya aku diajakin jadi asisten MUA.
+            Di jalan, aku juga bertemu dengan MUA lain yang mau berbagi ilmu.
+          </p>
+          <p className="max-w-sm text-sm/3.5 text-inksoft text-right">
+            Lalu aku didorong buat berdiri sendiri biar makin berkembang.
+          </p>
+          <img
+            src={BRAND_ITEM.photos.story}
+            alt={``}
+            className="aspect-15/10 w-full object-cover object-center rounded"
+          />
+        </section>
+
+        {/* */}
+        <section className="mt-4 grid grid-cols-1 gap-4">
+          <p className="max-w-sm text-sm/3.5 text-inksoft -mt-1">
+            Tahun 2024 mulai buka makeup.
+            Awalnya ya ga mulus.
+            Banyak rintangan di awal.
+            Tapi ada orang-orang terdekat yang selalu siap buat support dan Itu yang bikin aku sampai di titik ini.
+          </p>
+          <img
+            src={BRAND_ITEM.photos.story}
+            alt={``}
+            className="aspect-5/3 w-full object-cover object-center rounded"
+          /> 
+        </section>
+
+        {/* Philosophy */}
+        {/* <section className="mt-24 grid grid-cols-1 gap-4">
+          {Philosophy.map((item, idx) => (
+            <div
+              key={idx}
+              className="border border-dashed border-inksoft p-4"
+            >
+              <h1 className={cn(
+                "text-5xl font-serif font-semibold",
+                idx === Philosophy.length - 1 ? "text-rose" : ""
+              )}>
+                {item.title}
+              </h1>
+              <p className="mt-8 font-semibold text-inksoft">
+                {item.body}
+              </p>
+            </div>
+          ))}
+        </section> */}
+
+        {/* Philosophy */}
+        <section className="mt-24 flex flex-col gap-4">
+          <header className="flex justify-between items-end">
+            <h2 className="text-4xl/6 tracking-widest text-inksoft font-serif font-semibold">Soft.</h2>
+            <h2 className="text-4xl/6 tracking-widest text-inksoft font-serif font-semibold">Clean.</h2>
+            <h2 className="text-4xl/6 tracking-widest text-rose font-curvy font-black">Fresh.</h2>
+          </header>
+          <div className="grid grid-cols-2 gap-4">
+            <img
+              src={BRAND_ITEM.photos.story}
+              alt={``}
+              className="aspect-2/3 w-full object-cover object-center rounded"
+            />
+            <img
+              src={BRAND_ITEM.photos.story}
+              alt={``}
+              className="aspect-3/2 w-full object-cover object-center rounded"
+            />
+          </div>
+          <p className="text-sm/3.5 text-inksoft">
+            Ini adalah style-ku. Kamu tetap terlihat kamu, bukan seperti orang lain.
+          </p>
         </section>
 
         {/* Why choose me */}
-        <section className="border border-dashed border-inksoft px-3 py-4" aria-labelledby="why-title">
+        {/* <section className="border border-dashed border-inksoft px-3 py-4 mt-4" aria-labelledby="why-title">
           <p className="font-serif text-2xl" id="why-title">
             Kenapa aku
           </p>
@@ -154,28 +220,11 @@ export default function About() {
           >
             Lihat semua layanan
           </Button>
-        </section>
-
-        {/* Testimonials */}
-        <section aria-label="Testimoni">
-          <p className="mb-5 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-rose">
-            Kata mereka
-          </p>
-          <div className="flex flex-col gap-4">
-            {BRAND_ITEM.testimonials.map((t, i) => (
-              <figure key={i} className="border border-dashed border-inksoft px-3 py-4">
-                <blockquote className="font-serif text-xl">{t.text}</blockquote>
-                <figcaption className="mt-4 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-inksoft">
-                  {t.name}, {t.occasion}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </section>
+        </section> */}
 
         {/* Gallery */}
-        <section aria-label="Galeri">
-          <div className="grid grid-cols-2 gap-2">
+        {/* <section className="mt-24" aria-label="Galeri"> 
+          <div className="grid grid-cols-2 gap-4">
             {BRAND_ITEM.gallery.map((g, i) => (
               <img
                 key={i}
@@ -186,71 +235,83 @@ export default function About() {
               />
             ))}
           </div>
-          <p className="pt-4 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-inksoft">
-            Graduation, family bride, bridesmaid.
+          <p className="mt-4 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-inksoft">
+            Graduation, family bride, bridesmaid, engagement
           </p>
-        </section>
-
-        {/* Personal */}
-        <section className="-mx-1" aria-label="Di luar makeup">
-          <p className="font-serif text-[3.2rem] font-semibold text-inksoft">
-            Di luar makeup, aku <span className="text-rose">naik gunung.</span>
-          </p>
-          <p className="mt-6 max-w-xs text-sm text-inksoft">
-            Aku suka ketemu orang baru, dan workaholic parah. Tapi pas di kursi
-            rias, kamu dapat perhatian penuhku.
-          </p>
-          {/* <p className="mt-6 max-w-xs font-serif text-2xl">
-            Orang sering kaget: ternyata aku itu <span className="text-rose">teges.</span>{' '}
-            Bukan tegas, ya.
-          </p> */}
-        </section>
+        </section> */}
 
         {/* CTA */}
-        <section className="border border-dashed border-inksoft px-3 py-5" aria-labelledby="cta-title">
+        {/* <section className="mt-24 border border-dashed border-inksoft px-3 py-5" aria-labelledby="cta-title">
           <p className="font-serif text-2xl" id="cta-title">
             Yuk, ngobrol dulu.
           </p>
-          <p className="mt-4 max-w-xs text-sm text-inksoft">
-            Ceritain acaramu dan bayangan look-mu. Sisanya kita rapihin bareng.
+          <p className="mt-4 max-w-xs text-sm/3.5 text-inksoft">
+            Ceritain acaramu dan bayangan <span className="italic">look</span>-mu. Sisanya kita rapihin bareng.
           </p>
           <div className="mt-7 grid grid-cols-2 grid-rows-2 gap-3">
             <Button
-              href={BRAND_ITEM.wa}
+              href="/contact"
               target="_blank"
               rel="noreferrer"
-              className="bg-rose px-4 py-3 text-center font-mono text-[0.7rem] uppercase tracking-[0.16em] text-white col-span-2 w-full rounded-none"
+              className="bg-rose px-4 py-3 text-center font-mono text-xs uppercase tracking-widest text-white col-span-2 w-full rounded-none"
             >
-              Chat via WhatsApp
+              Kontak
             </Button>
             <Button
               href={BRAND_ITEM.mua}
               target="_blank"
               rel="noreferrer"
-              className="border border-ink px-4 py-3 text-center font-mono text-[0.7rem] uppercase tracking-[0.16em] w-full rounded-none bg-transparent text-ink"
+              className="border border-ink px-4 py-3 text-center font-mono text-xs uppercase tracking-widest w-full rounded-none bg-transparent text-ink"
             >
-              Instagram makeup
+              Instagram Makeup
             </Button>
             <Button
               href={BRAND_ITEM.hairdo}
               target="_blank"
               rel="noreferrer"
-              className="border border-ink px-4 py-3 text-center font-mono text-[0.7rem] uppercase tracking-[0.16em] w-full rounded-none bg-transparent text-ink"
+              className="border border-ink px-4 py-3 text-center font-mono text-xs uppercase tracking-widest w-full rounded-none bg-transparent text-ink"
             >
-              Instagram hairdo
+              Instagram Hairdo
             </Button>
           </div>
-          <div className="mt-7 flex items-end justify-between gap-4 border-t border-line pt-3">
-            <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-inksoft">
+          <div className="mt-7 border-t border-line pt-3 grid grid-cols-2 grid-rows-2 text-right font-serif text-rose">
+            <p className="font-mono text-left text-xs uppercase tracking-widest text-inksoft row-span-2 self-center">
               Fast respon
             </p>
-            <p className="text-right font-serif text-lg text-rose">
+            <p className="">
               {BRAND_ITEM.hours.days}
-              <br />
+            </p>
+            <p className="">
               {BRAND_ITEM.hours.time}
             </p>
           </div>
+        </section> */}
+
+        {/* FAQ */}
+        <section className="mt-24 flex flex-col">
+          <header className="py-4 flex flex-col items-center text-center">
+            <h1 className="font-serif text-rose text-5xl/12">
+              FAQs
+            </h1>
+            <p className="text-xs max-w-30 text-inksoft">
+              pertanyaan yang sering aku dapat dari klien-klienku
+            </p>
+          </header>
+          <ul className="accordion-list flex flex-col gap-3">
+            {FAQs.map((item, idx) => (
+              <li key={idx} className="accordion-item px-3 bg-rose/15 rounded">
+              <h2 className="item-header flex">
+                <Button as="button" className="rounded-none text-sm/3.5 font-medium w-full flex justify-between px-0 py-6 bg-transparent! text-ink">
+                  <span>{item.q}</span>
+                    <div className="icon text-xs/3">{`\u2716`}</div>
+                </Button>
+              </h2>
+              <p className="item-text text-sm/3.5 text-inksoft pb-3">{item.a}</p>
+            </li>
+            ))}
+          </ul>
         </section>
+
       </main>
       <Footer />
     </>
